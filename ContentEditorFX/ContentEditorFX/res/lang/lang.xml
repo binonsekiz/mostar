@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!-- Bu dil listesi programı yeniden derlemeden genişletilebilir 	-->
+<!-- This list of languages is extensible without recompiling		-->
+<languages>
+	<language id = "Türkçe">tr.xml</language>
+	<language id = "English">en.xml</language>
+</languages>

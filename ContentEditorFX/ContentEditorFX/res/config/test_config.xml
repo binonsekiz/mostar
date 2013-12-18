@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!-- Bu dosya bitmiş yazılımda yer almamalıdır 	-->
+<!-- This file should not exist in the released software -->
+<testConfig>
+	<guiDebugGuidelines>false</guiDebugGuidelines>
+	<testMode>false</testMode>
+</testConfig>

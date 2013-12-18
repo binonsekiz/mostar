@@ -1,0 +1,278 @@
+.root{
+	
+}
+
+.segmented-button-bar-class .button {
+	-light-black: rgb(74, 75, 78);
+    -dark-highlight: rgb(87, 89, 92);
+    -dark-black: rgb(39, 40, 40);
+    -darkest-black: rgb(5, 5, 5);
+    -mid-gray: rgb(216, 222, 227);
+    -fx-background-color:
+        -darkest-black,
+        -dark-highlight,
+        linear-gradient(to bottom, -light-black 2%, -dark-black 98%);
+    -fx-background-insets: 0, 1 1 1 0, 2 1 1 1;
+    -fx-background-radius: 0;
+}
+ 
+.segmented-button-bar-class .button.first {
+    -fx-background-insets: 0, 1, 2 1 1 1;
+    -fx-background-radius: 3 0 0 3, 2 0 0 2, 2 0 0 2;
+}
+ 
+.segmented-button-bar-class .button.last {
+    -fx-background-insets: 0, 1 1 1 0, 2 1 1 1;
+    -fx-background-radius: 0 3 3 0, 0 2 2 0, 0 2 2 0;
+}
+ 
+.segmented-button-bar-class .button:pressed {
+    -fx-background-color:
+        -darkest-black,
+        rgb(55, 57, 58),
+        linear-gradient(to top, -light-black 2%, -dark-black 98%);
+}
+
+.segmented-button-bar-class .combo-box {
+	-light-black: rgb(74, 75, 78);
+    -dark-highlight: rgb(87, 89, 92);
+    -dark-black: rgb(39, 40, 40);
+    -darkest-black: rgb(5, 5, 5);
+    -mid-gray: rgb(216, 222, 227);
+    -fx-background-color:
+        -darkest-black,
+        -dark-highlight,
+        linear-gradient(to bottom, -light-black 2%, -dark-black 98%);
+    -fx-background-insets: 0, 1 1 1 0, 2 1 1 1;
+    -fx-background-radius: 0;
+}
+
+.segmented-button-bar-class .combo-box.first {
+    -fx-background-insets: 0, 1, 2 1 1 1;
+    -fx-background-radius: 3 0 0 3, 2 0 0 2, 2 0 0 2;
+}
+ 
+.segmented-button-bar-class .combo-box.last {
+    -fx-background-insets: 0, 1 1 1 0, 2 1 1 1;
+    -fx-background-radius: 0 3 3 0, 0 2 2 0, 0 2 2 0;
+}
+ 
+.segmented-button-bar-class .combo-box:pressed {
+    -fx-background-color:
+        -darkest-black,
+        rgb(55, 57, 58),
+        linear-gradient(to top, -light-black 2%, -dark-black 98%);
+}
+
+#NumberField {
+    -fx-border-width: 1;
+    -fx-border-color: lightgray;
+    -fx-background-insets:1;
+    -fx-border-radius:3 0 0 3;
+    /*    -fx-border-radius:0 0 0 0;*/
+}
+#NumberSpinnerArrow {
+    -fx-fill: gray;
+    -fx-stroke: gray;
+    /*        -fx-effect: innershadow( gaussian , black , 2 , 0.6 , 1 , 1 )*/
+}
+#ButtonsBox {
+    -fx-border-color:lightgray;
+    -fx-border-width: 1 1 1 0;
+    -fx-border-radius: 0 3 3 0;
+    /*    -fx-border-radius: 0 0 0 0;*/
+}
+#SpinnerButtonUp {
+    -fx-background-insets: 0;
+    -fx-background-radius:0 3 0 0;
+    /*    -fx-background-radius:0;*/
+}
+#SpinnerButtonDown {
+    -fx-background-insets: 0;
+    -fx-background-radius:0 0 3 0;
+    /*    -fx-background-radius:0;*/
+}
+
+
+#glass-pane{
+	-fx-background-color: rgb(40,255,40);
+}
+
+#red-pane{
+	-fx-background-color: #FF222255;
+}
+
+#columnview-selected{
+	-fx-border-color: darkblue;
+	-fx-border-width: 3px;
+}
+
+#columnview-disabled{
+	-fx-border-color: rgba(0, 0, 0, 0);
+	-fx-border-width: 1px;
+}
+
+#text-style1{
+	-fx-font-size: 32px;
+	-fx-font-family: "Arial Black";
+	-fx-fill: #818181;	
+}
+
+#scenechange-pane{
+	-fx-border-color: #0020b0;
+	-fx-border-width: 3px;
+}
+
+#docmodify-pane {
+	-fx-border-color: #ff6000;
+	-fx-border-width: 3px;
+}
+
+#docmodify-screen {
+	-fx-border-color: #990000;
+	-fx-border-width: 3px;
+}
+
+#docwidget-toolbar{
+	-light-black: rgb(74, 75, 78);
+    -dark-highlight: rgb(87, 89, 92);
+    -dark-black: rgb(39, 40, 40);
+    -darkest-black: rgb(5, 5, 5);
+    -mid-gray: rgb(216, 222, 227);
+	
+	-fx-base: -dark-black;
+	-fx-font-size:12;
+	-fx-background-color: 
+		linear-gradient(to bottom, derive(-fx-base, -30%), derive(-fx-base, -60%) ),
+		linear-gradient(to bottom, -light-black 2%, -dark-black 98%);
+	-fx-background-insets: 0, 0 0 1 0;
+/*	-fx-padding: .9em 0.416667em .9em 0.416667em;*/
+	-fx-effect: dropshadow(two-pass-box, black, 5, .2, 0, 0);
+}
+
+#segmented-button-bar .button {
+    -fx-background-color:
+        -darkest-black,
+        -dark-highlight,
+        linear-gradient(to bottom, -light-black 2%, -dark-black 98%);
+    -fx-background-insets: 0, 1 1 1 0, 2 1 1 1;
+    -fx-background-radius: 0;
+/*    -fx-padding: 0.4em 1.833333em 0.4em 1.833333em;*/
+}
+ 
+#segmented-button-bar-first-button {
+    -fx-background-insets: 0, 1, 2 1 1 1;
+    -fx-background-radius: 3 0 0 3, 2 0 0 2, 2 0 0 2;
+}
+ 
+#segmented-button-bar-last-button {
+    -fx-background-insets: 0, 1 1 1 0, 2 1 1 1;
+    -fx-background-radius: 0 3 3 0, 0 2 2 0, 0 2 2 0;
+}
+ 
+#segmented-button-bar .button:pressed {
+    -fx-background-color:
+        -darkest-black,
+        rgb(55, 57, 58),
+        linear-gradient(to top, -light-black 2%, -dark-black 98%);
+}
+
+#clip-pane {
+	-fx-border-color: #999900;
+	-fx-border-width: 3px;
+}
+
+#scrollpane-custom {
+	-fx-border-color: #009900;
+	-fx-border-width: 3px;
+}
+
+#scrollpane-content {
+	-fx-border-color: #000099;
+	-fx-border-width: 3px;
+}
+
+#LineViewTest {
+	-fx-border-color: #444444;
+	-fx-border-width: 1px;
+}
+
+#doc-overview{
+	-fx-background-color: #bbbbbb;
+}
+
+#label-test{
+	-fx-border-color: #38ACEC;
+	-fx-border-width: 1px;
+}
+
+#textfield-custom{
+	-fx-font-family: Vera;
+	-fx-font-size: 40px;
+}
+
+#page-view{
+	-fx-background-color: white;
+}
+
+#textfield-custom-yellow{
+	-fx-font-family: Vera;
+	-fx-font-size: 40px;
+	-fx-fill: #FFA500;
+}
+
+#textfield-custom-red{
+	-fx-font-family: Vera;
+	-fx-font-size: 40px;
+	-fx-fill: #800000;
+}
+
+#single-image-widget{
+	-fx-background-color: rgba(0,0,0,0);
+}
+
+#single-image-widget-selected{
+	-fx-background-color: #33FFFF55;
+	-fx-stroke-color: darkblue;
+	-fx-stroke-width: 1px;
+}
+
+#versatile-pane{
+	-fx-stroke-color: pink;
+	-fx-stroke-width: 1px;
+	-fx-background-color: lightgray;
+}
+
+.textfield-error .text-field{
+	-fx-background-color: maroon;
+    -fx-text-fill: white;
+}
+
+.textfield-warning .text-field{
+	-fx-background-color: yellow;
+}
+/*
+.text-area{
+	-fx-border-color: null;
+	-fx-border-radius: 0;
+	-fx-select-on-focus:false;
+	-fx-background-color: null;
+	-fx-background-insets: 0, 1, 2;
+	-fx-background-radius: 1;
+	-fx-border-width: -1;
+}
+
+.text-area:focused {
+	-fx-border-color: null;
+	-fx-border-radius: 0;
+	-fx-select-on-focus:false;
+	-fx-background-color: null;
+	-fx-background-insets: 0, 1, 2;
+	-fx-background-radius: 1;
+	-fx-border-width: -1;
+}
+*/
+ .text-area .scroll-pane {
+        -fx-hbar-policy : never;
+        -fx-vbar-policy : never;
+ }
