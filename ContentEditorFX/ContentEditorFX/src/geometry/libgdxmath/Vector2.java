@@ -20,6 +20,8 @@ import geometry.libgdxmath.utils.NumberUtils;
 
 import java.io.Serializable;
 
+import settings.GlobalAppSettings;
+
 /** Encapsulates a 2D vector. Allows chaining methods by returning a reference to itself
  * @author badlogicgames@gmail.com */
 public class Vector2 implements Serializable, Vector<Vector2> {
@@ -369,5 +371,9 @@ public class Vector2 implements Serializable, Vector<Vector2> {
 		if (Math.abs(x - this.x) > epsilon) return false;
 		if (Math.abs(y - this.y) > epsilon) return false;
 		return true;
+	}
+
+	public boolean isEqual(Vector2 firstPoint) {
+		return epsilonEquals(firstPoint, GlobalAppSettings.ignoreValuesBelow);
 	}
 }

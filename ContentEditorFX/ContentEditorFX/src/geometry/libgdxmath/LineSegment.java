@@ -1,5 +1,7 @@
 package geometry.libgdxmath;
 
+import settings.GlobalAppSettings;
+
 public class LineSegment {
 	private Vector2 firstPoint;
 	private Vector2 secondPoint;
@@ -59,5 +61,11 @@ public class LineSegment {
 	
 	public Vector2 getMidpoint(){
 		return new Vector2((firstPoint.x + secondPoint.x)/2, (firstPoint.y + secondPoint.y)/2);
+	}
+
+	public boolean isEqual(LineSegment lineSegment1) {
+		if(this.firstPoint.epsilonEquals(lineSegment1.firstPoint, GlobalAppSettings.ignoreValuesBelow) && this.secondPoint.epsilonEquals(lineSegment1.secondPoint, GlobalAppSettings.ignoreValuesBelow))
+			return true;
+		return false;
 	}
 }

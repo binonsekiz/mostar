@@ -3,6 +3,7 @@ package gui.columnview;
 import java.util.ArrayList;
 
 import geometry.libgdxmath.LineSegment;
+import geometry.libgdxmath.Vector2;
 import document.StyledText;
 import document.TextStyle;
 import javafx.beans.property.DoubleProperty;
@@ -51,6 +52,7 @@ public class LineOnCanvas {
 		endIndexInStyledText = new SimpleIntegerProperty();
 		styleProperty = new SimpleObjectProperty<TextStyle>();
 		lineSegmentProperty = new SimpleObjectProperty<LineSegment>();
+		lineSegmentProperty.set(new LineSegment(new Vector2(), new Vector2()));
 		initEvents();
 	}
 	
@@ -60,6 +62,8 @@ public class LineOnCanvas {
 		this.preferredWidthProperty.set(width);
 		this.height = height;
 		this.angle = angle;
+		LineSegment lineSegment = new LineSegment(new Vector2(layoutX, layoutY), new Vector2((float)(layoutX + Math.cos(angle) * width), (float)(layoutY + Math.sin(angle) * height)));
+		lineSegmentProperty.set(lineSegment);
 	}
 	
 	public void initialTextSetup(StyledText text, int startIndex, int endIndex){
@@ -71,7 +75,6 @@ public class LineOnCanvas {
 	
 	public void setLineSegment(LineSegment line) {
 		lineSegmentProperty.set(line);
-		preferredWidthProperty.set(line.getLength());
 	}
 	
 	public void setPreferredWidth(double width){
@@ -141,9 +144,11 @@ public class LineOnCanvas {
 			@Override
 			public void changed(ObservableValue<? extends LineSegment> arg0,
 					LineSegment arg1, LineSegment arg2){
-				layoutX = arg0.getValue().getLeftPoint().x;
-				layoutY = arg0.getValue().getLeftPoint().y;
-				setPreferredWidth(arg0.getValue().getLength());
+				if(arg0.getValue() != null) {
+					layoutX = arg0.getValue().getLeftPoint().x;
+					layoutY = arg0.getValue().getLeftPoint().y;
+					setPreferredWidth(arg0.getValue().getLength());
+				}
 			}
 		});
 	}
@@ -165,5 +170,9 @@ public class LineOnCanvas {
 	@Override
 	public String toString(){
 		return "x: " + layoutX + ", y: " + layoutY + " width: " + preferredWidthProperty.get();
+	}
+
+	public LineSegment getLineSegment() {
+		return lineSegmentProperty.get();
 	}
 }

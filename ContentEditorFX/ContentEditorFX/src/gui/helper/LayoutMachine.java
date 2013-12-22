@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javafx.geometry.Point2D;
+import javafx.scene.shape.Shape;
 import document.PageInsets;
 import document.TextStyle;
 
@@ -41,24 +42,49 @@ public class LayoutMachine {
 		for(int y = (int) allowedSpace.y; y <= allowedSpace.height; y+= 10){
 			LineOnCanvas newLine = new LineOnCanvas(requester, paragraph);
 			newLine.initialPositionSetup(allowedSpace.x, y, allowedSpace.width, allowedSpace.height, 0);
-			ArrayList<LineOnCanvas> trimmedLine = trimLine(newLine);
+			ArrayList<LineOnCanvas> trimmedLine = buildLineOnCanvas(requester, newLine, paragraph);
 			paragraph.insertLines(trimmedLine);
 		}
 		
 		return paragraph;
 	}
 	
-	private ArrayList<LineOnCanvas> trimLine(LineOnCanvas newLine) {
-		//TODO: trim the lines properly
+	private ArrayList<LineOnCanvas> buildLineOnCanvas(ColumnView requester, LineOnCanvas newLine, ParagraphOnCanvas parentParagraph) {
 		ArrayList<LineOnCanvas> lines = new ArrayList<LineOnCanvas>();
-		lines.add(newLine);
-
-	//	for()
+		ArrayList<LineSegment> segments = new ArrayList<LineSegment>();
+		
+		segments.add(newLine.getLineSegment());
+		
+		for(int i = 0; i < shapes.size(); i++) {
+			
+			Polygon shape = shapes.get(i).getShape();
+			for(int j = 0; j < segments.size(); j++) {
+				LineSegmentIntersection intersection = shape.intersect(segments.get(j), requester);
+				segments.remove(j);
+				if(intersection.getLineSegment1() != null && intersection.getLineSegment2() == null){
+					segments.add(0,intersection.getLineSegment1());
+				}
+				else if(intersection.getLineSegment1() != null && intersection.getLineSegment2() != null){
+					segments.add(0, intersection.getLineSegment1());
+					segments.add(0, intersection.getLineSegment2());
+				}
+				else if(intersection.getLineSegment1() == null && intersection.getLineSegment2() == null){
+					j--;
+				}
+			}
+		}
+		
+		//construct the lineoncanvases.
+		for(int i = 0; i < segments.size(); i++){
+			LineOnCanvas tempLine = new LineOnCanvas(requester, parentParagraph);
+			tempLine.setLineSegment(segments.get(i));
+			lines.add(tempLine);
+		}
 		
 		return lines;
 	}
 
-	public LineOnCanvas getLine(float x, float y, float height, float angle){
+/*	public LineOnCanvas getLine(float x, float y, float height, float angle){
 		//see if the start position is available
 		if(!parentShape.contains(x, y)){
 			System.out.println("out at 1");
@@ -83,7 +109,7 @@ public class LayoutMachine {
 		
 		
 		return null;
-	}
+	}*/
 	
 	public void addSingleElement(ShapedPane shape){
 		shapes.add(shape);
@@ -143,10 +169,8 @@ public class LayoutMachine {
 		
 		System.out.println("Getting line segments");
 		for(int i = 0; i < shapes.size(); i++){
-			System.out.println("+first loop");
 			//for every shape, add or remove segments to the list.
 			for(int j = 0; j < segments.size(); j++){
-				System.out.println("++second loop");
 				//1. calculate intersection points
 				LineSegmentIntersection intersection = shapes.get(i).getShape().intersect(segments.get(j));
 				if(intersection.getLineSegment1() != null){

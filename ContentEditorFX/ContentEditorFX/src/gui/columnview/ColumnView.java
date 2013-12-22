@@ -1,6 +1,7 @@
 package gui.columnview;
 
 import geometry.libgdxmath.LineSegment;
+import geometry.libgdxmath.Vector2;
 import gui.ShapedPane;
 import gui.helper.LayoutMachine;
 import gui.widget.WidgetModifier;
@@ -45,12 +46,14 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	private boolean isRefreshInProgress;
 	
 	private ArrayList<ShapedPane> visuals;
-	private ArrayList<LineOnCanvas> lineViewsOnCanvas;
+	private ArrayList<ParagraphOnCanvas> paragraphsOnCanvas;
 	
 	private LayoutMachine layoutMachine;
 	
 	private float lastFilledLineHeight;
 	private ArrayList<LineSegment> backupLines;
+	
+	private ArrayList<Vector2> debugPoints;
 	
 	private HashMap<ShapedPane, ModificationInstance> modificationHash;
 	
@@ -63,7 +66,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		context = canvas.getGraphicsContext2D();
 		context.setStroke(Color.BLACK);
 		visuals = new ArrayList<ShapedPane>();
-		lineViewsOnCanvas = new ArrayList<LineOnCanvas>();
+		paragraphsOnCanvas = new ArrayList<ParagraphOnCanvas>();
 		
 		this.setId("columnview-selected");
 		layoutMachine = new LayoutMachine();
@@ -73,6 +76,8 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		modificationHash = new HashMap<ShapedPane, ModificationInstance>();
 		initEvents();
 		this.getChildren().add(canvas);
+		
+		debugPoints = new ArrayList<Vector2>();
 	}
 	
 	private void initEvents(){
@@ -80,9 +85,8 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 			@Override
 			public void changed(ObservableValue<? extends StyledText> arg0,
 					StyledText arg1, StyledText newText) {	
-				lineViewsOnCanvas.clear();
-		//		lineViewsOnCanvas.addAll(layoutMachine.getDebugLines(selfReference));
-				lineViewsOnCanvas.addAll(layoutMachine.getParagraphSpace(selfReference, column.getInsets().getUsableRectangle(), null).getLines());
+				paragraphsOnCanvas.clear();
+				paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, column.getInsets().getUsableRectangle(), null));
 				refresh();
 			}
 		});
@@ -114,17 +118,30 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 			isRefreshInProgress = false;
 		}
 	}
+	
+	public void debugPoint(Vector2 point){
+		this.debugPoints.add(new Vector2(point));
+	}
 
 	private void refreshAll(){
 		System.out.println("\n\nRefreshing all");
 		context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		
 		refreshCanvasOnly();
+		refreshDebugPoints();
 		refreshTextOnly();
 		
-		System.out.println("debug");
-		layoutMachine.getLine(40, 40, 20, 0);
 	}
 	
+	private void refreshDebugPoints() {
+		context.setStroke(Color.GREEN);
+		context.setLineWidth(2);
+		for(Vector2 point:debugPoints){
+			context.strokeOval(point.x-1, point.y-1, 3, 3);
+		}
+		debugPoints.clear();
+	}
+
 	private void refreshCanvasOnly(){
 		canvas.toBack();
 		drawInsets();
@@ -141,9 +158,18 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	}
 	
 	private void refreshTextOnly(){
-		for(int i = 0; i < lineViewsOnCanvas.size(); i++){
+	/*	for(int i = 0; i < lineViewsOnCanvas.size(); i++){
 			lineViewsOnCanvas.get(i).refresh();
+		}*/
+		System.out.println("updating text");
+		paragraphsOnCanvas.clear();
+		paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(this, column.getInsets().getUsableRectangle(), null));
+		
+		System.out.println("refreshing text");
+		for(ParagraphOnCanvas paragraph: paragraphsOnCanvas) {
+			paragraph.refresh();
 		}
+		
 	}
 	
 	/**

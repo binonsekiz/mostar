@@ -2,7 +2,9 @@ package geometry.libgdxmath;
 
 import java.util.ArrayList;
 
+import geometry.libgdxmath.Polygon.LineSegmentIntersection;
 import geometry.libgdxmath.utils.Array;
+import gui.columnview.ColumnView;
 
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
@@ -359,17 +361,20 @@ public class Polygon {
 		Vector2 point1 = null;
 		Vector2 point2 = null;
 		
-		for(int i = 0; i < numFloats; i+= 4){
+	//	System.out.println("CHECKING polygon " + this + ", \nsegment: " + lineSegment);
+		
+		for(int i = 0; i < numFloats; i+= 2){
 			Vector2 point = new Vector2();
-
+			
 			boolean result = Intersector.intersectSegments(
 					new Vector2(vertices[i], vertices[i+1]), 
-					new Vector2(vertices[i+2], vertices[i+3]), 
+					new Vector2(vertices[(i+2) % numFloats], vertices[(i+3) % numFloats]), 
 					lineSegment.getLeftPoint(),
 					lineSegment.getRightPoint(), 
 					point);
 			
 			if(result){
+		//		System.out.println("found intersection");
 				if(point1 == null){
 					point1 = point;
 				}
@@ -381,18 +386,22 @@ public class Polygon {
 		
 		//now we have the points of intersection.
 		if(point1 == null && point2 == null) {
+	//		System.out.print("no intersection, ");
 			//no intersection. check if one of the points line in the polygon
 			if(Intersector.isPointInPolygon(vertices, lineSegment.getFirstPoint())){
 				//they are both inside the polygon, return the null intersection.
+	//			System.out.println("full inside");
 				return intersection;
 			}
 			else{
 				//they are in a seperate area, pass in the whole line segment.
+		//		System.out.println("full outside");
 				intersection.segment1 = lineSegment;
 				return intersection;
 			}
 		}
 		else if(point2 == null) {
+	//		System.out.println("one point inside");
 			//one point is inside, the other is outside the polygon
 			if(Intersector.isPointInPolygon(vertices, lineSegment.getFirstPoint())){
 				intersection.segment2 = null;
@@ -406,6 +415,7 @@ public class Polygon {
 			}
 		}
 		else{
+	//		System.out.println("goes through kinda intersection");
 			//line segment goes through the polygon, return two segments
 			float dst1 = point1.dst(lineSegment.getFirstPoint());
 			float dst2 = point1.dst(lineSegment.getSecondPoint());
@@ -478,6 +488,10 @@ public class Polygon {
 		public LineSegment getReversed(){
 			return new LineSegment(segment1.getRightPoint(), segment2.getLeftPoint());
 		}
+		
+		public String toString() {
+			return "line segment 1: " + segment1 + ", segment 2: " + segment2;
+		}
 	}
 
 	public void setPositionX(float floatValue) {
@@ -505,5 +519,79 @@ public class Polygon {
 			retVal += "[" + worldVertices[i*2] + ":" + worldVertices[(i*2)+1] +"] ";
 		}
 		return retVal;
+	}
+
+	public LineSegmentIntersection intersect(LineSegment lineSegment, ColumnView requester) {
+		LineSegmentIntersection intersection = new LineSegmentIntersection();
+		final float[] vertices = getTransformedVertices();
+		final int numFloats = vertices.length;
+		
+		Vector2 point1 = null;
+		Vector2 point2 = null;
+	
+		for(int i = 0; i < numFloats; i+= 2){
+			Vector2 point = new Vector2();
+			
+			boolean result = Intersector.intersectSegments(
+					new Vector2(vertices[i], vertices[i+1]), 
+					new Vector2(vertices[(i+2) % numFloats], vertices[(i+3) % numFloats]), 
+					lineSegment.getLeftPoint(),
+					lineSegment.getRightPoint(), 
+					point);
+			
+			if(result){
+				if(point1 == null){
+					point1 = point;
+					requester.debugPoint(point1);
+				}
+				else if(point2 == null){
+					point2 = point;
+					requester.debugPoint(point2);
+				}
+			}
+		}
+		
+		//now we have the points of intersection.
+		if(point1 == null && point2 == null) {
+			//no intersection. check if one of the points line in the polygon
+			if(Intersector.isPointInPolygon(vertices, lineSegment.getFirstPoint())){
+				//they are both inside the polygon, return the null intersection.
+				return intersection;
+			}
+			else{
+				//they are in a seperate area, pass in the whole line segment.
+				intersection.segment1 = lineSegment;
+				return intersection;
+			}
+		}
+		else if(point2 == null) {
+			//one point is inside, the other is outside the polygon
+			if(Intersector.isPointInPolygon(vertices, lineSegment.getFirstPoint())){
+				intersection.segment2 = null;
+				intersection.segment1 = new LineSegment(lineSegment.getSecondPoint(), point1);
+				return intersection;
+			}
+			else{
+				intersection.segment2 = null;
+				intersection.segment1 = new LineSegment(lineSegment.getFirstPoint(), point1);
+				return intersection;
+			}
+		}
+		else{
+			//line segment goes through the polygon, return two segments
+			float dst1 = point1.dst(lineSegment.getFirstPoint());
+			float dst2 = point2.dst(lineSegment.getFirstPoint());
+			
+			if(dst1 < dst2){
+				//point 1 is closer, desired condition
+				intersection.segment1 = new LineSegment(lineSegment.getFirstPoint(), point1);
+				intersection.segment2 = new LineSegment(lineSegment.getSecondPoint(), point2);
+			}
+			else{
+				intersection.segment1 = new LineSegment(lineSegment.getFirstPoint(), point2);
+				intersection.segment2 = new LineSegment(lineSegment.getSecondPoint(), point1);
+			}
+			return intersection;
+		}
 	}
 }

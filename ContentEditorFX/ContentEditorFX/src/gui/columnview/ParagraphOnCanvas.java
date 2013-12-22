@@ -43,4 +43,10 @@ public class ParagraphOnCanvas {
 		this.lines.addAll(newLines);
 	}
 	
+	public void refresh() {
+		for(LineOnCanvas line: lines){
+			line.refresh();
+		}
+	}
+	
 }
