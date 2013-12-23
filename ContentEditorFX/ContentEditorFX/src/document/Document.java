@@ -1,10 +1,10 @@
 package document;
 
+import gui.docmodify.test.StyledTextTest;
+
 import java.util.ArrayList;
 
 import document.PageSpecs.Measurement;
-import gui.docmodify.test.StyledTextTest;
-import event.DocModifyScreenGuiFacade;
 
 public class Document {
 	

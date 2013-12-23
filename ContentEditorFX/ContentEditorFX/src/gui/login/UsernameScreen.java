@@ -1,15 +1,16 @@
 package gui.login;
 
+import event.GlobalGuiFacade;
+import gui.GFrame;
+import gui.GFrame.WindowType;
+import gui.ScreenType;
+import gui.helper.EffectHelper;
+import gui.helper.FontHelper;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import event.GlobalGuiFacade;
-import gui.GFrame.WindowType;
-import gui.GFrame;
-import gui.ScreenType;
-import gui.helper.EffectHelper;
-import gui.helper.FontHelper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;

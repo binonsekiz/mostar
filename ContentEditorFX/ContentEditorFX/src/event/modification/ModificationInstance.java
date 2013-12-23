@@ -1,8 +1,7 @@
 package event.modification;
 
-import javafx.scene.input.MouseEvent;
-import geometry.libgdxmath.Vector2;
 import gui.ShapedPane;
+import javafx.scene.input.MouseEvent;
 
 /**
  * A modification (translate, rotate etc) that is linked to a single shaped pane

@@ -1,10 +1,5 @@
 package gui.columnview;
 
-import document.Column;
-import document.Document;
-import event.DocModifyScreenGuiFacade;
-import gui.ShapedPane;
-
 import java.util.ArrayList;
 
 import javafx.beans.value.ChangeListener;
@@ -14,6 +9,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import document.Column;
+import document.Document;
+import event.DocModifyScreenGuiFacade;
 
 /**
  * This is a pane that has a corresponding document attached.

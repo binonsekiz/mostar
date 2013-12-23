@@ -1,14 +1,9 @@
 package gui.helper;
 
-import geometry.GeometryHelper;
-import geometry.libgdxmath.Intersector;
 import geometry.libgdxmath.LineSegment;
 import geometry.libgdxmath.Polygon;
-import geometry.libgdxmath.Rectangle;
 import geometry.libgdxmath.Polygon.LineSegmentIntersection;
-import geometry.libgdxmath.Vector3;
-import geometry.libgdxmath.collision.Ray;
-import geometry.libgdxmath.Vector2;
+import geometry.libgdxmath.Rectangle;
 import gui.ShapedPane;
 import gui.columnview.ColumnView;
 import gui.columnview.LineOnCanvas;
@@ -17,8 +12,6 @@ import gui.columnview.ParagraphOnCanvas;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javafx.geometry.Point2D;
-import javafx.scene.shape.Shape;
 import document.PageInsets;
 import document.TextStyle;
 

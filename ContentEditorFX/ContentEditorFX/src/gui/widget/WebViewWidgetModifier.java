@@ -1,6 +1,5 @@
 package gui.widget;
 
-import control.WidgetModifyFacade;
 import gui.columnview.ColumnView;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -8,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import control.WidgetModifyFacade;
 import document.Column;
 import document.widget.WebViewWidget;
 

@@ -3,6 +3,7 @@ package gui.helper;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;

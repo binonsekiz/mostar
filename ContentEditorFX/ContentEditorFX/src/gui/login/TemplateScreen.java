@@ -4,7 +4,6 @@ import gui.GFrame;
 import gui.GFrame.WindowType;
 import gui.ScreenType;
 import gui.helper.EffectHelper;
-import gui.helper.FontHelper;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;

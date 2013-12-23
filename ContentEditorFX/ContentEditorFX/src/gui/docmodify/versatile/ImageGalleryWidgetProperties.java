@@ -1,12 +1,12 @@
 package gui.docmodify.versatile;
 
+import gui.widget.ImageGalleryWidgetModifier;
+import gui.widget.WidgetModifier;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import gui.widget.ImageGalleryWidgetModifier;
-import gui.widget.WidgetModifier;
-import settings.Translator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import settings.Translator;
 
 
 public class ImageGalleryWidgetProperties extends VersatileWidgetProperties{

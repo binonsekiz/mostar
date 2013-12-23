@@ -1,8 +1,5 @@
 package gui.docmodify;
 
-import settings.Translator;
-import zzzzdeprecated.DocSelectionModel;
-import event.DocModifyScreenGuiFacade;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -13,6 +10,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import settings.Translator;
+import event.DocModifyScreenGuiFacade;
 
 public class DocBottomToolbar extends ToolBar{
 	

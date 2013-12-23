@@ -7,13 +7,13 @@ import java.util.StringTokenizer;
 
 import javafx.scene.text.Font;
 
-import com.sun.javafx.tk.*;
+import com.sun.javafx.tk.FontMetrics;
+import com.sun.javafx.tk.Toolkit;
 
 import document.Column;
-import document.Document;
 import document.TextLineSpace;
-import document.TextStyle;
 import document.TextLineSpace.Slot;
+import document.TextStyle;
 
 /**
  * Deprecated

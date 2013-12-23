@@ -1,7 +1,5 @@
 package gui.docmodify;
 
-import java.util.ArrayList;
-
 import event.DocModifyScreenGuiFacade;
 import gui.docmodify.versatile.HtmlWidgetProperties;
 import gui.docmodify.versatile.ImageGalleryWidgetProperties;
@@ -13,8 +11,10 @@ import gui.widget.SingleImageWidgetModifier;
 import gui.widget.WebViewWidgetModifier;
 import gui.widget.WidgetModifier;
 import gui.widget.WidgetModifier.WidgetModifierType;
+
+import java.util.ArrayList;
+
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 /**

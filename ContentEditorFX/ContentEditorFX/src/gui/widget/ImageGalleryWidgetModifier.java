@@ -5,16 +5,13 @@ import gui.columnview.ColumnView;
 
 import java.io.FileInputStream;
 
-import control.WidgetModifyFacade;
-
-import zzzzdeprecated.ColumnViewPane;
-
 import javafx.scene.Node;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.PaginationBuilder;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
+import control.WidgetModifyFacade;
 import document.Column;
 import document.widget.ImageGalleryWidget;
 

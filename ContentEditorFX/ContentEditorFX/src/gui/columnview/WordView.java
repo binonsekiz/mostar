@@ -1,14 +1,13 @@
 package gui.columnview;
 
-import zzzzdeprecated.LineViewDeprecated;
-
-import com.sun.javafx.tk.FontMetrics;
-
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
+import zzzzdeprecated.LineViewDeprecated;
+
+import com.sun.javafx.tk.FontMetrics;
 
 /**
  * This is a label only suitable for showing a word.

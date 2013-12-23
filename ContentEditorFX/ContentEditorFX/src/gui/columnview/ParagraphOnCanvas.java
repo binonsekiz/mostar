@@ -1,8 +1,8 @@
 package gui.columnview;
 
-import java.util.ArrayList;
-
 import geometry.libgdxmath.Rectangle;
+
+import java.util.ArrayList;
 
 
 /**

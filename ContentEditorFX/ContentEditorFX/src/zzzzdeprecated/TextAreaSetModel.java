@@ -3,11 +3,11 @@ package zzzzdeprecated;
 
 import java.util.ArrayList;
 
-import com.sun.javafx.tk.FontMetrics;
-import com.sun.javafx.tk.Toolkit;
-
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import com.sun.javafx.tk.FontMetrics;
+import com.sun.javafx.tk.Toolkit;
 
 /**
  * The text inside the text area set.

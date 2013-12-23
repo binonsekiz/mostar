@@ -36,4 +36,10 @@ public class GeometryHelper {
 		return retVal;
 	}
 
+	public static javafx.scene.shape.Polygon polygonShapeFromPolygon(Polygon shape) {
+		javafx.scene.shape.Polygon retVal = new javafx.scene.shape.Polygon();
+		retVal.getPoints().addAll(shape.getDoubleVertices());
+		return retVal;
+	}
+
 }

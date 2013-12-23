@@ -3,14 +3,11 @@ package gui.helper;
 
 import java.util.ArrayList;
 
-import javax.xml.ws.handler.MessageContext.Scope;
-
-import zzzzdeprecated.ColumnViewPane;
-
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.scene.control.ScrollPane;
 import javafx.util.Duration;
+import zzzzdeprecated.ColumnViewPane;
 
 public class PageChangeTransition extends Transition{
 

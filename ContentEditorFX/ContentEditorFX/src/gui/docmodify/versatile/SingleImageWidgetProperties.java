@@ -1,23 +1,17 @@
 package gui.docmodify.versatile;
 
-import java.io.File;
-
 import gui.widget.SingleImageWidgetModifier;
 import gui.widget.WidgetModifier;
 
-import settings.Translator;
+import java.io.File;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import settings.Translator;
 
 /**
  * This class is the property pane that shows up when a single image widget is selected 

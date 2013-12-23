@@ -3,10 +3,8 @@ package document;
 import gui.helper.StyleRepository;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 import com.sun.javafx.tk.FontMetrics;
-import com.sun.javafx.tk.Toolkit;
 
 /**
  * Represents list of StyleTextPairs. Can be used to import or export string.

@@ -1,28 +1,23 @@
 package zzzzdeprecated;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import com.sun.javafx.tk.FontMetrics;
-
-import control.TextModifyFacade;
-import document.TextLineSpace;
-import document.TextStyle;
-import event.DocModifyScreenGuiFacade;
 import gui.helper.FontHelper;
 import gui.helper.StyleRepository;
+
+import java.util.ArrayList;
+
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.IntegerPropertyBase;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
+
+import com.sun.javafx.tk.FontMetrics;
+
+import document.TextLineSpace;
+import document.TextStyle;
 
 public class TextSlotVisual extends Label implements Comparable<Integer>{
 

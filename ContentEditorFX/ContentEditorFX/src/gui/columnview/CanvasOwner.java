@@ -1,9 +1,8 @@
 package gui.columnview;
 
-import event.modification.ModificationType;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
-import geometry.libgdxmath.Vector2;
+import event.modification.ModificationType;
 import gui.ShapedPane;
 
 public interface CanvasOwner {

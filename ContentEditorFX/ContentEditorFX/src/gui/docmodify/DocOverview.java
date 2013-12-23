@@ -1,14 +1,9 @@
 package gui.docmodify;
 
-import settings.Translator;
-import zzzzdeprecated.DocSelectionModel;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import settings.Translator;
 import event.DocModifyScreenGuiFacade;
 
 public class DocOverview extends StackPane{

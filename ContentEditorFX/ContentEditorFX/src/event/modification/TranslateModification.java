@@ -1,9 +1,9 @@
 package event.modification;
 
-import settings.GlobalAppSettings;
-import javafx.scene.input.MouseEvent;
 import geometry.libgdxmath.Vector2;
 import gui.ShapedPane;
+import javafx.scene.input.MouseEvent;
+import settings.GlobalAppSettings;
 
 public class TranslateModification extends ModificationInstance{
 	

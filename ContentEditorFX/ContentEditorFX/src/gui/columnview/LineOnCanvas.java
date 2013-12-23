@@ -1,11 +1,7 @@
 package gui.columnview;
 
-import java.util.ArrayList;
-
 import geometry.libgdxmath.LineSegment;
 import geometry.libgdxmath.Vector2;
-import document.StyledText;
-import document.TextStyle;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -16,6 +12,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import document.StyledText;
+import document.TextStyle;
 
 public class LineOnCanvas {
 

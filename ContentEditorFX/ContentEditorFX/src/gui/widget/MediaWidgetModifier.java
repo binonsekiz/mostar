@@ -6,10 +6,6 @@ import gui.columnview.ColumnView;
 import java.io.File;
 import java.net.MalformedURLException;
 
-import control.WidgetModifyFacade;
-
-import zzzzdeprecated.ColumnViewPane;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -18,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import control.WidgetModifyFacade;
 import document.Column;
 import document.widget.MediaWidget;
 import document.widget.Widget;

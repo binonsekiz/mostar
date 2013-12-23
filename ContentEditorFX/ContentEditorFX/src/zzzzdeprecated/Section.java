@@ -2,9 +2,8 @@ package zzzzdeprecated;
 
 import java.util.ArrayList;
 
-import document.Column;
-
 import settings.Translator;
+import document.Column;
 
 @Deprecated
 public class Section {

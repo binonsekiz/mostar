@@ -1,11 +1,11 @@
 package event.modification;
 
-import settings.GlobalAppSettings;
-import javafx.scene.input.MouseEvent;
 import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Rectangle;
 import geometry.libgdxmath.Vector2;
 import gui.ShapedPane;
+import javafx.scene.input.MouseEvent;
+import settings.GlobalAppSettings;
 
 public class ResizeModification extends ModificationInstance{
 

@@ -7,13 +7,11 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.sun.javafx.tk.FontMetrics;
-import com.sun.javafx.tk.Toolkit;
-
-import document.TextStyle;
-
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import com.sun.javafx.tk.FontMetrics;
+import com.sun.javafx.tk.Toolkit;
 
 public class FontHelper {
 	

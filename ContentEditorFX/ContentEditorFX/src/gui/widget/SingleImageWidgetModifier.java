@@ -7,14 +7,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import control.WidgetModifyFacade;
-
-import zzzzdeprecated.ColumnViewPane;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import control.WidgetModifyFacade;
 import document.Column;
 import document.widget.SingleImageWidget;
 import document.widget.Widget;

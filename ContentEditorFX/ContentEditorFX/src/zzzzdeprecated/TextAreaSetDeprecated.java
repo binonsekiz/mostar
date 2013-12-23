@@ -1,16 +1,10 @@
 package zzzzdeprecated;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.ws.handler.MessageContext.Scope;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;

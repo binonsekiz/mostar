@@ -1,11 +1,10 @@
 package zzzzdeprecated;
 
+import gui.widget.WidgetModifier;
+
 import java.util.ArrayList;
 
 import document.widget.Widget.TextWrapType;
-
-import event.DocModifyScreenGuiFacade;
-import gui.widget.WidgetModifier;
 
 @Deprecated
 public class WidgetFocusHandler {

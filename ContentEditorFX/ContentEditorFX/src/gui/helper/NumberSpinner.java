@@ -2,6 +2,7 @@ package gui.helper;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -17,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+
 import javax.swing.JSpinner;
 
 /**

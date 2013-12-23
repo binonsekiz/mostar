@@ -1,7 +1,7 @@
 package gui.login;
 
-import gui.GFrame.WindowType;
 import gui.GFrame;
+import gui.GFrame.WindowType;
 import gui.ScreenType;
 import gui.helper.EffectHelper;
 import gui.helper.FontHelper;

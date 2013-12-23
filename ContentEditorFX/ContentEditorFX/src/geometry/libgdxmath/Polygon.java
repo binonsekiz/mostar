@@ -1,9 +1,5 @@
 package geometry.libgdxmath;
 
-import java.util.ArrayList;
-
-import geometry.libgdxmath.Polygon.LineSegmentIntersection;
-import geometry.libgdxmath.utils.Array;
 import gui.columnview.ColumnView;
 
 /*******************************************************************************
@@ -26,6 +22,7 @@ public class Polygon {
 	private float[] localVertices;
 	
 	private float[] worldVertices;
+	private Double[] localDoubleVertices;
 	private float x, y;
 	private float originX, originY;
 	private float rotation;
@@ -34,6 +31,8 @@ public class Polygon {
 	private Rectangle bounds;
 
 	private short[] indexList;
+
+	private Rectangle localBounds;
 	
 	/** Constructs a new polygon with no vertices. */
 	public Polygon () {
@@ -51,6 +50,7 @@ public class Polygon {
 		if (vertices.length < 6) throw new IllegalArgumentException("polygons must contain at least 3 points.");
 		this.localVertices = vertices;
 		setupIndexList();
+		calculateDoubleVertices();
 	}
 	
 	private void setupIndexList(){
@@ -102,6 +102,7 @@ public class Polygon {
 	public void moveEdge(int edge, Vector2 amount){
 		moveVertex(edge, amount);
 		moveVertex((edge + 1) % getEdgeCount(), amount);
+		calculateDoubleVertices();
 	}
 	
 	public void moveVertex(int vertex, Vector2 amount){
@@ -199,6 +200,26 @@ public class Polygon {
 			worldVertices[i + 1] = positionY + y + originY;
 		}
 		return worldVertices;
+	}
+	
+	private void calculateDoubleVertices() {
+		// build the double array
+		localDoubleVertices = new Double[localVertices.length];
+		Rectangle rect = getLocalBoundingRectangle();
+		System.out.println("###Recalculate double vertices, rect.x: " + rect.x + ", " + rect.y);
+		
+		for(int i = 0; i < localDoubleVertices.length; i+=2) {
+			localDoubleVertices[i] = new Double(localVertices[i] - rect.x);
+			localDoubleVertices[i+1] = new Double(localVertices[i+1] - rect.y);
+		}
+	}
+	
+	public Double[] getDoubleVertices() {
+		// build the array if it doesnt exist
+		if(localDoubleVertices == null) {
+			calculateDoubleVertices();
+		}
+		return localDoubleVertices;
 	}
 
 	/** Sets the origin point to which all of the polygon's local vertices are relative to. */
@@ -334,6 +355,31 @@ public class Polygon {
 		bounds.height = maxY - minY;
 
 		return bounds;
+	}
+	
+	private Rectangle getLocalBoundingRectangle(){
+		float[] vertices = localVertices;
+
+		float minX = vertices[0];
+		float minY = vertices[1];
+		float maxX = vertices[0];
+		float maxY = vertices[1];
+
+		final int numFloats = vertices.length;
+		for (int i = 2; i < numFloats; i += 2) {
+			minX = minX > vertices[i] ? vertices[i] : minX;
+			minY = minY > vertices[i + 1] ? vertices[i + 1] : minY;
+			maxX = maxX < vertices[i] ? vertices[i] : maxX;
+			maxY = maxY < vertices[i + 1] ? vertices[i + 1] : maxY;
+		}
+
+		if (localBounds == null) localBounds = new Rectangle();
+		localBounds.x = minX;
+		localBounds.y = minY;
+		localBounds.width = maxX - minX;
+		localBounds.height = maxY - minY;
+
+		return localBounds;
 	}
 
 	/** Returns whether an x, y pair is contained within the polygon. */

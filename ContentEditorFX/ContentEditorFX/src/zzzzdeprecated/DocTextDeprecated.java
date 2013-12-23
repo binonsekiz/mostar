@@ -1,17 +1,11 @@
 package zzzzdeprecated;
 
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import javafx.scene.input.KeyCode;
 
 /**
  * Although this is technically a text area, it only represents a single line of text.

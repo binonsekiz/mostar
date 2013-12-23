@@ -2,6 +2,9 @@ package control;
 
 import java.util.ArrayList;
 
+import document.Document;
+import document.widget.Widget.TextWrapType;
+import event.DocModifyScreenGuiFacade;
 import gui.columnview.ColumnView;
 import gui.columnview.DocumentView;
 import gui.widget.ImageGalleryWidgetModifier;
@@ -9,9 +12,6 @@ import gui.widget.MediaWidgetModifier;
 import gui.widget.SingleImageWidgetModifier;
 import gui.widget.WebViewWidgetModifier;
 import gui.widget.WidgetModifier;
-import document.Document;
-import document.widget.Widget.TextWrapType;
-import event.DocModifyScreenGuiFacade;
 
 public class WidgetModifyFacade {
 	

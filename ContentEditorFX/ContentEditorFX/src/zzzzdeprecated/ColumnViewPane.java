@@ -4,7 +4,6 @@ import gui.widget.WidgetModifier;
 
 import java.util.ArrayList;
 
-import control.TextModifyFacade;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
@@ -18,9 +17,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import settings.GlobalAppSettings;
+import control.TextModifyFacade;
 import document.Column;
 import document.TextLineSpace;
-import event.DocModifyScreenGuiFacade;
 
 @Deprecated
 public class ColumnViewPane extends Pane {

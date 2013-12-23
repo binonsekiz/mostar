@@ -2,7 +2,6 @@ package event;
 
 import gui.columnview.DocumentView;
 import gui.docmodify.DocBottomToolbar;
-import gui.docmodify.DocBottomToolbar.DocNavigationButtons;
 import gui.docmodify.DocOverview;
 import gui.docmodify.DocVersatilePane;
 import gui.docmodify.DocWidgetToolbar;
@@ -12,15 +11,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import control.Caret;
-import control.TextModifyFacade;
-import control.WidgetModifyFacade;
-
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import settings.Translator;
+import control.Caret;
+import control.TextModifyFacade;
+import control.WidgetModifyFacade;
 import document.Document;
-import document.StyledText;
 
 public class DocModifyScreenGuiFacade {
 

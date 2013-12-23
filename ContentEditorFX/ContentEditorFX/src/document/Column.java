@@ -11,7 +11,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import document.PageSpecs.Measurement;
 import document.widget.Widget;
-import document.widget.Widget.TextWrapType;
 
 public class Column {
 

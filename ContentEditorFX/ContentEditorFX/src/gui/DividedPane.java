@@ -1,11 +1,12 @@
 package gui;
 
-import java.util.Random;
-
 import gui.GFrame.WindowType;
 import gui.helper.EffectHelper;
 import gui.login.SignupScreen;
 import gui.start.StartScreen;
+
+import java.util.Random;
+
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

@@ -1,10 +1,6 @@
 package gui;
 
-import java.util.ArrayList;
-
 import event.KeyboardManager;
-
-import gui.GFrame.WindowType;
 import gui.docmodify.DocModifyScreen;
 import gui.docmodify.test.TestFacade;
 import gui.docmodify.test.TextLineSpaceUnitTest;
@@ -13,6 +9,9 @@ import gui.login.TemplateScreen;
 import gui.login.UsernameScreen;
 import gui.login.WelcomeScreen;
 import gui.start.StartScreen;
+
+import java.util.ArrayList;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;

@@ -2,35 +2,25 @@ package zzzzdeprecated;
 
 import java.util.ArrayList;
 
-import javax.xml.ws.handler.MessageContext.Scope;
-
-import control.TextModifyFacade;
-
 import javafx.animation.ScaleTransition;
-import javafx.animation.Transition;
-import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import document.Document;
 import document.Column;
+import document.Document;
 import event.DocModifyScreenGuiFacade;
 import gui.columnview.ColumnView;
-import gui.helper.PageChangeTransition;
 
 /**
  * This is the pane where the user modifies the current doc. 

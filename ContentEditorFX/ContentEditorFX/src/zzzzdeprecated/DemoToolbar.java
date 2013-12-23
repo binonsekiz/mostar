@@ -1,9 +1,5 @@
 package zzzzdeprecated;
 
-import settings.Translator;
-
-
-import event.DocModifyScreenGuiFacade;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -11,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import settings.Translator;
 
 
 @Deprecated

@@ -5,14 +5,13 @@ import gui.widget.WidgetModifier;
 
 import java.io.File;
 
-import settings.Translator;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import settings.Translator;
 
 public class MediaWidgetProperties extends VersatileWidgetProperties{
 	

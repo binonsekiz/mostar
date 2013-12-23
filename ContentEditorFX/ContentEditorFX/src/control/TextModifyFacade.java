@@ -1,25 +1,11 @@
 package control;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-
-import zzzzdeprecated.ColumnViewPane;
-import zzzzdeprecated.TextSlotVisual;
-import document.Column;
-import document.Document;
-import document.StyleTextPair;
-import document.StyledText;
-import document.TextStyle;
-import event.DocModifyScreenGuiFacade;
 import gui.columnview.DocumentView;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.KeyCombination.ModifierValue;
+import zzzzdeprecated.ColumnViewPane;
+import document.Document;
+import document.StyledText;
 
 /**
  * This is a facade class that all the gui events happening on text (including cut/copy/undo etc.) has to go through.

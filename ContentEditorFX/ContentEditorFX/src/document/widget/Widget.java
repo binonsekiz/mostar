@@ -1,8 +1,5 @@
 package document.widget;
 
-import com.sun.prism.Texture.WrapMode;
-
-import document.widget.Widget.TextWrapType;
 
 public abstract class Widget {
 

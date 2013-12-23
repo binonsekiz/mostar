@@ -1,24 +1,15 @@
 package gui.widget;
 
+import geometry.GeometryHelper;
 import gui.ShapedPane;
 import gui.columnview.ColumnView;
-import gui.helper.EffectHelper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import settings.Translator;
 import control.WidgetModifyFacade;
 import document.Column;
 import document.widget.Widget;
@@ -45,8 +36,8 @@ public abstract class WidgetModifier extends ShapedPane{
 	protected Pane widgetStack;
 	protected Widget widget;
 	
-	private Text header;
-	private Text footer;
+	//private Text header;
+	//private Text footer;
 	
 	private WidgetModifier selfReference;
 	protected Node widgetNode;
@@ -68,11 +59,11 @@ public abstract class WidgetModifier extends ShapedPane{
 	}
 	
 	protected void initializeGui() {
-		header = new Text(Translator.get("Header"));
-		footer = new Text(Translator.get("Footer"));
+//		header = new Text(Translator.get("Header"));
+//		footer = new Text(Translator.get("Footer"));
 		
-		EffectHelper.setAsWidgetHeaderText(header);
-		EffectHelper.setAsWidgetFooterText(footer);
+//		EffectHelper.setAsWidgetHeaderText(header);
+//		EffectHelper.setAsWidgetFooterText(footer);
 		
 		widgetStack = new Pane();
 		widgetStack.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
@@ -85,11 +76,16 @@ public abstract class WidgetModifier extends ShapedPane{
 		
 		positionHeaderFooter();
 		
-		this.getChildren().addAll(header, widgetStack, footer);
+		this.getChildren().addAll(/*header,*/ widgetStack/*, footer*/);
 	}
 
 	private void positionHeaderFooter() {
-		header.setLayoutX(selfReference.getWidth()/2 - header.getBoundsInParent().getWidth()/2 - 2);
+		widgetStack.setLayoutX(0);
+		widgetStack.setLayoutY(0);
+		widgetStack.setClip(GeometryHelper.polygonShapeFromPolygon(this.getShape()));
+		
+		
+/*		header.setLayoutX(selfReference.getWidth()/2 - header.getBoundsInParent().getWidth()/2 - 2);
 		header.setLayoutY(20);
 		
 		//footer.setLayoutY(header.getBoundsInParent().getHeight() + widgetStack.getBoundsInParent().getHeight());
@@ -104,23 +100,25 @@ public abstract class WidgetModifier extends ShapedPane{
 		widgetStack.setLayoutY(header.getBoundsInParent().getMaxY() + 5);
 		widgetStack.setClip(new Rectangle(0,0,this.getWidth()-2, this.getHeight() - header.getBoundsInParent().getHeight() - footer.getBoundsInParent().getHeight() - 20 - 15 -2));
 		widgetNode.setLayoutX(0);
-		widgetNode.setLayoutY(0);
+		widgetNode.setLayoutY(0);*/
 	}
 
 	public void setHeaderText(String text){
-		header.setText(text);
+	//	header.setText(text);
 	}
 	
 	public void setFooterText(String text){
-		footer.setText(text);
+	//	footer.setText(text);
 	}
 	
 	public String getHeaderText() {
-		return header.getText();
+	//	return header.getText();
+		return "";
 	}
 	
 	public String getFooterText() {
-		return footer.getText();
+	//	return footer.getText();
+		return "";
 	}
 
 	public void delete(){
