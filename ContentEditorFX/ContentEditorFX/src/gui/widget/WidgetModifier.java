@@ -10,11 +10,13 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import settings.Translator;
 import control.WidgetModifyFacade;
@@ -53,7 +55,7 @@ public abstract class WidgetModifier extends ShapedPane{
 	public ColumnView parentPane;
 	private WidgetModifyFacade widgetModifyFacade;
 	
-	public WidgetModifier(WidgetModifyFacade widgetModifyFacade, Column parent, ColumnView parentPane){
+	protected WidgetModifier(WidgetModifyFacade widgetModifyFacade, Column parent, ColumnView parentPane){
 		super(parentPane);
 		selfReference = this;
 		isRelocateAllowed = true;
@@ -68,32 +70,41 @@ public abstract class WidgetModifier extends ShapedPane{
 	protected void initializeGui() {
 		header = new Text(Translator.get("Header"));
 		footer = new Text(Translator.get("Footer"));
-		footer.setTranslateX(5);
 		
 		EffectHelper.setAsWidgetHeaderText(header);
 		EffectHelper.setAsWidgetFooterText(footer);
 		
-		widgetStack = new StackPane();
+		widgetStack = new Pane();
 		widgetStack.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		widgetStack.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		widgetStack.setId("red-pane");
 		
 		if(widgetNode!= null){
-		//	widgetStack.getChildren().add(widgetNode);
+			widgetStack.getChildren().add(widgetNode);
 		}
 		
 		positionHeaderFooter();
 		
-//		this.getChildren().addAll(header,/*widgetStack,*/ footer);
+		this.getChildren().addAll(header, widgetStack, footer);
 	}
 
 	private void positionHeaderFooter() {
 		header.setLayoutX(selfReference.getWidth()/2 - header.getBoundsInParent().getWidth()/2 - 2);
-		widgetStack.setLayoutX(selfReference.getWidth()/2 - widgetStack.getBoundsInParent().getWidth()/2 - 2);
-		footer.setLayoutY(header.getBoundsInParent().getHeight() + widgetStack.getBoundsInParent().getHeight());
+		header.setLayoutY(20);
+		
+		//footer.setLayoutY(header.getBoundsInParent().getHeight() + widgetStack.getBoundsInParent().getHeight());
+		footer.setLayoutY(selfReference.getHeight() - 15);
 		header.setWrappingWidth(selfReference.getWidth() - 10);
 		footer.setWrappingWidth(selfReference.getWidth() - 10);
-		widgetStack.setPrefSize(this.getWidth(), this.getHeight() - header.getBoundsInParent().getHeight() - footer.getBoundsInParent().getHeight());
+		
+		widgetStack.setPrefSize(this.getWidth(), this.getHeight() - header.getBoundsInParent().getHeight() - footer.getBoundsInParent().getHeight() - 20 - 15);
+		widgetStack.setMinSize(this.getWidth(), this.getHeight() - header.getBoundsInParent().getHeight() - footer.getBoundsInParent().getHeight() - 20 - 15);
+		widgetStack.setMaxSize(this.getWidth(), this.getHeight() - header.getBoundsInParent().getHeight() - footer.getBoundsInParent().getHeight() - 20 - 15);
+		widgetStack.setLayoutX(selfReference.getWidth()/2 - widgetStack.getBoundsInParent().getWidth()/2 - 2);
+		widgetStack.setLayoutY(header.getBoundsInParent().getMaxY() + 5);
+		widgetStack.setClip(new Rectangle(0,0,this.getWidth()-2, this.getHeight() - header.getBoundsInParent().getHeight() - footer.getBoundsInParent().getHeight() - 20 - 15 -2));
+		widgetNode.setLayoutX(0);
+		widgetNode.setLayoutY(0);
 	}
 
 	public void setHeaderText(String text){
@@ -159,7 +170,6 @@ public abstract class WidgetModifier extends ShapedPane{
 		@Override
 		public void changed(ObservableValue<? extends Number> arg0,
 				Number arg1, Number arg2) {
-			//parentPane.refresh();
 			widget.setBorders(getLayoutX(), getLayoutY(), getWidth(), getHeight());
 		}
 	}

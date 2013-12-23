@@ -62,7 +62,10 @@ public class LineOnCanvas {
 		this.preferredWidthProperty.set(width);
 		this.height = height;
 		this.angle = angle;
-		LineSegment lineSegment = new LineSegment(new Vector2(layoutX, layoutY), new Vector2((float)(layoutX + Math.cos(angle) * width), (float)(layoutY + Math.sin(angle) * height)));
+		LineSegment lineSegment = new LineSegment(
+				new Vector2(layoutX, layoutY), 
+				new Vector2( (float)(layoutX + Math.cos(Math.toRadians(angle)) * width), 
+						     (float)(layoutY + Math.sin(Math.toRadians(angle)) * width)));
 		lineSegmentProperty.set(lineSegment);
 	}
 	
@@ -89,7 +92,8 @@ public class LineOnCanvas {
 		GraphicsContext context = parent.getGraphicsContext();
 		context.setStroke(Color.RED);
 		context.setLineWidth(2);
-		context.strokeLine(layoutX, layoutY, layoutX+preferredWidthProperty.get(), layoutY);
+		LineSegment line = lineSegmentProperty.get();
+		context.strokeLine(line.getFirstPoint().x, line.getFirstPoint().y, line.getSecondPoint().x, line.getSecondPoint().y);
 	}
 	
 	private void initEvents(){
