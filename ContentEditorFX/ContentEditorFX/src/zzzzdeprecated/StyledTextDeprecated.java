@@ -1,4 +1,4 @@
-package document;
+package zzzzdeprecated;
 
 import gui.helper.StyleRepository;
 
@@ -6,12 +6,14 @@ import java.util.ArrayList;
 
 import com.sun.javafx.tk.FontMetrics;
 
+import document.TextStyle;
+
 /**
  * Represents list of StyleTextPairs. Can be used to import or export string.
  * @author sahin
  *
  */
-public class StyledText implements CharSequence{
+public class StyledTextDeprecated implements CharSequence{
 	// These two *must* have one-to-one char-to-string correspondence
 	// Don't reinitialize any style's here, just keep the pointers
 	private StringBuffer string;
@@ -19,7 +21,7 @@ public class StyledText implements CharSequence{
 	
 	private StyleRepository styleRepository;
 	
-	public StyledText(){
+	public StyledTextDeprecated(){
 		string = new StringBuffer();
 		styles = new ArrayList<TextStyle>();
 		styleRepository = StyleRepository.instance;

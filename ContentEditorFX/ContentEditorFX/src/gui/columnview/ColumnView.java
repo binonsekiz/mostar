@@ -23,8 +23,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import settings.GlobalAppSettings;
+import zzzzdeprecated.StyledTextDeprecated;
 import document.Column;
-import document.StyledText;
 import document.widget.Widget;
 import event.modification.ModificationInstance;
 import event.modification.ModificationType;
@@ -41,7 +41,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	private GraphicsContext context;
 	
 	private DocumentView parent;
-	private SimpleObjectProperty<StyledText> text;
+	private SimpleObjectProperty<StyledTextDeprecated> text;
 		
 	private boolean isRefreshInProgress;
 	
@@ -70,7 +70,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		
 		this.setId("columnview-selected");
 		layoutMachine = new LayoutMachine();
-		this.text = new SimpleObjectProperty<StyledText>();
+		this.text = new SimpleObjectProperty<StyledTextDeprecated>();
 		backupLines = new ArrayList<LineSegment>();
 		lastFilledLineHeight = 0;
 		modificationHash = new HashMap<ShapedPane, ModificationInstance>();
@@ -81,10 +81,10 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	}
 	
 	private void initEvents(){
-		text.addListener(new ChangeListener<StyledText>(){
+		text.addListener(new ChangeListener<StyledTextDeprecated>(){
 			@Override
-			public void changed(ObservableValue<? extends StyledText> arg0,
-					StyledText arg1, StyledText newText) {	
+			public void changed(ObservableValue<? extends StyledTextDeprecated> arg0,
+					StyledTextDeprecated arg1, StyledTextDeprecated newText) {	
 				paragraphsOnCanvas.clear();
 				paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, column.getInsets().getUsableRectangle(), null));
 				refresh();
@@ -199,7 +199,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		layoutMachine.addSingleElement(widgetModifier);
 	}
 
-	public void setStyledText(StyledText styledText) {
+	public void setStyledText(StyledTextDeprecated styledText) {
 		this.text.set(styledText);
 	}
 

@@ -46,8 +46,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="document.StyledText" project="ContentEditorFX" 
-    file="/ContentEditorFX/src/document/StyledText.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="6" language="java" name="zzzzdeprecated.StyledTextDeprecated" project="ContentEditorFX" 
+    file="/ContentEditorFX/src/zzzzdeprecated/StyledTextDeprecated.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="143" y="484"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -55,8 +55,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="7" language="java" name="document.StyledText.ReadingMode" project="ContentEditorFX" 
-    file="/ContentEditorFX/src/document/StyledText.java" binary="false" corner="BOTTOM_RIGHT">    
+  <enumeration id="7" language="java" name="zzzzdeprecated.StyledTextDeprecated.ReadingMode" project="ContentEditorFX" 
+    file="/ContentEditorFX/src/zzzzdeprecated/StyledTextDeprecated.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="149" y="776"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      

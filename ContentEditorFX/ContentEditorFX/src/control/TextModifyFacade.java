@@ -4,8 +4,8 @@ import gui.columnview.DocumentView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import zzzzdeprecated.ColumnViewPane;
+import zzzzdeprecated.StyledTextDeprecated;
 import document.Document;
-import document.StyledText;
 
 /**
  * This is a facade class that all the gui events happening on text (including cut/copy/undo etc.) has to go through.
@@ -15,7 +15,7 @@ import document.StyledText;
  */
 public class TextModifyFacade{
 	
-	private StyledText documentText;
+	private StyledTextDeprecated documentText;
 	private Caret caret;
 	private Document document;
 	private DocumentView documentView;

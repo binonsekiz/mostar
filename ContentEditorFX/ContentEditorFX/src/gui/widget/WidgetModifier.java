@@ -36,9 +36,6 @@ public abstract class WidgetModifier extends ShapedPane{
 	protected Pane widgetStack;
 	protected Widget widget;
 	
-	//private Text header;
-	//private Text footer;
-	
 	private WidgetModifier selfReference;
 	protected Node widgetNode;
 	
@@ -59,66 +56,20 @@ public abstract class WidgetModifier extends ShapedPane{
 	}
 	
 	protected void initializeGui() {
-//		header = new Text(Translator.get("Header"));
-//		footer = new Text(Translator.get("Footer"));
-		
-//		EffectHelper.setAsWidgetHeaderText(header);
-//		EffectHelper.setAsWidgetFooterText(footer);
-		
 		widgetStack = new Pane();
-		widgetStack.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-		widgetStack.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		widgetStack.setId("red-pane");
 		
 		if(widgetNode!= null){
 			widgetStack.getChildren().add(widgetNode);
 		}
 		
-		positionHeaderFooter();
-		
-		this.getChildren().addAll(/*header,*/ widgetStack/*, footer*/);
+		this.getChildren().addAll(widgetStack);
 	}
 
-	private void positionHeaderFooter() {
+	private void recalculateClip() {
 		widgetStack.setLayoutX(0);
 		widgetStack.setLayoutY(0);
 		widgetStack.setClip(GeometryHelper.polygonShapeFromPolygon(this.getShape()));
-		
-		
-/*		header.setLayoutX(selfReference.getWidth()/2 - header.getBoundsInParent().getWidth()/2 - 2);
-		header.setLayoutY(20);
-		
-		//footer.setLayoutY(header.getBoundsInParent().getHeight() + widgetStack.getBoundsInParent().getHeight());
-		footer.setLayoutY(selfReference.getHeight() - 15);
-		header.setWrappingWidth(selfReference.getWidth() - 10);
-		footer.setWrappingWidth(selfReference.getWidth() - 10);
-		
-		widgetStack.setPrefSize(this.getWidth(), this.getHeight() - header.getBoundsInParent().getHeight() - footer.getBoundsInParent().getHeight() - 20 - 15);
-		widgetStack.setMinSize(this.getWidth(), this.getHeight() - header.getBoundsInParent().getHeight() - footer.getBoundsInParent().getHeight() - 20 - 15);
-		widgetStack.setMaxSize(this.getWidth(), this.getHeight() - header.getBoundsInParent().getHeight() - footer.getBoundsInParent().getHeight() - 20 - 15);
-		widgetStack.setLayoutX(selfReference.getWidth()/2 - widgetStack.getBoundsInParent().getWidth()/2 - 2);
-		widgetStack.setLayoutY(header.getBoundsInParent().getMaxY() + 5);
-		widgetStack.setClip(new Rectangle(0,0,this.getWidth()-2, this.getHeight() - header.getBoundsInParent().getHeight() - footer.getBoundsInParent().getHeight() - 20 - 15 -2));
-		widgetNode.setLayoutX(0);
-		widgetNode.setLayoutY(0);*/
-	}
-
-	public void setHeaderText(String text){
-	//	header.setText(text);
-	}
-	
-	public void setFooterText(String text){
-	//	footer.setText(text);
-	}
-	
-	public String getHeaderText() {
-	//	return header.getText();
-		return "";
-	}
-	
-	public String getFooterText() {
-	//	return footer.getText();
-		return "";
 	}
 
 	public void delete(){
@@ -127,6 +78,11 @@ public abstract class WidgetModifier extends ShapedPane{
 	}
 	
 	protected void initializeEvents() {
+		this.setMinHeight(100);
+		this.setMinWidth(100);
+		this.setPrefWidth(250);
+		this.setPrefHeight(250);
+		
 		this.addEventHandler(MouseEvent.MOUSE_PRESSED,new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent arg0) {
@@ -141,7 +97,7 @@ public abstract class WidgetModifier extends ShapedPane{
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
-				positionHeaderFooter();
+				recalculateClip();
 			}
 		});
 		
@@ -149,7 +105,7 @@ public abstract class WidgetModifier extends ShapedPane{
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
-				positionHeaderFooter();
+				recalculateClip();
 			}
 		});
 		
@@ -158,10 +114,8 @@ public abstract class WidgetModifier extends ShapedPane{
 		this.widthProperty().addListener(listener);
 		this.heightProperty().addListener(listener);
 		
-		this.setMinHeight(100);
-		this.setMinWidth(100);
-		this.setPrefWidth(250);
-		this.setPrefHeight(250);
+		recalculateClip();
+		
 	}
 	
 	protected class LayoutChangeListener implements ChangeListener<Number>{
@@ -198,7 +152,6 @@ public abstract class WidgetModifier extends ShapedPane{
 	protected void gainFocus(){
 		widgetModifyFacade.changeVersatilePane(this);
 		widgetModifyFacade.gainedFocusSignal(this);
-//		((ColumnViewPane) this.getParent()).renderText();
 		this.setId("single-image-widget-selected");
 	}
 	
@@ -272,6 +225,24 @@ public abstract class WidgetModifier extends ShapedPane{
 			widget.setTextWrap(value);
 			parentPane.refresh();
 		}
+	}
+	
+	public void setHeaderText(String text){
+	//	header.setText(text);
+	}
+	
+	public void setFooterText(String text){
+	//	footer.setText(text);
+	}
+	
+	public String getHeaderText() {
+	//	return header.getText();
+		return "";
+	}
+	
+	public String getFooterText() {
+	//	return footer.getText();
+		return "";
 	}
 	
 }

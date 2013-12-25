@@ -113,7 +113,7 @@ public class DocWidgetToolbar extends FlowPane{
 		drawGraphicButton.getStyleClass().add("last");
 		
 		shapePane.getStyleClass().add("segmented-button-bar-class");
-		shapePane.getChildren().addAll(drawShapeButton, drawTableButton, drawSignButton, drawGraphicButton);
+//		shapePane.getChildren().addAll(drawShapeButton, drawTableButton, drawSignButton, drawGraphicButton);
 	}
 
 	private void initWidgetControls() {
@@ -143,7 +143,7 @@ public class DocWidgetToolbar extends FlowPane{
 		newPageButton.getStyleClass().add("last");
 		
 		pagePane.getStyleClass().add("segmented-button-bar-class");
-		pagePane.getChildren().addAll(newBookButton, newChapterButton, newSectionButton, newPageButton);
+		pagePane.getChildren().addAll(newBookButton/*, newChapterButton, newSectionButton*/, newPageButton);
 	}
 
 	private void initImportControls() {
@@ -155,7 +155,7 @@ public class DocWidgetToolbar extends FlowPane{
 		exportFile.getStyleClass().add("last");
 		
 		importPane.getStyleClass().add("segmented-button-bar-class");
-		importPane.getChildren().addAll(importFile, exportFile);
+//		importPane.getChildren().addAll(importFile, exportFile);
 	}
 
 	private void initColorControls() {
@@ -178,7 +178,7 @@ public class DocWidgetToolbar extends FlowPane{
 		strokeColorPicker.getStyleClass().add("last");
 		
 		colorPane.getStyleClass().add("segmented-button-bar-class");
-		colorPane.getChildren().addAll(frontColorPicker, highlightColorPicker, strokeColorPicker);
+	//	colorPane.getChildren().addAll(frontColorPicker, highlightColorPicker, strokeColorPicker);
 	}
 
 	private void initComboBoxes() {
@@ -213,7 +213,7 @@ public class DocWidgetToolbar extends FlowPane{
 		styleBox.getStyleClass().add("first");
 		
 		fontPane.getStyleClass().add("segmented-button-bar-class");
-		fontPane.getChildren().addAll(styleBox, fontBox, fontSizeBox);
+//		fontPane.getChildren().addAll(styleBox, fontBox, fontSizeBox);
 	}
 
 	private void initEvents() {

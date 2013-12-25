@@ -1,12 +1,12 @@
 package control;
 
+import zzzzdeprecated.StyledTextDeprecated;
 import document.Column;
-import document.StyledText;
 import document.TextStyle;
 
 public class Caret{
 	//reference to the text
-	private StyledText styledText;
+	private StyledTextDeprecated styledText;
 	
 	//style just under the caret index
 	private TextStyle style;
@@ -69,7 +69,7 @@ public class Caret{
 		return Math.max(caretIndex + anchor, caretIndex);
 	}
 
-	public void setStyledText(StyledText text) {
+	public void setStyledText(StyledTextDeprecated text) {
 		this.styledText = text;
 	}
 

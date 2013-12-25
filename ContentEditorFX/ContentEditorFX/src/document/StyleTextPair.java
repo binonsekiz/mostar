@@ -11,8 +11,7 @@ import com.sun.javafx.tk.FontMetrics;
  * @author sahin
  *
  */
-@Deprecated
-public class StyleTextPair{
+public class StyleTextPair implements CharSequence{
 
 	private TextStyle style;
 	private StringBuffer textBuffer;
@@ -108,8 +107,11 @@ public class StyleTextPair{
 		
 		int wordIndex = Collections.binarySearch(cummulativeWordSizes, lineEndSize);
 		
+		System.out.println("inputSize: "+ inputSize + ", lineEndSize: " + lineEndSize + ", wordIndex: " + wordIndex);
+		
 		if(wordIndex < 0) wordIndex = (wordIndex + 1) * -1;
 		if(wordIndex >= cummulativeWordSizes.size()){
+			System.out.println("first out null");
 			hasNext = false;
 			return null;
 		}
@@ -118,8 +120,10 @@ public class StyleTextPair{
 		}
 		
 		//if no word fits the area
-		if(wordIndex < 0) 
+		if(wordIndex < 0) {
+			System.out.println("second out null");
 			return null;
+		}
 		
 		int wordStartIndex = wordCountToStringIndex.get(wordIndex);
 		String retVal = textBuffer.substring(previousIndex, wordStartIndex)/*.trim()*/;
@@ -128,6 +132,7 @@ public class StyleTextPair{
 		previousIndex = wordStartIndex;
 				
 		cummulativeTextSize = cummulativeWordSizes.get(wordIndex);
+		System.out.println("cumulative size: " + cummulativeTextSize);
 		return retVal;
 	}
 	
@@ -137,7 +142,7 @@ public class StyleTextPair{
 	 * - style changes
 	 * - text changes
 	 */
-	private void computeStringWidths(){
+	public void computeStringWidths(){
 		FontMetrics metrics = style.getFontMetrics();
 		cummulativeWordSizes.clear();
 		int wordCount = 0;
@@ -171,5 +176,15 @@ public class StyleTextPair{
 
 	public char getCharAtAbsoluteIndex(int max) {
 		return textBuffer.charAt(max - startIndexInBigText);
+	}
+
+	@Override
+	public char charAt(int arg0) {
+		return textBuffer.charAt(arg0);
+	}
+
+	@Override
+	public String subSequence(int arg0, int arg1) {
+		return textBuffer.substring(arg0, arg1);
 	}
 }

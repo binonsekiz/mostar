@@ -19,7 +19,6 @@ import javafx.scene.text.TextAlignment;
 
 import com.sun.javafx.tk.FontMetrics;
 
-import document.StyledText;
 import document.TextStyle;
 
 /**
@@ -45,7 +44,7 @@ public class LineViewDeprecated extends ShapedPane{
 	private boolean isShapeDirty;
 	private Polygon shape;
 	
-	private SimpleObjectProperty<StyledText> text;
+	private SimpleObjectProperty<StyledTextDeprecated> text;
 	private SimpleObjectProperty<TextStyle> styleProperty;
 	private SimpleObjectProperty<LineSegment> lineSegmentProperty;
 	private float spaceWidth;
@@ -56,7 +55,7 @@ public class LineViewDeprecated extends ShapedPane{
 		this.parent = parent;
 		wordViews = new ArrayList<WordView>();
 		preferredWidthProperty = new SimpleDoubleProperty();
-		text = new SimpleObjectProperty<StyledText>();
+		text = new SimpleObjectProperty<StyledTextDeprecated>();
 		alignmentProperty = new SimpleObjectProperty<TextAlignment>();
 		alignmentProperty.set(TextAlignment.JUSTIFY);
 		startIndexInStyledText = new SimpleIntegerProperty();
@@ -68,7 +67,7 @@ public class LineViewDeprecated extends ShapedPane{
 		initEvents();
 	}
 	
-	public void initialSetup(StyledText text, int startIndex, int endIndex){
+	public void initialSetup(StyledTextDeprecated text, int startIndex, int endIndex){
 		this.text.set(text);
 		startIndexInStyledText.set(startIndex);
 		endIndexInStyledText.set(endIndex);

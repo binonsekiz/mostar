@@ -4,6 +4,7 @@ import gui.docmodify.test.StyledTextTest;
 
 import java.util.ArrayList;
 
+import zzzzdeprecated.StyledTextDeprecated;
 import document.PageSpecs.Measurement;
 
 public class Document {
@@ -12,7 +13,7 @@ public class Document {
 	private Measurement measurement;
 	private PageInsets pageInsets;
 	
-	private StyledText styledText;
+	private StyledTextDeprecated styledText;
 	private ArrayList<Column> columns;
 	
 	public Document(){
@@ -22,7 +23,7 @@ public class Document {
 		columns = new ArrayList<Column>();
 		columns.add(new Column(measurement, pageInsets));
 		
-		styledText = new StyledText();
+		styledText = new StyledTextDeprecated();
 		styledText.importString(StyledTextTest.getText());
 	}
 	
@@ -46,7 +47,7 @@ public class Document {
 		return measurement;
 	}
 	
-	public StyledText getStyledText(){
+	public StyledTextDeprecated getStyledText(){
 		return styledText;
 	}
 }

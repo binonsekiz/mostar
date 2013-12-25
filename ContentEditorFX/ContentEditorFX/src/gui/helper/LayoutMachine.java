@@ -28,8 +28,8 @@ public class LayoutMachine {
 		lines = new ArrayList<LineOnCanvas>();
 	}
 	
-	public ParagraphOnCanvas getParagraphSpace(ColumnView requester, Rectangle allowedSpace, TextStyle stlye){
-		ParagraphOnCanvas paragraph = new ParagraphOnCanvas(requester, allowedSpace);
+	public ParagraphOnCanvas getParagraphSpace(ColumnView requester, Rectangle allowedSpace, TextStyle style){
+		ParagraphOnCanvas paragraph = new ParagraphOnCanvas(requester, allowedSpace, style);
 		
 		//TODO: take textstyle into account
 		for(int y = (int) allowedSpace.y; y <= allowedSpace.height; y+= 10){

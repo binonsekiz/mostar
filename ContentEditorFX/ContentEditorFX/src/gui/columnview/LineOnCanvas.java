@@ -1,5 +1,6 @@
 package gui.columnview;
 
+import zzzzdeprecated.StyledTextDeprecated;
 import geometry.libgdxmath.LineSegment;
 import geometry.libgdxmath.Vector2;
 import javafx.beans.property.DoubleProperty;
@@ -12,7 +13,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
-import document.StyledText;
+import document.StyleTextPair;
 import document.TextStyle;
 
 public class LineOnCanvas {
@@ -24,31 +25,31 @@ public class LineOnCanvas {
 	
 	private ColumnView parent;
 	private ParagraphOnCanvas parentParagraph;
+//	private StyleTextPair text;
 	
 	private LineOnCanvas previousLine;
 	private LineOnCanvas nextLine;
-	
-	private SimpleObjectProperty<StyledText> text;
-	private SimpleObjectProperty<TextStyle> styleProperty;
+
 	private SimpleObjectProperty<LineSegment> lineSegmentProperty;
-	
 	private SimpleObjectProperty<TextAlignment> alignmentProperty;
 	
 	private float layoutX;
 	private float layoutY;
 	private float height;
+	private float width;
 	private float angle;
+	
+	//TODO: debug variable
+	private String text;
 	
 	public LineOnCanvas(ColumnView parent, ParagraphOnCanvas parentParagraph){
 		this.parent = parent;
 		this.parentParagraph = parentParagraph;
 		preferredWidthProperty = new SimpleDoubleProperty();
-		text = new SimpleObjectProperty<StyledText>();
 		alignmentProperty = new SimpleObjectProperty<TextAlignment>();
 		alignmentProperty.set(TextAlignment.JUSTIFY);
 		startIndexInStyledText = new SimpleIntegerProperty();
 		endIndexInStyledText = new SimpleIntegerProperty();
-		styleProperty = new SimpleObjectProperty<TextStyle>();
 		lineSegmentProperty = new SimpleObjectProperty<LineSegment>();
 		lineSegmentProperty.set(new LineSegment(new Vector2(), new Vector2()));
 		initEvents();
@@ -59,6 +60,7 @@ public class LineOnCanvas {
 		this.layoutY = layoutY;
 		this.preferredWidthProperty.set(width);
 		this.height = height;
+		this.width = width;
 		this.angle = angle;
 		LineSegment lineSegment = new LineSegment(
 				new Vector2(layoutX, layoutY), 
@@ -67,11 +69,9 @@ public class LineOnCanvas {
 		lineSegmentProperty.set(lineSegment);
 	}
 	
-	public void initialTextSetup(StyledText text, int startIndex, int endIndex){
-		this.text.set(text);
+	public void initialTextSetup(int startIndex, int endIndex){
 		startIndexInStyledText.set(startIndex);
 		endIndexInStyledText.set(endIndex);
-		styleProperty.set(TextStyle.defaultStyle);
 	}
 	
 	public void setLineSegment(LineSegment line) {
@@ -81,17 +81,41 @@ public class LineOnCanvas {
 	public void setPreferredWidth(double width){
 		this.preferredWidthProperty.set(width);
 	}
-	
-	public void setTextStyle(TextStyle style){
-		this.styleProperty.set(style);
-	}
-	
+
 	public void refresh(){
 		GraphicsContext context = parent.getGraphicsContext();
+		//TODO: uncomment next line, lines should get texts from paragraphs.
+	//	String text = parentParagraph.getText();
 		context.setStroke(Color.RED);
 		context.setLineWidth(2);
 		LineSegment line = lineSegmentProperty.get();
 		context.strokeLine(line.getFirstPoint().x, line.getFirstPoint().y, line.getSecondPoint().x, line.getSecondPoint().y);
+		
+		context.setStroke(Color.BLACK);
+		context.setLineWidth(1);
+		context.setFont(parentParagraph.getFont());
+		if(text != null) {
+		//	context.strokeText(text.substring(startIndexInStyledText.get(), endIndexInStyledText.get()), line.getFirstPoint().x, line.getFirstPoint().y);
+			float startX = 0;
+			float startY = 0;
+			if(isTextUpsideDown()){
+				startX = line.getRightPoint().x;
+				startY = line.getRightPoint().y;
+			}	
+			else{
+				startX = line.getLeftPoint().x;
+				startY = line.getLeftPoint().y;
+			}
+			context.strokeText(text, startX, startY);
+		}
+	}
+	
+	private boolean isTextUpsideDown() {
+		float angleTemp = ((angle % 360) + 360) % 360;
+		if(angleTemp > 90 && angleTemp < 270){
+			return true;
+		}
+		return false;
 	}
 	
 	private void initEvents(){
@@ -99,9 +123,6 @@ public class LineOnCanvas {
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
-				if(text.get()!= null && alignmentProperty.get() == TextAlignment.JUSTIFY) {
-					calculateSpaceLength();
-				}
 			}
 		});
 		
@@ -109,9 +130,6 @@ public class LineOnCanvas {
 			@Override
 			public void changed(ObservableValue<? extends TextAlignment> arg0,
 					TextAlignment arg1, TextAlignment arg2) {
-				if(arg2 == TextAlignment.JUSTIFY){
-					calculateSpaceLength();
-				}
 			}
 		});
 		
@@ -134,14 +152,6 @@ public class LineOnCanvas {
 			}
 		});
 		
-		styleProperty.addListener(new ChangeListener<TextStyle>(){
-			@Override
-			public void changed(ObservableValue<? extends TextStyle> arg0,
-					TextStyle arg1, TextStyle arg2) {
-				calculateSpaceLength();
-			}
-		});
-		
 		lineSegmentProperty.addListener(new ChangeListener<LineSegment>(){
 			@Override
 			public void changed(ObservableValue<? extends LineSegment> arg0,
@@ -153,11 +163,6 @@ public class LineOnCanvas {
 				}
 			}
 		});
-	}
-
-	protected void calculateSpaceLength() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	public IntegerProperty getStartIndexInStyledTextProperty(){
@@ -176,5 +181,13 @@ public class LineOnCanvas {
 
 	public LineSegment getLineSegment() {
 		return lineSegmentProperty.get();
+	}
+
+	public float getWidth() {
+		return (float) lineSegmentProperty.get().getLength();
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 }

@@ -58,7 +58,7 @@ public abstract class ShapedPane extends Pane implements VisualView {
 	protected boolean isShapeInitialized;
 	
 	public ShapedPane(CanvasOwner canvasOwner) {
-		this(canvasOwner, GeometryHelper.getRectanglePolygon(100, 50));
+		this(canvasOwner, GeometryHelper.getRectanglePolygon(250, 250));
 	}
 	
 	public ShapedPane(CanvasOwner canvasOwner, Polygon shape){ 
