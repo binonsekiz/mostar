@@ -1,5 +1,6 @@
 package gui;
 
+import event.input.CustomMouseHandler;
 import event.modification.ModificationType;
 import geometry.GeometryHelper;
 import geometry.libgdxmath.Polygon;
@@ -9,7 +10,6 @@ import gui.columnview.CanvasOwner;
 import gui.columnview.VisualView;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -17,7 +17,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-public abstract class ShapedPane extends Pane implements VisualView {
+public abstract class ShapedPane extends Pane implements VisualView, CustomMouseHandler {
 	private Polygon shape;
 	
 	private Rectangle relocationRectangle;
@@ -140,83 +140,95 @@ public abstract class ShapedPane extends Pane implements VisualView {
 	}
 
 	private void initMouseEvents(){
-		this.setOnMouseEntered(new EventHandler<MouseEvent>() {
-			@Override 
-			public void handle(MouseEvent mouseEvent) {
-				isMouseInside = true;
-				if(isShapeInitialized == false){
-					initializeShape();
-					isShapeInitialized = true;
-				}
-			}
-		});
-		
-		this.setOnMouseExited(new EventHandler<MouseEvent>(){
-			@Override
-			public void handle(MouseEvent arg0) {
-		//		isMouseInside = false;
-				canvasOwner.notifyRepaintNeeded();
-			}
-		});
-		
-		this.setOnMouseMoved(new EventHandler<MouseEvent>(){
-			@Override
-			public void handle(MouseEvent arg0) {
-				updateMousePosition(arg0);
-				canvasOwner.notifyRepaintNeeded();
-			}
-		});
-	
-		this.setOnMousePressed(new EventHandler<MouseEvent>(){
-			@Override
-			public void handle(MouseEvent arg0) {
-				updateMousePosition(arg0);
-				if(isRelocatable && relocationRectangle.contains(mousePosition)){
-					canvasOwner.notifyModificationStart(ModificationType.Transform, selfReference, arg0);
-					isRelocateHappening = true;
-				}
-				if(isResizable){
-					for(int i=0; i < resizeRectangles.length; i++){
-						if(resizeRectangles[i].contains(mousePosition)){
-							resizeIndex = i;
-							canvasOwner.notifyModificationStart(ModificationType.Resize, selfReference, arg0);
-							isResizeHappening = true;
-							System.out.println("RESIZE");
-							break;
-						}
-					}
-				}
-			}
-		});
-		
-		this.setOnMouseDragged(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent arg0) {
-				if(isResizeHappening || isRelocateHappening){
-					canvasOwner.notifyMouseMovement(selfReference, arg0);
-					updateMousePosition(arg0);
-					canvasOwner.notifyRepaintNeeded();
-				}
-			}
-		});
-		
-		this.setOnMouseReleased(new EventHandler<MouseEvent>(){
-			@Override
-			public void handle(MouseEvent arg0) {
-				if(isRelocateHappening){
-					canvasOwner.notifyModificationEnd(selfReference, arg0);
-					isRelocateHappening = false;
-					canvasOwner.notifyRepaintNeeded();
-				}
-				if(isResizeHappening){
-					canvasOwner.notifyModificationEnd(selfReference, arg0);
-					isResizeHappening = false;
-					canvasOwner.notifyRepaintNeeded();
-				}
-			}
-		});
 	}
 	
+	public void onMouseEntered(MouseEvent event) {
+		isMouseInside = true;
+		if(isShapeInitialized == false){
+			initializeShape();
+			isShapeInitialized = true;
+		}
+	}
+	
+	public void onMouseExited(MouseEvent event) {
+		canvasOwner.notifyRepaintNeeded();
+	}
+	
+	public void onMouseMoved(MouseEvent event) {
+		updateMousePosition(event);
+		canvasOwner.notifyRepaintNeeded();
+	}
+	
+	public void onMousePressed(MouseEvent event) {
+		updateMousePosition(event);
+		if(isRelocatable && relocationRectangle.contains(mousePosition)){
+			canvasOwner.notifyModificationStart(ModificationType.Transform, selfReference, event);
+			isRelocateHappening = true;
+		}
+		if (isResizable) {
+			for(int i=0; i < resizeRectangles.length; i++){
+				if(resizeRectangles[i].contains(mousePosition)){
+					resizeIndex = i;
+					canvasOwner.notifyModificationStart(ModificationType.Resize, selfReference, event);
+					isResizeHappening = true;
+					System.out.println("RESIZE");
+					break;
+				}
+			}
+		}
+	}
+	
+	public void onMouseDragged(MouseEvent event) {
+		if(isResizeHappening || isRelocateHappening){
+			canvasOwner.notifyMouseMovement(selfReference, event);
+			updateMousePosition(event);
+			canvasOwner.notifyRepaintNeeded();
+		}
+	}
+	
+	public void onMouseReleased(MouseEvent event){
+		if(isRelocateHappening){
+			canvasOwner.notifyModificationEnd(selfReference, event);
+			isRelocateHappening = false;
+			canvasOwner.notifyRepaintNeeded();
+		}
+		if(isResizeHappening){
+			canvasOwner.notifyModificationEnd(selfReference, event);
+			isResizeHappening = false;
+			canvasOwner.notifyRepaintNeeded();
+		}
+	}
+	
+	@Override
+	public void onMouseClicked(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMouseDragEntered(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMouseDragExited(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMouseDragOver(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMouseDragReleased(MouseEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void initializeShape(Polygon shape) {
 		this.shape = shape;
 		resizeRectangles = new Rectangle[shape.getVerticeCount()];
@@ -379,5 +391,7 @@ public abstract class ShapedPane extends Pane implements VisualView {
 	public void setResizeVector(Vector2 resizeVector){
 		this.resizeVector = resizeVector;
 	}
+	
+	
 	
 }

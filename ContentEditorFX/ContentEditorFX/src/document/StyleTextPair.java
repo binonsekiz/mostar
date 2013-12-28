@@ -106,12 +106,9 @@ public class StyleTextPair implements CharSequence{
 		float lineEndSize = (float) (cummulativeTextSize + inputSize);
 		
 		int wordIndex = Collections.binarySearch(cummulativeWordSizes, lineEndSize);
-		
-		System.out.println("inputSize: "+ inputSize + ", lineEndSize: " + lineEndSize + ", wordIndex: " + wordIndex);
-		
+
 		if(wordIndex < 0) wordIndex = (wordIndex + 1) * -1;
 		if(wordIndex >= cummulativeWordSizes.size()){
-			System.out.println("first out null");
 			hasNext = false;
 			return null;
 		}
@@ -121,7 +118,6 @@ public class StyleTextPair implements CharSequence{
 		
 		//if no word fits the area
 		if(wordIndex < 0) {
-			System.out.println("second out null");
 			return null;
 		}
 		
@@ -132,7 +128,6 @@ public class StyleTextPair implements CharSequence{
 		previousIndex = wordStartIndex;
 				
 		cummulativeTextSize = cummulativeWordSizes.get(wordIndex);
-		System.out.println("cumulative size: " + cummulativeTextSize);
 		return retVal;
 	}
 	

@@ -1,4 +1,4 @@
-package event;
+package event.input;
 
 import javafx.scene.input.KeyEvent;
 

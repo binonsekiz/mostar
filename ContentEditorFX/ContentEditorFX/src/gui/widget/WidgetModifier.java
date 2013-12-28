@@ -14,6 +14,7 @@ import control.WidgetModifyFacade;
 import document.Column;
 import document.widget.Widget;
 import document.widget.Widget.TextWrapType;
+import event.input.CustomMouseHandler;
 
 /**
  * A modifier for a widget that should be in a doc modify screen.
@@ -22,7 +23,7 @@ import document.widget.Widget.TextWrapType;
  * @author sahin
  *
  */
-public abstract class WidgetModifier extends ShapedPane{
+public abstract class WidgetModifier extends ShapedPane implements CustomMouseHandler{
 	
 	protected boolean isResizeAllowed;
 	protected boolean isRelocateAllowed;
@@ -244,7 +245,6 @@ public abstract class WidgetModifier extends ShapedPane{
 	//	return footer.getText();
 		return "";
 	}
-	
 }
 /*	setOnMousePressed(new EventHandler<MouseEvent>() {
 @Override 

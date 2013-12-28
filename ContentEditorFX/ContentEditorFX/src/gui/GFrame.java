@@ -1,6 +1,6 @@
 package gui;
 
-import event.KeyboardManager;
+import event.input.KeyboardManager;
 import gui.docmodify.DocModifyScreen;
 import gui.docmodify.test.TestFacade;
 import gui.docmodify.test.TextLineSpaceUnitTest;

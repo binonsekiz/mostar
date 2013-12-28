@@ -91,8 +91,8 @@ public class LineOnCanvas {
 		LineSegment line = lineSegmentProperty.get();
 		context.strokeLine(line.getFirstPoint().x, line.getFirstPoint().y, line.getSecondPoint().x, line.getSecondPoint().y);
 		
-		context.setStroke(Color.BLACK);
-		context.setLineWidth(1);
+		context.setFill(Color.BLACK);
+		context.setLineWidth(1.5f);
 		context.setFont(parentParagraph.getFont());
 		if(text != null) {
 		//	context.strokeText(text.substring(startIndexInStyledText.get(), endIndexInStyledText.get()), line.getFirstPoint().x, line.getFirstPoint().y);
@@ -106,7 +106,7 @@ public class LineOnCanvas {
 				startX = line.getLeftPoint().x;
 				startY = line.getLeftPoint().y;
 			}
-			context.strokeText(text, startX, startY);
+			context.fillText(text, startX, startY);
 		}
 	}
 	
