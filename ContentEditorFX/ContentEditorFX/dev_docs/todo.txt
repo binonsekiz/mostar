@@ -1,0 +1,5 @@
+Dev work:
+	+ DocumentView/ColumnView arasýnda mouse koordinatlarýný hallet. 
+
+Done:
+	+ ColumnView'deki canvaslarý ikiye ayýr. birinde yazýlar vs olsun ötekisinde overlay.
