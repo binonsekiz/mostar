@@ -1,6 +1,5 @@
 package gui;
 
-import event.input.CustomMouseHandler;
 import event.modification.ModificationType;
 import geometry.GeometryHelper;
 import geometry.libgdxmath.Polygon;
@@ -10,6 +9,7 @@ import gui.columnview.CanvasOwner;
 import gui.columnview.VisualView;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -17,7 +17,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-public abstract class ShapedPane extends Pane implements VisualView, CustomMouseHandler {
+public abstract class ShapedPane extends Pane implements VisualView {
 	private Polygon shape;
 	
 	private Rectangle relocationRectangle;
@@ -127,6 +127,56 @@ public abstract class ShapedPane extends Pane implements VisualView, CustomMouse
 				updateControls();
 			}
 		});
+		
+		this.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+		    @Override
+		    public void handle(MouseEvent event) {
+		        System.out.println("clicked on shaped pane");
+		    }
+		});
+		
+		this.addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+		    @Override
+		    public void handle(MouseEvent event) {
+		        onMouseEntered(event);
+		    }
+		});
+		
+		this.addEventFilter(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+		    @Override
+		    public void handle(MouseEvent event) {
+		        onMouseExited(event);
+		    }
+		});
+		
+		this.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+		    @Override
+		    public void handle(MouseEvent event) {
+		        onMousePressed(event);
+		    }
+		});
+		
+		this.addEventFilter(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
+		    @Override
+		    public void handle(MouseEvent event) {
+		        onMouseDragged(event);
+		    }
+		});
+		
+		this.addEventFilter(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+		    @Override
+		    public void handle(MouseEvent event) {
+		        onMouseReleased(event);
+		    }
+		});
+		
+		this.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+		    @Override
+		    public void handle(MouseEvent event) {
+		        onMouseMoved(event);
+		        System.out.println("mouse on shapedpane");
+		    }
+		});
 	}
 
 	protected void updateControls() {
@@ -148,6 +198,7 @@ public abstract class ShapedPane extends Pane implements VisualView, CustomMouse
 			initializeShape();
 			isShapeInitialized = true;
 		}
+		System.out.println("mouse entered");
 	}
 	
 	public void onMouseExited(MouseEvent event) {
@@ -157,6 +208,7 @@ public abstract class ShapedPane extends Pane implements VisualView, CustomMouse
 	public void onMouseMoved(MouseEvent event) {
 		updateMousePosition(event);
 		canvasOwner.notifyRepaintNeeded();
+		System.out.println("Pane mouse");
 	}
 	
 	public void onMousePressed(MouseEvent event) {
@@ -197,36 +249,6 @@ public abstract class ShapedPane extends Pane implements VisualView, CustomMouse
 			isResizeHappening = false;
 			canvasOwner.notifyRepaintNeeded();
 		}
-	}
-	
-	@Override
-	public void onMouseClicked(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMouseDragEntered(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMouseDragExited(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMouseDragOver(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMouseDragReleased(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	private void initializeShape(Polygon shape) {

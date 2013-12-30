@@ -9,12 +9,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import control.WidgetModifyFacade;
 import document.Column;
 import document.widget.Widget;
 import document.widget.Widget.TextWrapType;
-import event.input.CustomMouseHandler;
 
 /**
  * A modifier for a widget that should be in a doc modify screen.
@@ -23,7 +21,7 @@ import event.input.CustomMouseHandler;
  * @author sahin
  *
  */
-public abstract class WidgetModifier extends ShapedPane implements CustomMouseHandler{
+public abstract class WidgetModifier extends ShapedPane{
 	
 	protected boolean isResizeAllowed;
 	protected boolean isRelocateAllowed;
@@ -246,90 +244,3 @@ public abstract class WidgetModifier extends ShapedPane implements CustomMouseHa
 		return "";
 	}
 }
-/*	setOnMousePressed(new EventHandler<MouseEvent>() {
-@Override 
-public void handle(MouseEvent mouseEvent) {
-	if(!hasFocus){
-		hasFocus = true;
-		gainFocus();
-	}
-	if(isRelocateAllowed && !isInDraggableZone(mouseEvent)){
-		// record a delta distance for the drag and drop operation.
-		dragDelta.x = getLayoutX() - mouseEvent.getSceneX();
-		dragDelta.y = getLayoutY() - mouseEvent.getSceneY();
-		setCursor(Cursor.MOVE);
-		isRelocating = true;
-		isResizing = false;
-	}
-	if(isResizeAllowed && isInDraggableZone(mouseEvent)){
-		dragging = true;
-		if (!initMinHeight) {
-			setMinWidth(getWidth());
-			setMinHeight(getHeight());
-	    	initMinHeight = true;
-	    }
-		resizeStartDelta.x = mouseEvent.getX();
-	    resizeStartDelta.y = mouseEvent.getY();
-	    isResizing = true;
-	    isRelocating = false;
-	}
-}
-});
-setOnMouseReleased(new EventHandler<MouseEvent>() {
-@Override 
-public void handle(MouseEvent mouseEvent) {
-	if(isRelocateAllowed){
-		setCursor(Cursor.HAND);
-	}
-	if(isResizeAllowed){
-		setMinWidth(getWidth());
-		setMinHeight(getHeight());
-	}
-	dragging = false;
-	isRelocating = false;
-	isResizing = false;
-}
-});
-setOnMouseDragged(new EventHandler<MouseEvent>() {
-@Override 
-public void handle(MouseEvent mouseEvent) {
-	if(isRelocateAllowed && isRelocating){
-		setLayoutX((mouseEvent.getSceneX() + dragDelta.x) / widgetModifyFacade.getZoomFactor());
-		setLayoutY((mouseEvent.getSceneY() + dragDelta.y) / widgetModifyFacade.getZoomFactor());
-	}
-	if(isResizeAllowed && dragging && isResizing && !isResizingVertical){
-		double newWidth = getWidth()+ (mouseEvent.getX() - resizeStartDelta.x);
-		setMinWidth(newWidth);
-		setMaxWidth(newWidth);
-		resizeStartDelta.x = mouseEvent.getX();
-	}
-	else if(isResizeAllowed && dragging && isResizing && isResizingVertical){
-		double newHeight = getHeight() + (mouseEvent.getY() - resizeStartDelta.y);
-        setMinHeight(newHeight);
-        setMaxHeight(newHeight);
-        resizeStartDelta.y = mouseEvent.getY();
-    }
-}
-});
-setOnMouseMoved(new EventHandler<MouseEvent>(){
-@Override
-public void handle(MouseEvent mouseEvent) {
-	if(isResizeAllowed){
-		if((isInDraggableZone(mouseEvent) && isResizingVertical) || (isResizingVertical && dragging)) {
-			setCursor(Cursor.S_RESIZE);
-		}
-		else if((isInDraggableZone(mouseEvent) && !isResizingVertical) || (!isResizingVertical && dragging)){
-			setCursor(Cursor.E_RESIZE);
-		}
-		else{
-			setCursor(Cursor.DEFAULT);
-		}
-	}
-	else if(isRelocateAllowed) {
-		setCursor(Cursor.HAND);
-	}
-	else 
-		setCursor(Cursor.DEFAULT);
-}
-});
-*/

@@ -26,13 +26,12 @@ import settings.GlobalAppSettings;
 import zzzzdeprecated.StyledTextDeprecated;
 import document.Column;
 import document.widget.Widget;
-import event.input.CustomMouseHandler;
 import event.modification.ModificationInstance;
 import event.modification.ModificationType;
 import event.modification.ResizeModification;
 import event.modification.TranslateModification;
 
-public class ColumnView extends Pane implements VisualView, CanvasOwner, CustomMouseHandler{
+public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	
 	private int debugCount = 0;
 	
@@ -92,6 +91,13 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner, CustomM
 				paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, column.getInsets().getUsableRectangle(), null));
 				refresh();
 			}
+		});
+		
+		this.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+		    @Override
+		    public void handle(MouseEvent event) {
+		        System.out.println("clicked on column view");
+		    }
 		});
 	}
 
@@ -258,70 +264,5 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner, CustomM
 
 	public Column getColumn() {
 		return column;
-	}
-	
-	@Override
-	public void onMouseClicked(MouseEvent event) {
-		// TODO Auto-generated method stub
-		System.out.println("clicked " + debugCount);
-		debugCount++;
-	}
-
-	@Override
-	public void onMouseEntered(MouseEvent event) {
-		System.out.println("Mouse entered");
-	}
-
-	@Override
-	public void onMouseExited(MouseEvent event) {
-		System.out.println("Mouse exited");
-	}
-
-	@Override
-	public void onMouseMoved(MouseEvent event) {
-		System.out.println("Mouse moving " +debugCount);
-		debugCount ++ ;
-	}
-
-	@Override
-	public void onMousePressed(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMouseDragged(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMouseReleased(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMouseDragEntered(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMouseDragExited(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMouseDragOver(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMouseDragReleased(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
 	}
 }

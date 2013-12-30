@@ -5,8 +5,10 @@ import java.util.Random;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
@@ -18,7 +20,6 @@ import javafx.scene.shape.Rectangle;
 import document.Column;
 import document.Document;
 import event.DocModifyScreenGuiFacade;
-import event.input.CustomMouseHandler;
 import event.input.OverlayCanvas;
 import event.modification.ModificationType;
 import geometry.libgdxmath.MathUtils;
@@ -30,7 +31,7 @@ import gui.ShapedPane;
  * @author sahin
  *
  */
-public class DocumentView extends Pane implements CanvasOwner, CustomMouseHandler{
+public class DocumentView extends Pane implements CanvasOwner{
 	
 	private DocModifyScreenGuiFacade guiFacade;
 	
@@ -45,8 +46,10 @@ public class DocumentView extends Pane implements CanvasOwner, CustomMouseHandle
 	private GraphicsContext overlayContext;
 	
 	private Document document;
+	private DocumentView selfReference;
 	
 	public DocumentView(){
+		selfReference = this;
 		columnViews = new ArrayList<ColumnView>();
 		initGui();
 		initEvents();
@@ -57,7 +60,9 @@ public class DocumentView extends Pane implements CanvasOwner, CustomMouseHandle
 	}
 
 	private void debug(){
-		
+//		scrollPane.setId("scrollpane-custom");
+//		scrollContent.setId("scrollpane-content");
+//		this.setId("docmodify-pane");
 	}
 	
 	private void initGui() {
@@ -68,22 +73,17 @@ public class DocumentView extends Pane implements CanvasOwner, CustomMouseHandle
 		scrollContent = new Group();
 		scrollPane.setContent(scrollContent);
 		
-		scrollPane.setId("scrollpane-custom");
-		scrollContent.setId("scrollpane-content");
-		
 		gridPane = new GridPane();
 		gridPane.setVgap(20);
 		gridPane.setHgap(20);
+		scrollContent.getChildren().add(gridPane);
 		overlayCanvas = new OverlayCanvas(this);
 		overlayContext = overlayCanvas.getGraphicsContext2D();
-		this.setId("docmodify-pane");
-		scrollContent.getChildren().add(gridPane);
-		overlayCanvas.setLayoutX(0);
-		overlayCanvas.setLayoutY(0);
-		overlayCanvas.setWidth(800);
-		overlayCanvas.setHeight(600);
+		fixCanvasSize();
+		scrollPane.toFront();
 		overlayCanvas.toFront();
 		this.getChildren().addAll(scrollPane, overlayCanvas);
+		
 	}
 	
 	private void initEvents(){
@@ -104,6 +104,22 @@ public class DocumentView extends Pane implements CanvasOwner, CustomMouseHandle
 				scrollPane.setPrefSize(getWidth(), getHeight());
 			}
 		});		
+		
+		scrollPane.widthProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0,
+					Number arg1, Number arg2) {
+				refresh();
+			}
+		});
+		
+		scrollPane.heightProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0,
+					Number arg1, Number arg2) {
+				refresh();
+			}
+		});
 	}
 
 	public void associateWithDocument(Document document) {
@@ -128,25 +144,27 @@ public class DocumentView extends Pane implements CanvasOwner, CustomMouseHandle
 	//	for(int i = 0; i < columnViews.size(); i++){
 	//		columnViews.get(i).refresh();
 	//	}
-		
-		if(overlayCanvas.getWidth() != this.getWidth()){
-			System.out.println("fixing width: " + overlayCanvas.getWidth());
-			overlayCanvas.setWidth(this.getWidth());
-		}
-		if(overlayCanvas.getHeight() != this.getHeight()){
-			System.out.println("fixing height: " + overlayCanvas.getHeight());
-			overlayCanvas.setHeight(this.getHeight());
-		}
-
+		fixCanvasSize();
 		overlayContext.setStroke(Color.BLACK);
 		overlayContext.setFill(Color.BLUE);
 		System.out.println("DOC VIEW REFRESH");
 		overlayContext.setLineWidth(3);
 		overlayContext.strokeOval(250,250,100,100);
-		overlayContext.fillOval(250,250,100,100);
+		overlayContext.fillRect(250,250,100,100);
 		overlayCanvas.toFront();
 	}
 
+	private void fixCanvasSize() {
+		if(overlayCanvas.getWidth() != scrollPane.getViewportBounds().getWidth())
+			overlayCanvas.setWidth(scrollPane.getViewportBounds().getWidth());
+		if(overlayCanvas.getHeight() != scrollPane.getViewportBounds().getHeight())
+			overlayCanvas.setHeight(scrollPane.getViewportBounds().getHeight());
+	}
+
+	public ColumnView getActiveColumnView() {
+		return columnViews.get(0);
+	}
+	
 	public void changeZoom(double zoomFactor) {
 		this.zoomFactor = zoomFactor;
 	}
@@ -158,16 +176,12 @@ public class DocumentView extends Pane implements CanvasOwner, CustomMouseHandle
 	public void setGuiFacade(DocModifyScreenGuiFacade docModifyScreenGuiFacade) {
 		this.guiFacade = docModifyScreenGuiFacade;
 	}
-
-	public ColumnView getActiveColumnView() {
-		return columnViews.get(0);
-	}
-
+	
 	@Override
 	public void notifyRepaintNeeded() {
 		refresh();
 	}
-
+	
 	@Override
 	public void notifyModificationStart(ModificationType type, ShapedPane pane,	MouseEvent event) {
 		// TODO Auto-generated method stub
@@ -190,101 +204,4 @@ public class DocumentView extends Pane implements CanvasOwner, CustomMouseHandle
 	public GraphicsContext getGraphicsContext() {
 		return overlayContext;
 	}
-
-	private ColumnView getColumnViewForMouseEvent(MouseEvent event) {
-		for(int i = 0; i < columnViews.size(); i++) {
-			ColumnView view = columnViews.get(i);
-			Bounds bounds = view.getBoundsInParent();
-			if(bounds.contains(event.getX(), event.getY())){
-				return view;
-			}
-		}
-		return null;
-	}
-	
-	private void passEventToColumnView(MouseEvent event, MouseEventType type) {
-		ColumnView view = getColumnViewForMouseEvent(event);
-		if(view == null) return;
-		switch (type){
-		case MouseClicked: 
-			view.onMouseClicked(event); break;
-		case MouseDragEntered:
-			view.onMouseDragEntered(event); break;
-		case MouseDragExited:
-			view.onMouseDragExited(event); break;
-		case MouseDragged:
-			view.onMouseDragged(event); break;
-		case MouseDragOver:
-			view.onMouseDragOver(event); break;
-		case MouseDragReleased:
-			view.onMouseDragReleased(event); break;
-		case MouseEntered:
-			view.onMouseEntered(event); break;
-		case MouseExited:
-			view.onMouseExited(event); break;
-		case MouseMoved:
-			view.onMouseMoved(event); break;
-		case MousePressed:
-			view.onMousePressed(event); break;
-		case MouseReleased:
-			view.onMouseReleased(event); break;
-		default: break;
-		}
-	}
-	
-	@Override
-	public void onMouseClicked(MouseEvent event) {
-		passEventToColumnView(event, MouseEventType.MouseClicked);
-	}
-
-	@Override
-	public void onMouseEntered(MouseEvent event) {
-		passEventToColumnView(event, MouseEventType.MouseEntered);
-	}
-
-	@Override
-	public void onMouseExited(MouseEvent event) {
-		passEventToColumnView(event, MouseEventType.MouseExited);
-	}
-
-	@Override
-	public void onMouseMoved(MouseEvent event) {
-		passEventToColumnView(event, MouseEventType.MouseMoved);
-	}
-
-	@Override
-	public void onMousePressed(MouseEvent event) {
-		passEventToColumnView(event, MouseEventType.MousePressed);
-	}
-
-	@Override
-	public void onMouseDragEntered(MouseEvent event) {
-		passEventToColumnView(event, MouseEventType.MouseDragEntered);
-	}
-
-	@Override
-	public void onMouseDragExited(MouseEvent event) {
-		passEventToColumnView(event, MouseEventType.MouseDragExited);
-	}
-
-	@Override
-	public void onMouseDragOver(MouseEvent event) {
-		passEventToColumnView(event, MouseEventType.MouseDragOver);
-	}
-
-	@Override
-	public void onMouseDragReleased(MouseEvent event) {
-		passEventToColumnView(event, MouseEventType.MouseDragReleased);
-	}
-
-	@Override
-	public void onMouseDragged(MouseEvent event) {
-		passEventToColumnView(event, MouseEventType.MouseDragged);
-	}
-
-	@Override
-	public void onMouseReleased(MouseEvent event) {
-		passEventToColumnView(event, MouseEventType.MouseReleased);
-	}
-
 }
