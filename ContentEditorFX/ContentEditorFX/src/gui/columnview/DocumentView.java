@@ -3,8 +3,12 @@ package gui.columnview;
 import java.util.ArrayList;
 import java.util.Random;
 
+import settings.GlobalAppSettings;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -17,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import document.Column;
 import document.Document;
 import event.DocModifyScreenGuiFacade;
@@ -47,22 +52,20 @@ public class DocumentView extends Pane implements CanvasOwner{
 	
 	private Document document;
 	private DocumentView selfReference;
-	
+
+	private boolean isOverlayCanvasVisible;
+	private boolean isTextCanvasVisible;
+	private boolean isDebugPointsVisible;
+
+	private boolean isRefreshInProgress;
+
 	public DocumentView(){
 		selfReference = this;
 		columnViews = new ArrayList<ColumnView>();
 		initGui();
-		initEvents();
-
-		zoomFactor = 1;		
+		initEvents();	
 		
 		debug();
-	}
-
-	private void debug(){
-//		scrollPane.setId("scrollpane-custom");
-//		scrollContent.setId("scrollpane-content");
-//		this.setId("docmodify-pane");
 	}
 	
 	private void initGui() {
@@ -80,10 +83,16 @@ public class DocumentView extends Pane implements CanvasOwner{
 		overlayCanvas = new OverlayCanvas(this);
 		overlayContext = overlayCanvas.getGraphicsContext2D();
 		fixCanvasSize();
+		
+		isOverlayCanvasVisible = true;
+		isTextCanvasVisible = true;
+		isDebugPointsVisible = true;
+		isRefreshInProgress = false;
+		zoomFactor = 1;	
+		
 		scrollPane.toFront();
 		overlayCanvas.toFront();
 		this.getChildren().addAll(scrollPane, overlayCanvas);
-		
 	}
 	
 	private void initEvents(){
@@ -132,7 +141,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 			Column tempColumn = document.getColumns().get(i);
 			ColumnView tempColumnView = new ColumnView(this);
 			tempColumnView.associateWithColumn(tempColumn);
-			tempColumnView.setStyledText(document.getStyledText());
+			tempColumnView.setDocumentText(document.getDocumentText());
 			columnViews.add(tempColumnView);
 			gridPane.add(tempColumnView, i, 0);
 		}
@@ -140,20 +149,29 @@ public class DocumentView extends Pane implements CanvasOwner{
 	}
 
 	public void refresh() {
-		//TODO: increase perf by not refreshing everything
-	//	for(int i = 0; i < columnViews.size(); i++){
-	//		columnViews.get(i).refresh();
-	//	}
-		fixCanvasSize();
-		overlayContext.setStroke(Color.BLACK);
-		overlayContext.setFill(Color.BLUE);
-		System.out.println("DOC VIEW REFRESH");
-		overlayContext.setLineWidth(3);
-		overlayContext.strokeOval(250,250,100,100);
-		overlayContext.fillRect(250,250,100,100);
-		overlayCanvas.toFront();
+		if(!isRefreshInProgress){
+			isRefreshInProgress = true;
+			Timeline timer = new Timeline(new KeyFrame(Duration.millis(GlobalAppSettings.fastDeviceFrameMillis), new EventHandler<ActionEvent>(){
+				@Override
+			    public void handle(ActionEvent event) {
+			        refreshAll();
+			    }
+			}));
+			timer.play();
+			isRefreshInProgress = false;
+		}
 	}
 
+	private void refreshAll() {
+		for(int i = 0; i < columnViews.size(); i++){
+			columnViews.get(i).refresh();
+		}
+		
+		guiFacade.notifyRefreshHappened();
+		fixCanvasSize();
+		overlayCanvas.toFront();
+	}
+	
 	private void fixCanvasSize() {
 		if(overlayCanvas.getWidth() != scrollPane.getViewportBounds().getWidth())
 			overlayCanvas.setWidth(scrollPane.getViewportBounds().getWidth());
@@ -199,9 +217,43 @@ public class DocumentView extends Pane implements CanvasOwner{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private void debug(){
+//		scrollPane.setId("scrollpane-custom");
+//		scrollContent.setId("scrollpane-content");
+//		this.setId("docmodify-pane");
+	}
 
 	@Override
 	public GraphicsContext getGraphicsContext() {
 		return overlayContext;
+	}
+
+	public void setOverlayCanvasVisible(boolean value) {
+		this.isOverlayCanvasVisible = value;
+	}
+
+	public void setTextCanvasVisible(boolean value) {
+		this.isTextCanvasVisible = value;
+	}
+	
+	public void setDebugPointsVisible(boolean value) {
+		this.isDebugPointsVisible = value;
+	}
+	
+	public boolean isOverlayCanvasVisible() {
+		return this.isOverlayCanvasVisible;
+	}
+	
+	public boolean isTextCanvasVisible() {
+		return this.isTextCanvasVisible;
+	}
+	
+	public boolean isDebugPointsVisible() {
+		return this.isDebugPointsVisible;
+	}
+
+	public void setDebugText(String value) {
+		columnViews.get(0).setDebugText(value);
 	}
 }

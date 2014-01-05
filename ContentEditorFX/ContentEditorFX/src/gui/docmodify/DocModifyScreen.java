@@ -10,12 +10,12 @@ import javafx.scene.layout.VBox;
 
 public class DocModifyScreen extends BorderPane implements ScreenType{
 
-//	private DocModifyPane docModifyPane;
 	private DocumentView documentView;
 	private DocWidgetToolbar docWidgetToolbar;
 	private DocOverview docOverview;
 	private DocBottomToolbar docBottomToolbar;
 	private DocVersatilePane docVersatilePane;
+	private DocDebugView docDebugView;
 	
 	private DocModifyScreenGuiFacade guiFacade;
 	private StyleRepository styleRepository;
@@ -30,11 +30,11 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 		docWidgetToolbar = new DocWidgetToolbar();
 		docOverview = new DocOverview();
 		
-	//	docModifyPane = new DocModifyPane();
 		documentView = new DocumentView();
 		docBottomToolbar = new DocBottomToolbar();		
 		docVersatilePane = new DocVersatilePane();
-		guiFacade = new DocModifyScreenGuiFacade(documentView, docWidgetToolbar, docOverview, docBottomToolbar, docVersatilePane);
+		docDebugView = new DocDebugView();
+		guiFacade = new DocModifyScreenGuiFacade(documentView, docWidgetToolbar, docOverview, docBottomToolbar, docVersatilePane, docDebugView);
 		styleRepository = new StyleRepository();
 		
 		//TODO: for demo use only
@@ -44,7 +44,7 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 		this.setId("docmodify-screen");
 		
 		this.setTop(toolbarBox);
-		this.setLeft(docOverview);
+		this.setLeft(docDebugView);
 		this.setCenter(documentView);
 		this.setRight(docVersatilePane);
 		this.setBottom(docBottomToolbar);

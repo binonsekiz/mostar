@@ -1,5 +1,7 @@
 Dev work:
-	+ DocumentView/ColumnView arasýnda mouse koordinatlarýný hallet. 
-
+	+ Debug Pane'deki textfieldý deðiþtirince texti ekrana yazmayý saðla.
+	+ Fare koordinatlarýnda hafif sapma var, hallet
+	 
 Done:
+	+ DocumentView/ColumnView arasýnda mouse koordinatlarýný hallet.
 	+ ColumnView'deki canvaslarý ikiye ayýr. birinde yazýlar vs olsun ötekisinde overlay.

@@ -1,10 +1,7 @@
 package document;
 
-import gui.docmodify.test.StyledTextTest;
-
 import java.util.ArrayList;
 
-import zzzzdeprecated.StyledTextDeprecated;
 import document.PageSpecs.Measurement;
 
 public class Document {
@@ -13,7 +10,7 @@ public class Document {
 	private Measurement measurement;
 	private PageInsets pageInsets;
 	
-	private StyledTextDeprecated styledText;
+	private DocumentText globalText;
 	private ArrayList<Column> columns;
 	
 	public Document(){
@@ -23,8 +20,7 @@ public class Document {
 		columns = new ArrayList<Column>();
 		columns.add(new Column(measurement, pageInsets));
 		
-		styledText = new StyledTextDeprecated();
-		styledText.importString(StyledTextTest.getText());
+		globalText = new DocumentText();
 	}
 	
 	public ArrayList<Column> getColumns(){
@@ -47,7 +43,7 @@ public class Document {
 		return measurement;
 	}
 	
-	public StyledTextDeprecated getStyledText(){
-		return styledText;
+	public DocumentText getDocumentText(){
+		return globalText;
 	}
 }

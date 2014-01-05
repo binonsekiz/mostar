@@ -1,11 +1,15 @@
 package control;
 
+import java.util.ArrayList;
+
 import gui.columnview.DocumentView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import zzzzdeprecated.ColumnViewPane;
 import zzzzdeprecated.StyledTextDeprecated;
 import document.Document;
+import document.DocumentText;
+import document.Paragraph;
 
 /**
  * This is a facade class that all the gui events happening on text (including cut/copy/undo etc.) has to go through.
@@ -15,7 +19,7 @@ import document.Document;
  */
 public class TextModifyFacade{
 	
-	private StyledTextDeprecated documentText;
+	private DocumentText documentText;
 	private Caret caret;
 	private Document document;
 	private DocumentView documentView;
@@ -27,10 +31,10 @@ public class TextModifyFacade{
 			DocumentView documentView) {
 		this.document = document;
 		this.documentView = documentView;
-		this.documentText = document.getStyledText();
-		caret.setStyledText(documentText);
+		this.documentText = document.getDocumentText();
+		caret.setDocumentText(documentText);
 	}
-
+	
 	public void setCaret(Caret caret) {
 		this.caret = caret;
 	}
@@ -39,7 +43,7 @@ public class TextModifyFacade{
 	
 	
 	
-	
+	/*
 	
 	
 	
@@ -109,7 +113,7 @@ public class TextModifyFacade{
 			documentText.removeString(caret.getSelectionStart(), caret.getSelectionEnd());
 			caret.setAnchor(0);
 		}
-	}
+	}*/
 
 /*	public void startTextDivision(boolean isRecording) {
 		previousLineEndIndex = 0;

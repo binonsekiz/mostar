@@ -25,6 +25,8 @@ import javafx.util.Duration;
 import settings.GlobalAppSettings;
 import zzzzdeprecated.StyledTextDeprecated;
 import document.Column;
+import document.DocumentText;
+import document.TextStyle;
 import document.widget.Widget;
 import event.modification.ModificationInstance;
 import event.modification.ModificationType;
@@ -41,9 +43,10 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	
 	private Canvas canvas;
 	private GraphicsContext context;
+	private GraphicsContext overlayContext;
 	
 	private DocumentView parent;
-	private SimpleObjectProperty<StyledTextDeprecated> text;
+	private SimpleObjectProperty<DocumentText> text;
 		
 	private boolean isRefreshInProgress;
 	
@@ -72,7 +75,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		
 		this.setId("columnview-selected");
 		layoutMachine = new LayoutMachine();
-		this.text = new SimpleObjectProperty<StyledTextDeprecated>();
+		this.text = new SimpleObjectProperty<DocumentText>();
 		backupLines = new ArrayList<LineSegment>();
 		lastFilledLineHeight = 0;
 		modificationHash = new HashMap<ShapedPane, ModificationInstance>();
@@ -83,13 +86,13 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	}
 	
 	private void initEvents(){
-		text.addListener(new ChangeListener<StyledTextDeprecated>(){
+		text.addListener(new ChangeListener<DocumentText>(){
 			@Override
-			public void changed(ObservableValue<? extends StyledTextDeprecated> arg0,
-					StyledTextDeprecated arg1, StyledTextDeprecated newText) {	
+			public void changed(ObservableValue<? extends DocumentText> arg0,
+					DocumentText arg1, DocumentText newText) {	
 				paragraphsOnCanvas.clear();
-				paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, column.getInsets().getUsableRectangle(), null));
-				refresh();
+				paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, column.getInsets().getUsableRectangle(), TextStyle.defaultStyle, text.get().getDebugParagraph()));
+				parent.refresh();
 			}
 		});
 		
@@ -111,7 +114,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		layoutMachine.setPageInsets(column.getInsets());
 		lastFilledLineHeight = column.getInsets().getMinY();
 		layoutMachine.setParentShape(column.getShape());
-		refresh();
+		parent.refresh();
 	}
 	
 	public void refresh(){
@@ -133,16 +136,17 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	}
 
 	private void refreshAll(){
-		System.out.println("\n\nRefreshing all");
-		context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		
-		refreshCanvasOnly();
-		refreshDebugPoints();
-		refreshTextOnly();
-		
-		parent.notifyRepaintNeeded();
+		if(parent.isOverlayCanvasVisible()) {
+			refreshOverlayCanvas();
+		}
+		if(parent.isTextCanvasVisible()) {
+			refreshTextCanvas();
+		}
+		else {
+			clearTextCanvas();
+		}
 	}
-	
+
 	private void refreshDebugPoints() {
 		context.setStroke(Color.GREEN);
 		context.setLineWidth(2);
@@ -152,34 +156,43 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		debugPoints.clear();
 	}
 
-	private void refreshCanvasOnly(){
-		canvas.toBack();
-		drawInsets();
+	private void refreshOverlayCanvas(){
+		overlayContext = parent.getGraphicsContext();
+		overlayContext.clearRect(0, 0, overlayContext.getCanvas().getWidth(), overlayContext.getCanvas().getHeight());
+		
+		overlayContext.save();
+		overlayContext.translate(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY());
+		
 		for(int i = 0; i < visuals.size(); i++){
 			VisualView view = visuals.get(i);
 			if(view instanceof ShapedPane){
-				((ShapedPane) view).paintShape(context);
+				((ShapedPane) view).paintShape(overlayContext);
 			}
 		}
 		
 		if(GlobalAppSettings.areGuiDebugGuidelinesVisible()){
 			drawWidgetGuidelines();
 		}
+		
+		overlayContext.restore();
 	}
 	
-	private void refreshTextOnly(){
-	/*	for(int i = 0; i < lineViewsOnCanvas.size(); i++){
-			lineViewsOnCanvas.get(i).refresh();
-		}*/
-		System.out.println("updating text");
+	private void refreshTextCanvas(){
+		clearTextCanvas();
+		canvas.toBack();
+		drawInsets();
+		
 		paragraphsOnCanvas.clear();
-		paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(this, column.getInsets().getUsableRectangle(), null));
+		paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(this, column.getInsets().getUsableRectangle(), TextStyle.defaultStyle, text.get().getDebugParagraph()));
 		
 		System.out.println("refreshing text");
 		for(ParagraphOnCanvas paragraph: paragraphsOnCanvas) {
 			paragraph.refresh();
 		}
 		
+		if(parent.isDebugPointsVisible()){
+			refreshDebugPoints();
+		}
 	}
 	
 	/**
@@ -188,7 +201,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	private void drawWidgetGuidelines() {
 		for(int i = 0; i < column.getWidgets().size(); i++){
 			Widget widget = column.getWidgets().get(i);
-			context.strokeRect(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight());
+			overlayContext.strokeRect(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight());
 		}
 	}
 	
@@ -209,16 +222,12 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		layoutMachine.addSingleElement(widgetModifier);
 	}
 
-	public void setStyledText(StyledTextDeprecated styledText) {
-		this.text.set(styledText);
-	}
-
 	/**
 	 * This means that the child is in need of repaints.
 	 */
 	@Override
 	public void notifyRepaintNeeded() {
-		refresh();
+		parent.refresh();
 	}
 
 	@Override
@@ -264,5 +273,17 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 
 	public Column getColumn() {
 		return column;
+	}
+	
+	private void clearTextCanvas() {
+		context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+	}
+
+	public void setDebugText(String value) {
+		text.get().setDebugText(value, paragraphsOnCanvas.get(0));
+	}
+
+	public void setDocumentText(DocumentText documentText) {
+		this.text.set(documentText);
 	}
 }

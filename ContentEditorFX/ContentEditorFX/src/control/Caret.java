@@ -2,11 +2,12 @@ package control;
 
 import zzzzdeprecated.StyledTextDeprecated;
 import document.Column;
+import document.DocumentText;
 import document.TextStyle;
 
 public class Caret{
 	//reference to the text
-	private StyledTextDeprecated styledText;
+	private DocumentText documentText;
 	
 	//style just under the caret index
 	private TextStyle style;
@@ -33,7 +34,7 @@ public class Caret{
 	
 	public void setCaretIndex(int index){
 		this.caretIndex = index;
-		this.style = styledText.getStyleAt(caretIndex);
+		this.style = documentText.getStyleAt(caretIndex);
 	}
 	
 	public void setAnchor(int relativeIndex){
@@ -69,13 +70,13 @@ public class Caret{
 		return Math.max(caretIndex + anchor, caretIndex);
 	}
 
-	public void setStyledText(StyledTextDeprecated text) {
-		this.styledText = text;
-	}
-
 	public Column getActiveColumn() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void setDocumentText(DocumentText documentText) {
+		this.documentText = documentText;
 	}
 	
 }

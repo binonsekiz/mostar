@@ -2,7 +2,7 @@ package geometry.libgdxmath;
 
 import settings.GlobalAppSettings;
 
-public class LineSegment {
+public class LineSegment implements Comparable<LineSegment>{
 	private Vector2 firstPoint;
 	private Vector2 secondPoint;
 	private Vector2 normal;
@@ -67,5 +67,14 @@ public class LineSegment {
 		if(this.firstPoint.epsilonEquals(lineSegment1.firstPoint, GlobalAppSettings.ignoreValuesBelow) && this.secondPoint.epsilonEquals(lineSegment1.secondPoint, GlobalAppSettings.ignoreValuesBelow))
 			return true;
 		return false;
+	}
+
+	public int compareTo(LineSegment o) {
+		if(this.getLeftPoint().x < o.getLeftPoint().x)
+			return -1;
+		else if(this.getLeftPoint().x > o.getLeftPoint().x)
+			return 1;
+		else 
+			return 0;
 	}
 }

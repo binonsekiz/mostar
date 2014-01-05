@@ -1,6 +1,5 @@
 package gui.columnview;
 
-import zzzzdeprecated.StyledTextDeprecated;
 import geometry.libgdxmath.LineSegment;
 import geometry.libgdxmath.Vector2;
 import javafx.beans.property.DoubleProperty;
@@ -13,10 +12,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
-import document.StyleTextPair;
-import document.TextStyle;
 
-public class LineOnCanvas {
+public class LineOnCanvas implements Comparable<LineOnCanvas>{
 
 	private DoubleProperty preferredWidthProperty;
 	
@@ -42,7 +39,7 @@ public class LineOnCanvas {
 	//TODO: debug variable
 	private String text;
 	
-	public LineOnCanvas(ColumnView parent, ParagraphOnCanvas parentParagraph){
+	public LineOnCanvas(ColumnView parent, ParagraphOnCanvas parentParagraph) {
 		this.parent = parent;
 		this.parentParagraph = parentParagraph;
 		preferredWidthProperty = new SimpleDoubleProperty();
@@ -55,7 +52,7 @@ public class LineOnCanvas {
 		initEvents();
 	}
 	
-	public void initialPositionSetup(float layoutX, float layoutY, float width, float height, float angle){
+	public void initialPositionSetup(float layoutX, float layoutY, float width, float height, float angle) {
 		this.layoutX = layoutX;
 		this.layoutY = layoutY;
 		this.preferredWidthProperty.set(width);
@@ -69,7 +66,7 @@ public class LineOnCanvas {
 		lineSegmentProperty.set(lineSegment);
 	}
 	
-	public void initialTextSetup(int startIndex, int endIndex){
+	public void initialTextSetup(int startIndex, int endIndex) {
 		startIndexInStyledText.set(startIndex);
 		endIndexInStyledText.set(endIndex);
 	}
@@ -78,14 +75,14 @@ public class LineOnCanvas {
 		lineSegmentProperty.set(line);
 	}
 	
-	public void setPreferredWidth(double width){
+	public void setPreferredWidth(double width) {
 		this.preferredWidthProperty.set(width);
 	}
 
 	public void refresh(){
 		GraphicsContext context = parent.getGraphicsContext();
 		//TODO: uncomment next line, lines should get texts from paragraphs.
-	//	String text = parentParagraph.getText();
+//		String text = parentParagraph.getText(startIndexInStyledText.get(), endIndexInStyledText.get());
 		context.setStroke(Color.RED);
 		context.setLineWidth(2);
 		LineSegment line = lineSegmentProperty.get();
@@ -142,7 +139,7 @@ public class LineOnCanvas {
 			}
 		});
 		
-		endIndexInStyledText.addListener(new ChangeListener<Number>(){
+		endIndexInStyledText.addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
@@ -152,7 +149,7 @@ public class LineOnCanvas {
 			}
 		});
 		
-		lineSegmentProperty.addListener(new ChangeListener<LineSegment>(){
+		lineSegmentProperty.addListener(new ChangeListener<LineSegment>() {
 			@Override
 			public void changed(ObservableValue<? extends LineSegment> arg0,
 					LineSegment arg1, LineSegment arg2){
@@ -165,7 +162,7 @@ public class LineOnCanvas {
 		});
 	}
 	
-	public IntegerProperty getStartIndexInStyledTextProperty(){
+	public IntegerProperty getStartIndexInStyledTextProperty() {
 		return startIndexInStyledText;
 	}
 
@@ -187,7 +184,20 @@ public class LineOnCanvas {
 		return (float) lineSegmentProperty.get().getLength();
 	}
 
-	public void setText(String text) {
+/*	public void setText(String text) {
+		this.text = text;
+	}*/
+
+	@Override
+	public int compareTo(LineOnCanvas o) {
+		int value = this.getLineSegment().compareTo(o.getLineSegment());
+		if(isTextUpsideDown())
+			return -1 * value;
+		else
+			return value;
+	}
+
+	public void setDebugText(String text) {
 		this.text = text;
 	}
 }

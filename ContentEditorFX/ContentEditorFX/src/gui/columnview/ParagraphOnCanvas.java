@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.text.Font;
-import document.StyleTextPair;
+import document.Paragraph;
 import document.TextStyle;
 
 
@@ -22,18 +22,17 @@ public class ParagraphOnCanvas {
 	private Rectangle allowedSpace;
 	private ArrayList<LineOnCanvas> lines; 
 	private TextStyle style;
-	private StyleTextPair textPair;
+	private Paragraph textPair;
 	
 	public ParagraphOnCanvas(ColumnView parent, Rectangle allowedSpace, TextStyle style) {
 		this.parent = parent;
 		this.allowedSpace = allowedSpace;
 		this.style = style;
 		lines = new ArrayList<LineOnCanvas>();
-		debug();
 	}
 	
 	private void debug() {
-		textPair = new StyleTextPair();
+		textPair = new Paragraph();
 		if(style == null)
 			style = TextStyle.defaultStyle;
 		textPair.setText("DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME ");
@@ -67,7 +66,8 @@ public class ParagraphOnCanvas {
 			LineOnCanvas line = lines.get(i);
 			float allowedWidth = line.getWidth();
 			String text = textPair.getNextLine(allowedWidth);
-			line.setText("Line #" + i);
+			System.out.println("Paragraph refresh, got line " + text +" for length: " + allowedWidth);
+			line.setDebugText(text);
 			line.refresh();
 		}
 	}
@@ -78,6 +78,22 @@ public class ParagraphOnCanvas {
 
 	public Font getFont() {
 		return style.getFont();
+	}
+
+	/**
+	 * Forces refresh on the column this paragraph is in
+	 */
+	public void updateColumn() {
+		parent.refresh();
+	}
+
+	public void setParagraph(Paragraph paragraph) {
+		System.out.println("Set paragraph to: " + paragraph);
+		textPair = paragraph;
+	}
+	
+	public String toString() {
+		return textPair.getText();
 	}
 	
 }

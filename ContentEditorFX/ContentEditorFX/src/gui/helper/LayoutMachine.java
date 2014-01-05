@@ -11,8 +11,10 @@ import gui.columnview.ParagraphOnCanvas;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import document.PageInsets;
+import document.Paragraph;
 import document.TextStyle;
 
 public class LayoutMachine {
@@ -28,7 +30,7 @@ public class LayoutMachine {
 		lines = new ArrayList<LineOnCanvas>();
 	}
 	
-	public ParagraphOnCanvas getParagraphSpace(ColumnView requester, Rectangle allowedSpace, TextStyle style){
+	public ParagraphOnCanvas getParagraphSpace(ColumnView requester, Rectangle allowedSpace, TextStyle style, Paragraph text){
 		ParagraphOnCanvas paragraph = new ParagraphOnCanvas(requester, allowedSpace, style);
 		
 		//TODO: take textstyle into account
@@ -38,6 +40,8 @@ public class LayoutMachine {
 			ArrayList<LineOnCanvas> trimmedLine = buildLineOnCanvas(requester, newLine, paragraph);
 			paragraph.insertLines(trimmedLine);
 		}
+		
+		paragraph.setParagraph(text);
 		
 		return paragraph;
 	}
@@ -73,6 +77,8 @@ public class LayoutMachine {
 			tempLine.setLineSegment(segments.get(i));
 			lines.add(tempLine);
 		}
+		
+		Collections.sort(lines);
 		
 		return lines;
 	}

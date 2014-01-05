@@ -1,5 +1,7 @@
 package document;
 
+import gui.docmodify.DocDebugView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,7 +13,7 @@ import com.sun.javafx.tk.FontMetrics;
  * @author sahin
  *
  */
-public class StyleTextPair implements CharSequence{
+public class Paragraph implements CharSequence{
 
 	private TextStyle style;
 	private StringBuffer textBuffer;
@@ -27,22 +29,27 @@ public class StyleTextPair implements CharSequence{
 	private ArrayList<Float> cummulativeWordSizes;
 	private HashMap<Integer, Integer> wordCountToStringIndex;
 	
-	public StyleTextPair(){
-		this(new TextStyle(), "");
+	private int lastChangeStartIndex;
+	
+	public Paragraph(){
+		this(TextStyle.defaultStyle, "");
 	}
 	
-	public StyleTextPair(TextStyle style){
+	public Paragraph(TextStyle style){
 		this(style, "");
 	}
 	
-	public StyleTextPair(String text){
-		this(new TextStyle(), text);
+	public Paragraph(String text){
+		this(TextStyle.defaultStyle, text);
 	}
 	
-	public StyleTextPair(TextStyle style, String text){
+	public Paragraph(TextStyle style, String text){
 		this.style = style;
 		cummulativeWordSizes = new ArrayList<Float>();
 		wordCountToStringIndex = new HashMap<Integer, Integer>();
+		lastChangeStartIndex = 0;
+		setText(text);
+		computeStringWidths();
 	}
 	
 	public void setStartIndexInBigText(int index){
@@ -75,6 +82,7 @@ public class StyleTextPair implements CharSequence{
 	
 	public void setText(String text){
 		this.textBuffer = new StringBuffer(text);
+		lastChangeStartIndex = 0;
 		computeStringWidths();
 	}
 	
@@ -104,30 +112,36 @@ public class StyleTextPair implements CharSequence{
 	 */
 	public String getNextLine(double inputSize){
 		float lineEndSize = (float) (cummulativeTextSize + inputSize);
-		
-		int wordIndex = Collections.binarySearch(cummulativeWordSizes, lineEndSize);
+		System.out.println("\n\nGet next line call with input size: " + inputSize + ", cummulative size: " + cummulativeTextSize);
 
-		if(wordIndex < 0) wordIndex = (wordIndex + 1) * -1;
-		if(wordIndex >= cummulativeWordSizes.size()){
-			hasNext = false;
-			return null;
-		}
-		while(wordIndex >= 0 && cummulativeWordSizes.get(wordIndex) > lineEndSize){
-			wordIndex --;
-		}
-		
-		//if no word fits the area
-		if(wordIndex < 0) {
-			return null;
+		//TODO: use binary search instead of linear search
+		int wordIndex = -1;
+		for(int i = cummulativeWordSizes.size() - 1; i >= 0; i--) {
+			if(cummulativeWordSizes.get(i) < lineEndSize) {
+				wordIndex = i;
+				break;
+			}
 		}
 		
-		int wordStartIndex = wordCountToStringIndex.get(wordIndex);
+		System.out.println("querying wordcounttostringindex with " + wordIndex);
+		int wordStartIndex = previousIndex;
+		
+		if(wordIndex >= 0 && wordCountToStringIndex.containsKey(wordIndex)){
+			wordStartIndex = wordCountToStringIndex.get(wordIndex);
+		}
+		else return null;
+		
+		if(wordStartIndex < previousIndex) 
+			return null;
+		
+		System.out.println("substring with: " + previousIndex + ", " + wordStartIndex);
 		String retVal = textBuffer.substring(previousIndex, wordStartIndex)/*.trim()*/;
 		startIndexSaveOnly = previousIndex;
 		endIndexSaveOnly = wordStartIndex;
 		previousIndex = wordStartIndex;
-				
+		
 		cummulativeTextSize = cummulativeWordSizes.get(wordIndex);
+		
 		return retVal;
 	}
 	
@@ -142,13 +156,23 @@ public class StyleTextPair implements CharSequence{
 		cummulativeWordSizes.clear();
 		int wordCount = 0;
 	
+		ArrayList<String> debugTexts = new ArrayList<String>();
+		
 		for(int i = 0; i < textBuffer.length(); i++){
-			if(textBuffer.charAt(i) == ' ' || textBuffer.charAt(i) == '\t'){
+			if(textBuffer.charAt(i) == ' ' || textBuffer.charAt(i) == '\t' || i == textBuffer.length() -1){
+				debugTexts.add(textBuffer.substring(0, i+1));
 				float stringWidth = metrics.computeStringWidth(textBuffer.substring(0, i+1));
 				cummulativeWordSizes.add(stringWidth);
 				wordCountToStringIndex.put(wordCount, i);
+		//		DocDebugView.instance.putText("put [" + wordCount+ "] - [" + i + "] to wordcounttostringindex");
 				wordCount ++;
 			}
+		}
+		
+		System.out.println("**** Calculated string widths *****");
+		
+		for(int i= 0; i < cummulativeWordSizes.size(); i++) {
+	//		System.out.println("word: " + debugTexts.get(i) + ", size: " + cummulativeWordSizes.get(i));
 		}
 	}
 

@@ -2,6 +2,7 @@ package event;
 
 import gui.columnview.DocumentView;
 import gui.docmodify.DocBottomToolbar;
+import gui.docmodify.DocDebugView;
 import gui.docmodify.DocOverview;
 import gui.docmodify.DocVersatilePane;
 import gui.docmodify.DocWidgetToolbar;
@@ -26,6 +27,7 @@ public class DocModifyScreenGuiFacade {
 	private DocOverview docOverview;
 	private DocBottomToolbar docBottomToolbar;
 	private DocVersatilePane docVersatilePane;
+	private DocDebugView docDebugView;
 	
 	private TextModifyFacade textModifyFacade;
 	private WidgetModifyFacade widgetModifyFacade;
@@ -34,18 +36,20 @@ public class DocModifyScreenGuiFacade {
 	
 	private Document document;
 	
-	public DocModifyScreenGuiFacade(DocumentView documentView, DocWidgetToolbar docWidgetToolbar, DocOverview docOverview, DocBottomToolbar docBottomToolbar, DocVersatilePane docVersatilePane) {
+	public DocModifyScreenGuiFacade(DocumentView documentView, DocWidgetToolbar docWidgetToolbar, DocOverview docOverview, DocBottomToolbar docBottomToolbar, DocVersatilePane docVersatilePane, DocDebugView docDebugView) {
 		this.documentView = documentView;
 		this.docWidgetToolbar = docWidgetToolbar;
 		this.docOverview = docOverview;
 		this.docBottomToolbar = docBottomToolbar;
 		this.docVersatilePane = docVersatilePane;
+		this.docDebugView = docDebugView;
 			
 		documentView.setGuiFacade(this);
 		docWidgetToolbar.setGuiFacade(this);
 		docOverview.setGuiFacade(this);
 		docBottomToolbar.setGuiFacade(this);
 		docVersatilePane.setGuiFacade(this);
+		docDebugView.setGuiFacade(this);
 		
 		textModifyFacade = new TextModifyFacade();
 		widgetModifyFacade = new WidgetModifyFacade(this);
@@ -61,6 +65,7 @@ public class DocModifyScreenGuiFacade {
 		docOverview.populateTreeView();
 		textModifyFacade.setDocumentAndView(document, documentView);
 		widgetModifyFacade.setDocumentAndView(document, documentView);
+		debugAssignText("");
 	}
 	
 	public Document getDocument(){
@@ -148,6 +153,11 @@ public class DocModifyScreenGuiFacade {
 	public double getZoomFactor(){
 		return documentView.getZoomFactor();
 	}
+	
+	public void notifyRefreshHappened(){
+		docDebugView.refreshCountProperty().set(docDebugView.refreshCountProperty().get() + 1);
+		System.out.println("shouldve increased by one");
+	}
 
 	/*public void addLinePressed() {
 		// TODO temp solution
@@ -217,6 +227,27 @@ public class DocModifyScreenGuiFacade {
 
 	public void setGuiDebugText(String string) {
 		docBottomToolbar.setDebugString(string);
+	}
+
+	public void setOverlayCanvasVisible(boolean value) {
+		documentView.setOverlayCanvasVisible(value);
+	}
+
+	public void setTextCanvasVisible(boolean value) {
+		documentView.setTextCanvasVisible(value);
+	}
+
+	public void requestDocumentViewRefresh() {
+		documentView.refresh();
+	}
+
+	public void setDebugPointsVisible(boolean value) {
+		documentView.setDebugPointsVisible(value);
+	}
+
+	public void debugAssignText(String value) {
+		documentView.setDebugText(value);
+		documentView.refresh();
 	}
 
 }

@@ -64,8 +64,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="8" language="java" name="document.StyleTextPair" project="ContentEditorFX" 
-    file="/ContentEditorFX/src/document/StyleTextPair.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="8" language="java" name="document.Paragraph" project="ContentEditorFX" 
+    file="/ContentEditorFX/src/document/Paragraph.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1026" y="898"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
