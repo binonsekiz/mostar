@@ -13,4 +13,6 @@ public interface CanvasOwner {
 	public void notifyModificationEnd(ShapedPane pane, MouseEvent event);
 
 	public GraphicsContext getGraphicsContext();
+
+	public void notifyOverlayRepaintNeeded();
 }

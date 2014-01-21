@@ -20,7 +20,7 @@ public class ResizeModification extends ModificationInstance{
 	public ResizeModification(ShapedPane pane, int edgeIndex) {
 		super(pane);
 		this.edgeIndex = edgeIndex;
-		newShape = pane.getShape();
+		newShape = pane.getPaneShape();
 		backupShape = new Polygon(newShape.getVertices().clone());
 		normal = backupShape.getEdgeNormal(edgeIndex);
 		normal.nor();

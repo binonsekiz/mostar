@@ -68,7 +68,7 @@ public abstract class WidgetModifier extends ShapedPane{
 	private void recalculateClip() {
 		widgetStack.setLayoutX(0);
 		widgetStack.setLayoutY(0);
-		widgetStack.setClip(GeometryHelper.polygonShapeFromPolygon(this.getShape()));
+		widgetStack.setClip(GeometryHelper.polygonShapeFromPolygon(this.getPaneShape()));
 	}
 
 	public void delete(){

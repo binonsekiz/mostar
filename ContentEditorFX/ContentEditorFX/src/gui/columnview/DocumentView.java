@@ -21,6 +21,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Affine;
+import javafx.scene.transform.Transform;
 import javafx.util.Duration;
 import document.Column;
 import document.Document;
@@ -172,6 +174,36 @@ public class DocumentView extends Pane implements CanvasOwner{
 		overlayCanvas.toFront();
 	}
 	
+
+	@Override
+	public void notifyOverlayRepaintNeeded() {
+		refreshOverlay();
+	}
+	
+	public void refreshOverlay() {
+		if(!isRefreshInProgress){
+			isRefreshInProgress = true;
+			Timeline timer = new Timeline(new KeyFrame(Duration.millis(GlobalAppSettings.fastDeviceFrameMillis), new EventHandler<ActionEvent>(){
+				@Override
+			    public void handle(ActionEvent event) {
+			        refreshAllOverlay();
+			    }
+			}));
+			timer.play();
+			isRefreshInProgress = false;
+		}
+	}
+
+	protected void refreshAllOverlay() {
+		for(int i = 0; i < columnViews.size(); i++){
+			columnViews.get(i).refreshOverlayCanvas();
+		}
+		
+		guiFacade.notifyRefreshHappened();
+		fixCanvasSize();
+		overlayCanvas.toFront();
+	}
+
 	private void fixCanvasSize() {
 		if(overlayCanvas.getWidth() != scrollPane.getViewportBounds().getWidth())
 			overlayCanvas.setWidth(scrollPane.getViewportBounds().getWidth());
@@ -256,4 +288,9 @@ public class DocumentView extends Pane implements CanvasOwner{
 	public void setDebugText(String value) {
 		columnViews.get(0).setDebugText(value);
 	}
+
+	public Affine getOverlayContextTransformForChild(ColumnView columnView) {
+		return null;
+	}
+
 }

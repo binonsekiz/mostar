@@ -18,6 +18,7 @@
 package geometry.libgdxmath.utils;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 /** A {@link java.lang.StringBuilder} that implements equals and hashcode.
  * @see CharSequence
@@ -1128,5 +1129,17 @@ public class StringBuilder implements Appendable, CharSequence {
 		for (int i = 0; i < length; i++)
 			if (chars[i] != chars2[i]) return false;
 		return true;
+	}
+
+	@Override
+	public IntStream chars() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IntStream codePoints() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

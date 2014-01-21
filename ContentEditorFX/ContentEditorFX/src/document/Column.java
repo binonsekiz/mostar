@@ -148,7 +148,7 @@ public class Column {
 		return pageSize;
 	}
 
-	public Polygon getShape() {
+	public Polygon getPaneShape() {
 		return shape;
 	}
 

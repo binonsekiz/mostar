@@ -113,7 +113,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		canvas.setHeight(column.getHeight());
 		layoutMachine.setPageInsets(column.getInsets());
 		lastFilledLineHeight = column.getInsets().getMinY();
-		layoutMachine.setParentShape(column.getShape());
+		layoutMachine.setParentShape(column.getPaneShape());
 		parent.refresh();
 	}
 	
@@ -156,12 +156,12 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		debugPoints.clear();
 	}
 
-	private void refreshOverlayCanvas(){
+	public void refreshOverlayCanvas(){
 		overlayContext = parent.getGraphicsContext();
 		overlayContext.clearRect(0, 0, overlayContext.getCanvas().getWidth(), overlayContext.getCanvas().getHeight());
 		
 		overlayContext.save();
-		overlayContext.translate(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY());
+		overlayContext.translate(canvas.getBoundsInParent().getMinX(), canvas.getBoundsInParent().getMinY());
 		
 		for(int i = 0; i < visuals.size(); i++){
 			VisualView view = visuals.get(i);
@@ -229,6 +229,11 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	public void notifyRepaintNeeded() {
 		parent.refresh();
 	}
+	
+	@Override
+	public void notifyOverlayRepaintNeeded() {
+		parent.notifyOverlayRepaintNeeded();
+	}
 
 	@Override
 	public void notifyModificationStart(ModificationType type, ShapedPane pane, MouseEvent event) {
@@ -286,4 +291,6 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	public void setDocumentText(DocumentText documentText) {
 		this.text.set(documentText);
 	}
+
+	
 }

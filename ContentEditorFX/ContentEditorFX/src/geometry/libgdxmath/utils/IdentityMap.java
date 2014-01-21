@@ -20,6 +20,8 @@ import geometry.libgdxmath.MathUtils;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /** An unordered map that uses identity comparison for keys. This implementation is a cuckoo hash map using 3 hashes, random
  * walking, and a small stash for problematic keys. Null keys are not allowed. Null values are allowed. No allocation is done
@@ -651,6 +653,24 @@ public class IdentityMap<K, V> {
 		public Iterator<Entry<K, V>> iterator () {
 			return this;
 		}
+
+		@Override
+		public void forEachRemaining(Consumer<? super Entry<K, V>> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void forEach(Consumer<? super Entry<K, V>> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Spliterator<Entry<K, V>> spliterator() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 
 	static public class Values<V> extends MapIterator<Object, V> implements Iterable<V>, Iterator<V> {
@@ -688,6 +708,24 @@ public class IdentityMap<K, V> {
 			while (hasNext)
 				array.add(next());
 		}
+
+		@Override
+		public void forEachRemaining(Consumer<? super V> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void forEach(Consumer<? super V> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Spliterator<V> spliterator() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 
 	static public class Keys<K> extends MapIterator<K, Object> implements Iterable<K>, Iterator<K> {
@@ -718,6 +756,24 @@ public class IdentityMap<K, V> {
 			while (hasNext)
 				array.add(next());
 			return array;
+		}
+
+		@Override
+		public void forEachRemaining(Consumer<? super K> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void forEach(Consumer<? super K> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Spliterator<K> spliterator() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 }

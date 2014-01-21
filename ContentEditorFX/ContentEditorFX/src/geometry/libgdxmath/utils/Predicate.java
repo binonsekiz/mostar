@@ -17,6 +17,8 @@
 package geometry.libgdxmath.utils;
 
 import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /** Interface used to select items within an iterator against a predicate.
  * @author Xoppa
@@ -82,6 +84,12 @@ public interface Predicate<T> {
 				throw new GdxRuntimeException("Cannot remove between a call to hasNext() and next().");
 			iterator.remove();
 		}
+
+		@Override
+		public void forEachRemaining(Consumer<? super T> action) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 	
 	public static class PredicateIterable<T> implements Iterable<T> {
@@ -107,6 +115,18 @@ public interface Predicate<T> {
 			else
 				iterator.set(iterable.iterator(), predicate);
 			return iterator;
+		}
+
+		@Override
+		public void forEach(Consumer<? super T> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Spliterator<T> spliterator() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 }

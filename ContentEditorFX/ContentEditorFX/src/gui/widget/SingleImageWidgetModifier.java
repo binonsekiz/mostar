@@ -38,8 +38,8 @@ public class SingleImageWidgetModifier extends WidgetModifier{
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
-		//		imageView.setFitWidth(widgetStack.getWidth());
-		//		imageView.setTranslateX(widgetStack.getWidth()/2 - imageView.getBoundsInParent().getWidth()/2);
+				imageView.setFitWidth(widgetStack.getWidth());
+				imageView.setTranslateX(widgetStack.getWidth()/2 - imageView.getBoundsInParent().getWidth()/2);
 			}
 		});
 		
@@ -47,8 +47,8 @@ public class SingleImageWidgetModifier extends WidgetModifier{
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
-		//		imageView.setFitHeight(widgetStack.getHeight());
-		//		imageView.setTranslateX(widgetStack.getWidth()/2 - imageView.getBoundsInParent().getWidth()/2);
+				imageView.setFitHeight(widgetStack.getHeight());
+				imageView.setTranslateX(widgetStack.getWidth()/2 - imageView.getBoundsInParent().getWidth()/2);
 			}
 		});
 	}

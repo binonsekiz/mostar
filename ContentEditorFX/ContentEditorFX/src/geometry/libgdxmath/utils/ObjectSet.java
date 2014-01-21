@@ -20,6 +20,8 @@ import geometry.libgdxmath.MathUtils;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /** An unordered set where the keys are objects. This implementation uses cuckoo hashing using 3 hashes, random walking, and a
  * small stash for problematic keys. Null keys are not allowed. No allocation is done except when growing the table size. <br>
@@ -480,5 +482,35 @@ public class ObjectSet<T> implements Iterable<T> {
 				array.add(next());
 			return array;
 		}
+
+		@Override
+		public void forEachRemaining(Consumer<? super K> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void forEach(Consumer<? super K> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Spliterator<K> spliterator() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	}
+
+	@Override
+	public void forEach(Consumer<? super T> action) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Spliterator<T> spliterator() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

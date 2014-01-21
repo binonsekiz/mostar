@@ -1,10 +1,8 @@
 package document;
 
-import gui.docmodify.DocDebugView;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.stream.IntStream;
 
 import com.sun.javafx.tk.FontMetrics;
 
@@ -112,8 +110,7 @@ public class Paragraph implements CharSequence{
 	 */
 	public String getNextLine(double inputSize){
 		float lineEndSize = (float) (cummulativeTextSize + inputSize);
-		System.out.println("\n\nGet next line call with input size: " + inputSize + ", cummulative size: " + cummulativeTextSize);
-
+		
 		//TODO: use binary search instead of linear search
 		int wordIndex = -1;
 		for(int i = cummulativeWordSizes.size() - 1; i >= 0; i--) {
@@ -123,7 +120,6 @@ public class Paragraph implements CharSequence{
 			}
 		}
 		
-		System.out.println("querying wordcounttostringindex with " + wordIndex);
 		int wordStartIndex = previousIndex;
 		
 		if(wordIndex >= 0 && wordCountToStringIndex.containsKey(wordIndex)){
@@ -134,7 +130,6 @@ public class Paragraph implements CharSequence{
 		if(wordStartIndex < previousIndex) 
 			return null;
 		
-		System.out.println("substring with: " + previousIndex + ", " + wordStartIndex);
 		String retVal = textBuffer.substring(previousIndex, wordStartIndex)/*.trim()*/;
 		startIndexSaveOnly = previousIndex;
 		endIndexSaveOnly = wordStartIndex;
@@ -205,5 +200,17 @@ public class Paragraph implements CharSequence{
 	@Override
 	public String subSequence(int arg0, int arg1) {
 		return textBuffer.substring(arg0, arg1);
+	}
+
+	@Override
+	public IntStream chars() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IntStream codePoints() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

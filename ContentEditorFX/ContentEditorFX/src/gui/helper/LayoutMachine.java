@@ -54,7 +54,7 @@ public class LayoutMachine {
 		
 		for(int i = 0; i < shapes.size(); i++) {
 			
-			Polygon shape = shapes.get(i).getShape();
+			Polygon shape = shapes.get(i).getPaneShape();
 			for(int j = 0; j < segments.size(); j++) {
 				LineSegmentIntersection intersection = shape.intersect(segments.get(j), requester);
 				segments.remove(j);

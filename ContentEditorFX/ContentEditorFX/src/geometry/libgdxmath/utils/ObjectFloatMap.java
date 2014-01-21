@@ -20,6 +20,8 @@ import geometry.libgdxmath.MathUtils;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /** An unordered map where the values are floats. This implementation is a cuckoo hash map using 3 hashes, random walking, and a
  * small stash for problematic keys. Null keys are not allowed. No allocation is done except when growing the table size. <br>
@@ -636,6 +638,24 @@ public class ObjectFloatMap<K> {
 		public Iterator<Entry<K>> iterator () {
 			return this;
 		}
+
+		@Override
+		public void forEachRemaining(Consumer<? super Entry<K>> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void forEach(Consumer<? super Entry<K>> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Spliterator<Entry<K>> spliterator() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 
 	static public class Values extends MapIterator<Object> {
@@ -693,6 +713,24 @@ public class ObjectFloatMap<K> {
 			while (hasNext)
 				array.add(next());
 			return array;
+		}
+
+		@Override
+		public void forEachRemaining(Consumer<? super K> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void forEach(Consumer<? super K> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Spliterator<K> spliterator() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 }

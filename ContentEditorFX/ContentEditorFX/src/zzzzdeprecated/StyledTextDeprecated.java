@@ -3,6 +3,7 @@ package zzzzdeprecated;
 import gui.helper.StyleRepository;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 import com.sun.javafx.tk.FontMetrics;
 
@@ -121,6 +122,18 @@ public class StyledTextDeprecated implements CharSequence{
 				styles.add(style);
 			}
 		}
+	}
+
+	@Override
+	public IntStream chars() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IntStream codePoints() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

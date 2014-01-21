@@ -22,6 +22,8 @@ import geometry.libgdxmath.utils.reflect.ArrayReflection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /** A resizable, ordered or unordered array of objects. If unordered, this class avoids a memory copy when removing elements (the
  * last element is moved to the removed element's position).
@@ -505,6 +507,12 @@ public class Array<T> implements Iterable<T> {
 		public void reset () {
 			index = 0;
 		}
+
+		@Override
+		public void forEachRemaining(Consumer<? super T> action) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 	static public class ArrayIterable<T> implements Iterable<T> {
@@ -537,5 +545,29 @@ public class Array<T> implements Iterable<T> {
 			iterator1.valid = false;
 			return iterator2;
 		}
+
+		@Override
+		public void forEach(Consumer<? super T> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Spliterator<T> spliterator() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	}
+
+	@Override
+	public void forEach(Consumer<? super T> action) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Spliterator<T> spliterator() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

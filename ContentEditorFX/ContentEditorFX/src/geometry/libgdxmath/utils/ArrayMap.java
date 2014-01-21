@@ -22,6 +22,8 @@ import geometry.libgdxmath.utils.reflect.ArrayReflection;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /** An ordered or unordered map of objects. This implementation uses arrays to store the keys and values, which means
  * {@link #getKey(Object, boolean) gets} do a comparison for each key in the map. This is slower than a typical hash map
@@ -502,6 +504,24 @@ public class ArrayMap<K, V> {
 		public void reset () {
 			index = 0;
 		}
+
+		@Override
+		public void forEachRemaining(Consumer<? super Entry<K, V>> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void forEach(Consumer<? super Entry<K, V>> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Spliterator<Entry<K, V>> spliterator() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 
 	static public class Values<V> implements Iterable<V>, Iterator<V> {
@@ -539,6 +559,24 @@ public class ArrayMap<K, V> {
 		public Array<V> toArray () {
 			return new Array(true, map.values, index, map.size - index);
 		}
+
+		@Override
+		public void forEachRemaining(Consumer<? super V> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void forEach(Consumer<? super V> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Spliterator<V> spliterator() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 
 	static public class Keys<K> implements Iterable<K>, Iterator<K> {
@@ -575,6 +613,24 @@ public class ArrayMap<K, V> {
 
 		public Array<K> toArray () {
 			return new Array(true, map.keys, index, map.size - index);
+		}
+
+		@Override
+		public void forEachRemaining(Consumer<? super K> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void forEach(Consumer<? super K> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Spliterator<K> spliterator() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 }

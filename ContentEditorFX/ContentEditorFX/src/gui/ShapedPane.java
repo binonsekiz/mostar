@@ -202,12 +202,13 @@ public abstract class ShapedPane extends Pane implements VisualView {
 	}
 	
 	public void onMouseExited(MouseEvent event) {
-		canvasOwner.notifyRepaintNeeded();
+		eraseMousePointer();
+		canvasOwner.notifyOverlayRepaintNeeded();
 	}
-	
+
 	public void onMouseMoved(MouseEvent event) {
 		updateMousePosition(event);
-		canvasOwner.notifyRepaintNeeded();
+		canvasOwner.notifyOverlayRepaintNeeded();
 		System.out.println("Pane mouse");
 	}
 	
@@ -268,9 +269,18 @@ public abstract class ShapedPane extends Pane implements VisualView {
 	}
 
 	private void updateMousePosition(MouseEvent arg0){
-		mousePosition.x = (float) (arg0.getX() + getLayoutX());
-		mousePosition.y = (float) (arg0.getY() + getLayoutY());
+		updateMousePosition((float) (arg0.getX() + getLayoutX()), (float) (arg0.getY() + getLayoutY()));
 	}
+	
+	private void updateMousePosition(float i, float j) {
+		mousePosition.x = i;
+		mousePosition.y = j;
+	}
+	
+	private void eraseMousePointer() {
+		updateMousePosition(Integer.MIN_VALUE, Integer.MIN_VALUE);
+	}
+
 	
 	public void paintShape(GraphicsContext context) {
 		context.save();
@@ -353,7 +363,7 @@ public abstract class ShapedPane extends Pane implements VisualView {
 		translate(movement.x, movement.y);
 	}
 	
-	public Polygon getShape(){
+	public Polygon getPaneShape(){
 		return shape;
 	}
 	

@@ -16,6 +16,9 @@
 
 package geometry.libgdxmath.utils;
 
+import java.util.Spliterator;
+import java.util.function.Consumer;
+
 /** A sorted double linked list which uses ints for indexing
  * 
  * @param <E> */
@@ -150,6 +153,12 @@ public class SortedIntList<E> implements Iterable<SortedIntList.Node<E>> {
 			previousPosition = null;
 			return this;
 		}
+
+		@Override
+		public void forEachRemaining(Consumer<? super Node<E>> action) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 	public static class Node<E> {
@@ -177,5 +186,17 @@ public class SortedIntList<E> implements Iterable<SortedIntList.Node<E>> {
 			newNode.index = index;
 			return newNode;
 		}
+	}
+
+	@Override
+	public void forEach(Consumer<? super Node<E>> action) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Spliterator<Node<E>> spliterator() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

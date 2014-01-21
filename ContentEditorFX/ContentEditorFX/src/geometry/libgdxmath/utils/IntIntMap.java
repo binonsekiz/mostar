@@ -20,6 +20,8 @@ import geometry.libgdxmath.MathUtils;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /** An unordered map where the keys and values are ints. This implementation is a cuckoo hash map using 3 hashes, random walking,
  * and a small stash for problematic keys. No allocation is done except when growing the table size. <br>
@@ -689,6 +691,24 @@ public class IntIntMap {
 
 		public Iterator<Entry> iterator () {
 			return this;
+		}
+
+		@Override
+		public void forEachRemaining(Consumer<? super Entry> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void forEach(Consumer<? super Entry> action) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Spliterator<Entry> spliterator() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 
