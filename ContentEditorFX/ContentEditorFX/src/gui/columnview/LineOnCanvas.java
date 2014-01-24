@@ -1,6 +1,16 @@
 package gui.columnview;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
+import com.sun.javafx.tk.FontMetrics;
+
+import control.Caret;
+import control.TextModifyFacade;
+import document.Paragraph;
+import geometry.GeometryHelper;
 import geometry.libgdxmath.LineSegment;
+import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Vector2;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -10,6 +20,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
@@ -22,6 +33,8 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	
 	private ColumnView parent;
 	private ParagraphOnCanvas parentParagraph;
+	private ArrayList<Float> letterSizes;
+	private ArrayList<Float> caretPositions;
 //	private StyleTextPair text;
 	
 	private LineOnCanvas previousLine;
@@ -29,6 +42,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 
 	private SimpleObjectProperty<LineSegment> lineSegmentProperty;
 	private SimpleObjectProperty<TextAlignment> alignmentProperty;
+	private Polygon shape;
 	
 	private float layoutX;
 	private float layoutY;
@@ -36,12 +50,17 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	private float width;
 	private float angle;
 	
+	private TextModifyFacade textModifyFacade;
 	//TODO: debug variable
 	private String text;
+
+	private boolean isDebugColorOn;
 	
-	public LineOnCanvas(ColumnView parent, ParagraphOnCanvas parentParagraph) {
+	public LineOnCanvas(ColumnView parent, ParagraphOnCanvas parentParagraph, TextModifyFacade textModifyFacade) {
 		this.parent = parent;
 		this.parentParagraph = parentParagraph;
+		this.textModifyFacade = textModifyFacade;
+		
 		preferredWidthProperty = new SimpleDoubleProperty();
 		alignmentProperty = new SimpleObjectProperty<TextAlignment>();
 		alignmentProperty.set(TextAlignment.JUSTIFY);
@@ -49,6 +68,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		endIndexInStyledText = new SimpleIntegerProperty();
 		lineSegmentProperty = new SimpleObjectProperty<LineSegment>();
 		lineSegmentProperty.set(new LineSegment(new Vector2(), new Vector2()));
+		
 		initEvents();
 	}
 	
@@ -59,6 +79,10 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		this.height = height;
 		this.width = width;
 		this.angle = angle;
+		revalidateLineSegment();
+	}
+	
+	private void revalidateLineSegment() {
 		LineSegment lineSegment = new LineSegment(
 				new Vector2(layoutX, layoutY), 
 				new Vector2( (float)(layoutX + Math.cos(Math.toRadians(angle)) * width), 
@@ -73,6 +97,9 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	
 	public void setLineSegment(LineSegment line) {
 		lineSegmentProperty.set(line);
+		layoutX = line.getFirstPoint().x;
+		layoutY = line.getFirstPoint().y;
+		width = (float) line.getLength();
 	}
 	
 	public void setPreferredWidth(double width) {
@@ -83,10 +110,15 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		GraphicsContext context = parent.getGraphicsContext();
 		//TODO: uncomment next line, lines should get texts from paragraphs.
 //		String text = parentParagraph.getText(startIndexInStyledText.get(), endIndexInStyledText.get());
-		context.setStroke(Color.RED);
+		
+		if(isDebugColorOn)
+			context.setStroke(Color.GREEN);
+		else
+			context.setStroke(Color.RED);
 		context.setLineWidth(2);
 		LineSegment line = lineSegmentProperty.get();
-		context.strokeLine(line.getFirstPoint().x, line.getFirstPoint().y, line.getSecondPoint().x, line.getSecondPoint().y);
+	//	context.strokeLine(line.getFirstPoint().x, line.getFirstPoint().y, line.getSecondPoint().x, line.getSecondPoint().y);
+		context.strokePolygon(shape.getTransformedXVertices(), shape.getTransformedYVertices(), shape.getEdgeCount());
 		
 		context.setFill(Color.BLACK);
 		context.setLineWidth(1.5f);
@@ -103,7 +135,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 				startX = line.getLeftPoint().x;
 				startY = line.getLeftPoint().y;
 			}
-			context.fillText(text, startX, startY);
+			context.fillText(text, startX, startY + this.height);
 		}
 	}
 	
@@ -157,6 +189,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 					layoutX = arg0.getValue().getLeftPoint().x;
 					layoutY = arg0.getValue().getLeftPoint().y;
 					setPreferredWidth(arg0.getValue().getLength());
+					shape = GeometryHelper.getRectanglePolygon(lineSegmentProperty.get(), height, angle);
 				}
 			}
 		});
@@ -164,6 +197,26 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	
 	public IntegerProperty getStartIndexInStyledTextProperty() {
 		return startIndexInStyledText;
+	}
+	
+	public IntegerProperty getEndIndexInStyledTextProperty() {
+		return endIndexInStyledText;
+	}
+	
+	public int getStartIndex() {
+		return startIndexInStyledText.get();
+	}
+	
+	public int getEndIndex() {
+		return endIndexInStyledText.get();
+	}
+	
+	private void setStartIndex(int index) {
+		this.startIndexInStyledText.set(index);
+	}
+	
+	private void setEndIndex(int index) {
+		this.endIndexInStyledText.set(index);
 	}
 
 	public void setLayout(float x, float y) {
@@ -197,7 +250,99 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 			return value;
 	}
 
-	public void setDebugText(String text) {
-		this.text = text;
+	public void setDebugText(String text, int startIndex, int endIndex) {
+		if(text!= null)
+			System.out.println("Line received text: " + text);
+		this.setStartIndex(startIndex);
+		this.setEndIndex(endIndex);
+		if(text != null)
+			this.text = text.trim();
+		else
+			this.text = null;
+		letterSizes = null;
+		caretPositions = null;
 	}
+
+	public boolean containsCoordinate(double x, double y) {
+		return shape.contains((float)x, (float)y);
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public void setHeight(float height) {
+		this.height = height;
+		revalidateLineSegment();
+	}
+
+	public float getAngle() {
+		return angle;
+	}
+
+	public void setAngle(float angle) {
+		this.angle = angle;
+		revalidateLineSegment();
+	}
+	
+	private float calculateDistanceFromStart(float x, float y) {
+		LineSegment segment = lineSegmentProperty.get();
+		Vector2 closestPoint = segment.closestPoint(x,y);
+		return segment.getFirstPoint().dst(closestPoint);
+	}
+	
+	private void initializeLetterSizes() {
+		FontMetrics metrics = parentParagraph.getStyle().getFontMetrics();
+		letterSizes = new ArrayList<Float>();
+		caretPositions = new ArrayList<Float>();
+		if(text != null){
+			System.out.println("text: " + text  + ", size: " + text.length());
+			float currentWidth = 0;
+			caretPositions.add(0f);
+			for(int i = 1; i <= text.length(); i++) {
+				float nextWidth = metrics.computeStringWidth(text.substring(0, i));
+				letterSizes.add((currentWidth + nextWidth ) /2);
+				caretPositions.add(nextWidth);
+				currentWidth = nextWidth;
+			}
+			
+			System.out.println("CALCULATED with size: " + letterSizes.size() + ", caretPosSize: " + caretPositions.size());
+		}
+	}
+	
+	private int findClickedIndex(MouseEvent event) {
+		float distance = calculateDistanceFromStart((float) event.getX(), (float) event.getY());
+		if(letterSizes == null){
+			initializeLetterSizes();
+		}
+		int index = Collections.binarySearch(letterSizes, distance);
+		if(index < 0) index = index * -1 - 1;
+		
+		return index;
+	}
+	
+	private void updateCaret(MouseEvent event) {
+		int index = findClickedIndex(event);
+		Caret caret = textModifyFacade.getCaret();
+		caret.setCaretIndex(this, index);
+		System.out.println("CARET INDEX: " + index);
+		
+		for(int i = 0; i < letterSizes.size(); i++) {
+			System.out.println("\tLetter[" + i + "]= " + letterSizes.get(i) + ", Caret[" + i + "]= " + caretPositions.get(i));
+		}
+		System.out.println("\t\t\t\t[Caret[" + (caretPositions.size() - 1) + "]= " + caretPositions.get((caretPositions.size() - 1)));
+		
+		Vector2 caretPos = lineSegmentProperty.get().getDistanceCoordinate(caretPositions.get(Math.min(index,letterSizes.size())));
+		caret.setVisualPosition(caretPos.x, caretPos.y);
+	}
+
+	public void mouseClick(MouseEvent event) {
+		updateCaret(event);
+		parent.refreshOverlayCanvas();
+	}
+
+	public Paragraph getParentParagraph() {
+		return parentParagraph.getParagraph();
+	}
+
 }

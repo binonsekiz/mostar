@@ -1,6 +1,7 @@
 package document;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.stream.IntStream;
 
@@ -113,6 +114,7 @@ public class Paragraph implements CharSequence{
 		
 		//TODO: use binary search instead of linear search
 		int wordIndex = -1;
+
 		for(int i = cummulativeWordSizes.size() - 1; i >= 0; i--) {
 			if(cummulativeWordSizes.get(i) < lineEndSize) {
 				wordIndex = i;
@@ -130,10 +132,10 @@ public class Paragraph implements CharSequence{
 		if(wordStartIndex < previousIndex) 
 			return null;
 		
-		String retVal = textBuffer.substring(previousIndex, wordStartIndex)/*.trim()*/;
+		String retVal = textBuffer.substring(previousIndex, wordStartIndex 	+ 1)/*.trim()*/;
 		startIndexSaveOnly = previousIndex;
 		endIndexSaveOnly = wordStartIndex;
-		previousIndex = wordStartIndex;
+		previousIndex = wordStartIndex + 1;
 		
 		cummulativeTextSize = cummulativeWordSizes.get(wordIndex);
 		
@@ -155,7 +157,7 @@ public class Paragraph implements CharSequence{
 		
 		for(int i = 0; i < textBuffer.length(); i++){
 			if(textBuffer.charAt(i) == ' ' || textBuffer.charAt(i) == '\t' || i == textBuffer.length() -1){
-				debugTexts.add(textBuffer.substring(0, i+1));
+			//	debugTexts.add(textBuffer.substring(0, i+1));
 				float stringWidth = metrics.computeStringWidth(textBuffer.substring(0, i+1));
 				cummulativeWordSizes.add(stringWidth);
 				wordCountToStringIndex.put(wordCount, i);
@@ -200,6 +202,10 @@ public class Paragraph implements CharSequence{
 	@Override
 	public String subSequence(int arg0, int arg1) {
 		return textBuffer.substring(arg0, arg1);
+	}
+	
+	public ArrayList<Float> getCummulativeWordSizes() {
+		return cummulativeWordSizes;
 	}
 
 	@Override

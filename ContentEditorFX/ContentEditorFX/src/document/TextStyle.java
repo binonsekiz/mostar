@@ -10,7 +10,7 @@ import com.sun.javafx.tk.Toolkit;
 public class TextStyle {
 	
 	public static String defaultFontName = "Vera";
-	public static double defaultFontSize = 12;
+	public static double defaultFontSize = 24;
 	public static Color defaultStrokeColor = Color.DARKSLATEGRAY;
 	public static final TextStyle defaultStyle = new TextStyle();
 	public static float defaultLineSpacingHeight = 3; 

@@ -1,5 +1,6 @@
 package geometry;
 
+import geometry.libgdxmath.LineSegment;
 import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Vector3;
 
@@ -17,6 +18,20 @@ public class GeometryHelper {
 		vertices[7] = (float) height;
 		Polygon p = new Polygon(vertices);
 		return p;		
+	}
+	
+	public static Polygon getRectanglePolygon(LineSegment segment, float height, float angle) {
+		float[] vertices = new float[8];
+		vertices[0] = (float) (segment.getLeftPoint().x + height * Math.sin(Math.toRadians(angle)));
+		vertices[1] = (float) (segment.getLeftPoint().y + height * Math.cos(Math.toRadians(angle)));
+		vertices[2] = (float) (segment.getRightPoint().x + height * Math.sin(Math.toRadians(angle)));
+		vertices[3] = (float) (segment.getRightPoint().y + height * Math.cos(Math.toRadians(angle)));
+		vertices[4] = segment.getRightPoint().x;
+		vertices[5] = segment.getRightPoint().y;
+		vertices[6] = segment.getLeftPoint().x;
+		vertices[7] = segment.getLeftPoint().y;
+		Polygon p = new Polygon(vertices);
+		return p;
 	}
 
 	public static void changeWidthOfRectangularPolygon(Polygon shape, float width) {

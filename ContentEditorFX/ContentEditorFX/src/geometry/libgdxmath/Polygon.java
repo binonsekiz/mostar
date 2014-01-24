@@ -206,7 +206,6 @@ public class Polygon {
 		// build the double array
 		localDoubleVertices = new Double[localVertices.length];
 		Rectangle rect = getLocalBoundingRectangle();
-		System.out.println("###Recalculate double vertices, rect.x: " + rect.x + ", " + rect.y);
 		
 		for(int i = 0; i < localDoubleVertices.length; i+=2) {
 			localDoubleVertices[i] = new Double(localVertices[i] - rect.x);
@@ -399,7 +398,7 @@ public class Polygon {
 	}
 	
 	/** Returns the result of the intersection with this line segment */
-	public LineSegmentIntersection intersect(LineSegment lineSegment){
+/*	public LineSegmentIntersection intersect(LineSegment lineSegment){
 		LineSegmentIntersection intersection = new LineSegmentIntersection();
 		final float[] vertices = getTransformedVertices();
 		final int numFloats = vertices.length;
@@ -478,7 +477,7 @@ public class Polygon {
 			return intersection;
 		}
 	}
-
+*/
 	/** Returns the x-coordinate of the polygon's position within the world. */
 	public float getX () {
 		return x;
@@ -582,7 +581,7 @@ public class Polygon {
 					new Vector2(vertices[i], vertices[i+1]), 
 					new Vector2(vertices[(i+2) % numFloats], vertices[(i+3) % numFloats]), 
 					lineSegment.getLeftPoint(),
-					lineSegment.getRightPoint(), 
+					lineSegment.getRightPoint(),
 					point);
 			
 			if(result){
@@ -631,11 +630,11 @@ public class Polygon {
 			if(dst1 < dst2){
 				//point 1 is closer, desired condition
 				intersection.segment1 = new LineSegment(lineSegment.getFirstPoint(), point1);
-				intersection.segment2 = new LineSegment(lineSegment.getSecondPoint(), point2);
+				intersection.segment2 = new LineSegment(point2, lineSegment.getSecondPoint());
 			}
 			else{
 				intersection.segment1 = new LineSegment(lineSegment.getFirstPoint(), point2);
-				intersection.segment2 = new LineSegment(lineSegment.getSecondPoint(), point1);
+				intersection.segment2 = new LineSegment(point1, lineSegment.getSecondPoint());
 			}
 			return intersection;
 		}

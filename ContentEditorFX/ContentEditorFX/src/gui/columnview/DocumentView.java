@@ -19,6 +19,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
@@ -78,12 +79,17 @@ public class DocumentView extends Pane implements CanvasOwner{
 		scrollContent = new Group();
 		scrollPane.setContent(scrollContent);
 		
+		Pane pane = new Pane();
 		gridPane = new GridPane();
 		gridPane.setVgap(20);
 		gridPane.setHgap(20);
-		scrollContent.getChildren().add(gridPane);
+
 		overlayCanvas = new OverlayCanvas(this);
 		overlayContext = overlayCanvas.getGraphicsContext2D();
+		pane.setLayoutX(0);
+		pane.setLayoutY(0);
+		overlayCanvas.setLayoutX(0);
+		overlayCanvas.setLayoutY(0);
 		fixCanvasSize();
 		
 		isOverlayCanvasVisible = true;
@@ -92,9 +98,11 @@ public class DocumentView extends Pane implements CanvasOwner{
 		isRefreshInProgress = false;
 		zoomFactor = 1;	
 		
+		pane.getChildren().addAll(gridPane, overlayCanvas);
+		scrollContent.getChildren().add(pane);
+		this.getChildren().addAll(scrollPane/*, overlayCanvas*/);
 		scrollPane.toFront();
 		overlayCanvas.toFront();
-		this.getChildren().addAll(scrollPane, overlayCanvas);
 	}
 	
 	private void initEvents(){
@@ -104,6 +112,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 					Number arg1, Number arg2) {
 				setClip(new Rectangle(0,0,getWidth(), getHeight()));
 				scrollPane.setPrefSize(getWidth(), getHeight());
+				fixCanvasSize();
 			}
 		});
 		
@@ -113,6 +122,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 					Number arg1, Number arg2) {
 				setClip(new Rectangle(0,0,getWidth(), getHeight()));
 				scrollPane.setPrefSize(getWidth(), getHeight());
+				fixCanvasSize();
 			}
 		});		
 		
@@ -141,7 +151,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 	private void initialPopulate() {
 		for(int i = 0; i < document.getColumns().size(); i++){
 			Column tempColumn = document.getColumns().get(i);
-			ColumnView tempColumnView = new ColumnView(this);
+			ColumnView tempColumnView = new ColumnView(this, guiFacade.getTextModifyFacade());
 			tempColumnView.associateWithColumn(tempColumn);
 			tempColumnView.setDocumentText(document.getDocumentText());
 			columnViews.add(tempColumnView);
@@ -291,6 +301,10 @@ public class DocumentView extends Pane implements CanvasOwner{
 
 	public Affine getOverlayContextTransformForChild(ColumnView columnView) {
 		return null;
+	}
+
+	public void refocusTextField() {
+		guiFacade.refocusTextField();
 	}
 
 }

@@ -250,4 +250,8 @@ public class DocModifyScreenGuiFacade {
 		documentView.refresh();
 	}
 
+	public void refocusTextField() {
+		docDebugView.refocusOnTextField();
+	}
+
 }

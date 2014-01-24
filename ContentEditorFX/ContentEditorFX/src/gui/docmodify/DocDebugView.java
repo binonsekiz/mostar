@@ -114,4 +114,8 @@ public class DocDebugView extends FlowPane {
 		this.getChildren().add(text);
 	}
 	
+	public void refocusOnTextField() {
+		debugField.requestFocus();
+	}
+	
 }

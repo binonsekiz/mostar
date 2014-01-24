@@ -39,6 +39,9 @@ public class TextModifyFacade{
 		this.caret = caret;
 	}
 
+	public Caret getCaret() {
+		return caret;
+	}
 	
 	
 	

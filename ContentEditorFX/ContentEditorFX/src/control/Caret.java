@@ -1,8 +1,11 @@
 package control;
 
-import zzzzdeprecated.StyledTextDeprecated;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import gui.columnview.LineOnCanvas;
 import document.Column;
 import document.DocumentText;
+import document.Paragraph;
 import document.TextStyle;
 
 public class Caret{
@@ -14,14 +17,17 @@ public class Caret{
 	
 	//index relative to styled text start.
 	private int caretIndex;
+	private Paragraph caretParagraph;
 	 
 	//this is RELATIVE to caret index.
 	//i.e. -2 means 2 chars are selected and caret is at the end.
 	//this means this value is 0 unless a piece of text is selected
 	private int anchor;
+	private Paragraph anchorParagraph;
 	
 	//visual positions
-	private float x, y;
+	public float x;
+	public float y;
 	
 	public Caret(){
 		caretIndex = 0;
@@ -77,6 +83,21 @@ public class Caret{
 
 	public void setDocumentText(DocumentText documentText) {
 		this.documentText = documentText;
+	}
+	
+	public boolean isCaretOnParagraph(Paragraph paragraph) {
+		return caretParagraph == paragraph;
+	}
+
+	public void setCaretIndex(LineOnCanvas lineOnCanvas, int index) {
+		caretIndex = lineOnCanvas.getStartIndexInStyledTextProperty().get() + index;
+		caretParagraph = lineOnCanvas.getParentParagraph();
+	}
+	
+	public void drawCaret(float lineAngle, GraphicsContext context, TextStyle style) {
+		context.setStroke(Color.BLACK);
+		context.setLineWidth(1);
+		context.strokeLine(x, y, x + style.getLineSpacingHeight() * Math.sin(Math.toRadians(lineAngle)), y + style.getLineSpacingHeight() * Math.cos(Math.toRadians(lineAngle)));
 	}
 	
 }

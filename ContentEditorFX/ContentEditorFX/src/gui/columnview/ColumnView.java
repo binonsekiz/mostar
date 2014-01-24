@@ -9,6 +9,7 @@ import gui.widget.WidgetModifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import control.TextModifyFacade;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleObjectProperty;
@@ -28,6 +29,7 @@ import document.Column;
 import document.DocumentText;
 import document.TextStyle;
 import document.widget.Widget;
+import event.DocModifyScreenGuiFacade;
 import event.modification.ModificationInstance;
 import event.modification.ModificationType;
 import event.modification.ResizeModification;
@@ -47,6 +49,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	
 	private DocumentView parent;
 	private SimpleObjectProperty<DocumentText> text;
+	private TextModifyFacade textModifyFacade;
 		
 	private boolean isRefreshInProgress;
 	
@@ -62,8 +65,9 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	
 	private HashMap<ShapedPane, ModificationInstance> modificationHash;
 	
-	public ColumnView(DocumentView parent){
+	public ColumnView(DocumentView parent, TextModifyFacade textModifyFacade){
 		this.parent = parent;
+		this.textModifyFacade = textModifyFacade;
 		selfReference = this;
 		isRefreshInProgress = false;
 		canvas = new Canvas();
@@ -91,7 +95,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 			public void changed(ObservableValue<? extends DocumentText> arg0,
 					DocumentText arg1, DocumentText newText) {	
 				paragraphsOnCanvas.clear();
-				paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, column.getInsets().getUsableRectangle(), TextStyle.defaultStyle, text.get().getDebugParagraph()));
+				paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, column.getInsets().getUsableRectangle(), TextStyle.defaultStyle, text.get().getDebugParagraph(), textModifyFacade));
 				parent.refresh();
 			}
 		});
@@ -99,9 +103,25 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		this.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 		    @Override
 		    public void handle(MouseEvent event) {
-		        System.out.println("clicked on column view");
+		        selfReference.onMouseClick(event);
 		    }
 		});
+		
+		this.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent> () {
+			@Override
+			public void handle(MouseEvent arg0) {
+				parent.refocusTextField();
+			}
+		});
+	}
+
+	protected void onMouseClick(MouseEvent event) {
+		//check to see which paragraph this is
+		for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
+			if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
+				paragraphsOnCanvas.get(i).mouseClick(event);
+			}
+		}
 	}
 
 	public void associateWithColumn(Column column){
@@ -170,6 +190,10 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 			}
 		}
 		
+		for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
+			paragraphsOnCanvas.get(i).refreshOverlay();
+		}
+		
 		if(GlobalAppSettings.areGuiDebugGuidelinesVisible()){
 			drawWidgetGuidelines();
 		}
@@ -183,7 +207,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		drawInsets();
 		
 		paragraphsOnCanvas.clear();
-		paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(this, column.getInsets().getUsableRectangle(), TextStyle.defaultStyle, text.get().getDebugParagraph()));
+		paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(this, column.getInsets().getUsableRectangle(), TextStyle.defaultStyle, text.get().getDebugParagraph(), textModifyFacade));
 		
 		System.out.println("refreshing text");
 		for(ParagraphOnCanvas paragraph: paragraphsOnCanvas) {
@@ -292,5 +316,8 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		this.text.set(documentText);
 	}
 
+	public GraphicsContext getOverlayContext() {
+		return overlayContext;
+	}
 	
 }

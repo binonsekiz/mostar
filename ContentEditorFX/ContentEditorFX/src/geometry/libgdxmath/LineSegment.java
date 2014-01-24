@@ -77,4 +77,17 @@ public class LineSegment implements Comparable<LineSegment>{
 		else 
 			return 0;
 	}
+
+	public Vector2 closestPoint(float x, float y) {
+		return Intersector.closestPointOnLineSegment(this, new Vector2(x,y));
+	}
+
+	public Vector2 getDistanceCoordinate(float distance) {
+		float factor = (float) (distance / this.getLength());
+		Vector2 sub = this.secondPoint.cpy();
+		sub = sub.sub(this.firstPoint);
+		sub.scl(factor);
+		return sub.add(this.firstPoint);
+	}
+
 }
