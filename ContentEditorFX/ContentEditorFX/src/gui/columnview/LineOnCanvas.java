@@ -41,6 +41,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	private LineOnCanvas nextLine;
 
 	private SimpleObjectProperty<LineSegment> lineSegmentProperty;
+	private LineSegment lowerLineSegment;
 	private SimpleObjectProperty<TextAlignment> alignmentProperty;
 	private Polygon shape;
 	
@@ -123,6 +124,11 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		context.setFill(Color.BLACK);
 		context.setLineWidth(1.5f);
 		context.setFont(parentParagraph.getFont());
+		
+	//	context.setStroke(Color.GREEN);
+	//	context.setLineWidth(5);
+	//	context.strokeLine(lowerLineSegment.getFirstPoint().x, lowerLineSegment.getFirstPoint().y, lowerLineSegment.getSecondPoint().x, lowerLineSegment.getSecondPoint().y);
+		
 		if(text != null) {
 		//	context.strokeText(text.substring(startIndexInStyledText.get(), endIndexInStyledText.get()), line.getFirstPoint().x, line.getFirstPoint().y);
 			float startX = 0;
@@ -190,6 +196,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 					layoutY = arg0.getValue().getLeftPoint().y;
 					setPreferredWidth(arg0.getValue().getLength());
 					shape = GeometryHelper.getRectanglePolygon(lineSegmentProperty.get(), height, angle);
+					lowerLineSegment = arg0.getValue().buildLowerLineSegment(height, angle);
 				}
 			}
 		});
@@ -330,9 +337,12 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		for(int i = 0; i < letterSizes.size(); i++) {
 			System.out.println("\tLetter[" + i + "]= " + letterSizes.get(i) + ", Caret[" + i + "]= " + caretPositions.get(i));
 		}
-		System.out.println("\t\t\t\t[Caret[" + (caretPositions.size() - 1) + "]= " + caretPositions.get((caretPositions.size() - 1)));
-		
-		Vector2 caretPos = lineSegmentProperty.get().getDistanceCoordinate(caretPositions.get(Math.min(index,letterSizes.size())));
+
+		Vector2 caretPos;
+		if(caretPositions == null || caretPositions.size() == 0)
+			caretPos = lineSegmentProperty.get().getDistanceCoordinate(0);
+		else
+			caretPos = lineSegmentProperty.get().getDistanceCoordinate(caretPositions.get(Math.min(index,letterSizes.size())));
 		caret.setVisualPosition(caretPos.x, caretPos.y);
 	}
 
@@ -343,6 +353,10 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 
 	public Paragraph getParentParagraph() {
 		return parentParagraph.getParagraph();
+	}
+
+	public LineSegment getLowerLineSegment() {
+		return lowerLineSegment;
 	}
 
 }

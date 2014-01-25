@@ -613,7 +613,7 @@ public class Polygon {
 			//one point is inside, the other is outside the polygon
 			if(Intersector.isPointInPolygon(vertices, lineSegment.getFirstPoint())){
 				intersection.segment2 = null;
-				intersection.segment1 = new LineSegment(lineSegment.getSecondPoint(), point1);
+				intersection.segment1 = new LineSegment(point1, lineSegment.getSecondPoint());
 				return intersection;
 			}
 			else{
