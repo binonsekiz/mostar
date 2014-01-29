@@ -1,9 +1,13 @@
 package document;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.stream.IntStream;
+
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import com.sun.javafx.tk.FontMetrics;
 
@@ -16,7 +20,9 @@ public class Paragraph implements CharSequence{
 
 	private TextStyle style;
 	private StringBuffer textBuffer;
-	private int startIndexInBigText = 0;
+	private SimpleIntegerProperty startIndexInBigText;
+	private SimpleIntegerProperty endIndexInBigText;
+	private SimpleFloatProperty angle;
 
 	private int previousIndex = 0;
 	private float cummulativeTextSize = 0;
@@ -27,36 +33,58 @@ public class Paragraph implements CharSequence{
 	
 	private ArrayList<Float> cummulativeWordSizes;
 	private HashMap<Integer, Integer> wordCountToStringIndex;
+	private DocumentText documentText;
 	
-	private int lastChangeStartIndex;
-	
-	public Paragraph(){
-		this(TextStyle.defaultStyle, "");
+	public Paragraph(DocumentText parent){
+		this(TextStyle.defaultStyle, "", parent);
 	}
 	
-	public Paragraph(TextStyle style){
-		this(style, "");
-	}
-	
-	public Paragraph(String text){
-		this(TextStyle.defaultStyle, text);
-	}
-	
-	public Paragraph(TextStyle style, String text){
+	public Paragraph(TextStyle style, String text, DocumentText parent){
 		this.style = style;
+		this.documentText = parent;
 		cummulativeWordSizes = new ArrayList<Float>();
 		wordCountToStringIndex = new HashMap<Integer, Integer>();
-		lastChangeStartIndex = 0;
+		startIndexInBigText = new SimpleIntegerProperty();
+		endIndexInBigText = new SimpleIntegerProperty();
+		angle = new SimpleFloatProperty();
 		setText(text);
 		computeStringWidths();
+		initEvents();
 	}
 	
+	private void initEvents() {
+		startIndexInBigText.addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0,
+					Number oldValue, Number arg2) {
+				int wordLength = endIndexInBigText.get() - oldValue.intValue();
+				endIndexInBigText.set(startIndexInBigText.getValue() + wordLength);
+			}
+		});
+		endIndexInBigText.addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0,
+					Number arg1, Number arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		angle.addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0,
+					Number arg1, Number arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
+
 	public void setStartIndexInBigText(int index){
-		this.startIndexInBigText = index;
+		this.startIndexInBigText.set(index);
 	}
 	
 	public int getStartIndexInBigText(){
-		return startIndexInBigText;
+		return startIndexInBigText.get();
 	}
 	
 	public void setTextBuffer(StringBuffer buffer){
@@ -81,7 +109,6 @@ public class Paragraph implements CharSequence{
 	
 	public void setText(String text){
 		this.textBuffer = new StringBuffer(text);
-		lastChangeStartIndex = 0;
 		computeStringWidths();
 	}
 	
@@ -186,12 +213,12 @@ public class Paragraph implements CharSequence{
 	}
 
 	public void insertStringAbsoluteIndex(String string, int caretStartIndex) {
-		int relativeIndex = caretStartIndex - startIndexInBigText;
+		int relativeIndex = caretStartIndex - startIndexInBigText.get();
 		this.textBuffer.insert(relativeIndex, string);
 	}
 
 	public char getCharAtAbsoluteIndex(int max) {
-		return textBuffer.charAt(max - startIndexInBigText);
+		return textBuffer.charAt(max - startIndexInBigText.get());
 	}
 
 	@Override
@@ -218,5 +245,17 @@ public class Paragraph implements CharSequence{
 	public IntStream codePoints() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public float getAngle() {
+		return angle.get();
+	}
+	
+	public void setAngle(float angle) {
+		this.angle.set(angle);
+	}
+
+	public int getEndIndex() {
+		return endIndexInBigText.get();
 	}
 }

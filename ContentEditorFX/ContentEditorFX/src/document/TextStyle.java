@@ -2,6 +2,7 @@ package document;
 
 import gui.helper.FontHelper;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import com.sun.javafx.tk.FontMetrics;
@@ -14,6 +15,8 @@ public class TextStyle {
 	public static Color defaultStrokeColor = Color.DARKSLATEGRAY;
 	public static final TextStyle defaultStyle = new TextStyle();
 	public static float defaultLineSpacingHeight = 3; 
+	
+	private static Color defaultSelectionColor = new Color(Color.DARKBLUE.getRed(), Color.DARKBLUE.getGreen(), Color.DARKBLUE.getBlue(), 1f);
 	
 	private String fontName;
 	private double fontSize;
@@ -88,6 +91,14 @@ public class TextStyle {
 	public float getLineSpacingHeight() {
 		FontMetrics metrics = getFontMetrics();
 		return metrics.getLineHeight() + lineSpacingHeight;
+	}
+
+	public Paint getSelectionColor() {
+		return defaultSelectionColor;
+	}
+
+	public Paint getInvertedStrokeColor() {
+		return strokeColor.invert();
 	}
 
 }

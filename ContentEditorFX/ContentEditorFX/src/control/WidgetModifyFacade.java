@@ -52,6 +52,7 @@ public class WidgetModifyFacade {
 		widgetModifier.setLayoutY(50);
 		activeColumnView.addWidgetModifier(widgetModifier);
 		widgetFocusHandler.addWidgetModifier(widgetModifier);
+		widgetModifier.initializeShape();
 	}
 	
 	public void addWebViewWidget() {

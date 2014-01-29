@@ -3,6 +3,8 @@ package control;
 import java.util.ArrayList;
 
 import gui.columnview.DocumentView;
+import gui.columnview.LineOnCanvas;
+import gui.columnview.ParagraphOnCanvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import zzzzdeprecated.ColumnViewPane;
@@ -41,6 +43,31 @@ public class TextModifyFacade{
 
 	public Caret getCaret() {
 		return caret;
+	}
+
+	public void setActiveParagraphText(String arg2) {
+		caret.getActiveParagraph().setText(arg2);
+		caret.getActiveColumnView().notifyTextRepaintNeeded();
+	}
+
+	public Paragraph getParagraphWithIndex(int caretIndex) {
+		ArrayList<Paragraph> paragraphs =  documentText.getParagraphs();
+		for(int i = 0; i < paragraphs.size(); i++) {
+			if(caretIndex < paragraphs.get(i).getStartIndexInBigText())
+				return paragraphs.get(i - 1);
+		}
+		return paragraphs.get(paragraphs.size() - 1);
+	}
+
+	public LineOnCanvas getLineViewWithIndex(int index) {
+		return documentView.getLineThatIncludesIndex(index);
+	}
+
+	public void textSelectionSet(int caretIndex, int anchor) {
+		int lowerIndex = Math.min(caretIndex, anchor);
+		int higherIndex = Math.max(caretIndex, anchor); 
+		
+		documentView.textSelectionSet(lowerIndex, higherIndex);
 	}
 	
 	

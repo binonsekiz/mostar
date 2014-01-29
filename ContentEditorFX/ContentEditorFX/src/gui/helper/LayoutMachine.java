@@ -71,6 +71,9 @@ public class LayoutMachine {
 							segments.add(0, intersection2.getLineSegment1().buildLowerLineSegment(-1 * newLine.getHeight(), newLine.getAngle()));
 						}
 					}
+					else if(intersection2.getLineSegment1() == null && intersection2.getLineSegment2() == null){
+						
+					}
 					else if(intersection2.getLineSegment1().getLength() + intersection2.getLineSegment2().getLength() < intersection.getLineSegment1().getLength()){
 						segments.add(0,intersection2.getLineSegment1().buildLowerLineSegment(-1 * newLine.getHeight(), newLine.getAngle()));
 						segments.add(0,intersection2.getLineSegment2().buildLowerLineSegment(-1 * newLine.getHeight(), newLine.getAngle()));

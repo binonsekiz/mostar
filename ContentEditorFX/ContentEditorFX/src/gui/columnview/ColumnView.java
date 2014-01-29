@@ -37,8 +37,6 @@ import event.modification.TranslateModification;
 
 public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	
-	private int debugCount = 0;
-	
 	private ColumnView selfReference;
 	
 	protected Column column;
@@ -201,6 +199,17 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		overlayContext.restore();
 	}
 	
+	private void refreshTextValuesOnly() {
+		clearTextCanvas();
+		drawInsets();
+		for(ParagraphOnCanvas paragraph: paragraphsOnCanvas) {
+			paragraph.refresh();
+		}
+		if(parent.isDebugPointsVisible()){
+			refreshDebugPoints();
+		}
+	}
+	
 	private void refreshTextCanvas(){
 		clearTextCanvas();
 		canvas.toBack();
@@ -209,10 +218,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		paragraphsOnCanvas.clear();
 		paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(this, column.getInsets().getUsableRectangle(), TextStyle.defaultStyle, text.get().getDebugParagraph(), textModifyFacade));
 		
-		System.out.println("refreshing text");
-		for(ParagraphOnCanvas paragraph: paragraphsOnCanvas) {
-			paragraph.refresh();
-		}
+		refreshTextValuesOnly();
 		
 		if(parent.isDebugPointsVisible()){
 			refreshDebugPoints();
@@ -318,6 +324,26 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 
 	public GraphicsContext getOverlayContext() {
 		return overlayContext;
+	}
+
+	public void notifyTextRepaintNeeded() {
+		refreshTextValuesOnly();
+	}
+
+	public ArrayList<ParagraphOnCanvas> getParagraphsOnCanvas() {
+		return paragraphsOnCanvas;
+	}
+
+	public int getStartIndex() {
+		return paragraphsOnCanvas.get(0).getStartIndex();
+	}
+
+	public int getEndIndex() {
+		return paragraphsOnCanvas.get(paragraphsOnCanvas.size() - 1).getEndIndex();
+	}
+	
+	public DocumentView getDocumentView() {
+		return parent;
 	}
 	
 }

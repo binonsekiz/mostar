@@ -43,7 +43,7 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 		VBox toolbarBox = new VBox();
 		toolbarBox.getChildren().addAll(docWidgetToolbar);
 		
-		this.setId("docmodify-screen");
+//		this.setId("docmodify-screen");
 		
 		this.setTop(toolbarBox);
 		this.setLeft(docDebugView);

@@ -1,8 +1,17 @@
 package control;
 
+import geometry.libgdxmath.Interpolation;
+import geometry.libgdxmath.Vector2;
+import gui.columnview.ColumnView;
+import gui.columnview.LineOnCanvas;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import gui.columnview.LineOnCanvas;
+import javafx.util.Duration;
+import settings.GlobalAppSettings;
 import document.Column;
 import document.DocumentText;
 import document.Paragraph;
@@ -11,40 +20,97 @@ import document.TextStyle;
 public class Caret{
 	//reference to the text
 	private DocumentText documentText;
-	
-	//style just under the caret index
-	private TextStyle style;
+	private TextModifyFacade textModifyFacade;
 	
 	//index relative to styled text start.
 	private int caretIndex;
 	private Paragraph caretParagraph;
 	 
-	//this is RELATIVE to caret index.
-	//i.e. -2 means 2 chars are selected and caret is at the end.
-	//this means this value is 0 unless a piece of text is selected
+	//this is absolute caret index.
 	private int anchor;
 	private Paragraph anchorParagraph;
 	
 	//visual positions
-	public float x;
-	public float y;
+	private float startX;
+	private float startY;
+	private float screenX;
+	private float screenY;
+	private float destinationX;
+	private float destinationY;
 	
-	public Caret(){
+	private LineOnCanvas activeLineView;
+	private LineOnCanvas anchorLineView;
+	protected boolean isCaretVisible;
+	
+	private Interpolation interpolation = Interpolation.pow2;
+	private float totalDestination;
+	private Timeline caretTimer;
+	private Timeline caretMovementTimer;
+	
+	public Caret(TextModifyFacade facade){
+		this.textModifyFacade = facade;
 		caretIndex = 0;
 		anchor = 0;
+		initialSetup();
 	}
 	
-	public void setStyle(TextStyle style){
-		this.style = style;
+	private void initialSetup() {
+		//TODO: make it so that the caret starts from saved position
+		caretTimer = new Timeline(new KeyFrame(Duration.millis(GlobalAppSettings.caretBlinkRate), new EventHandler<ActionEvent>(){
+			@Override
+		    public void handle(ActionEvent event) {
+				isCaretVisible = !isCaretVisible;				
+				if(caretParagraph!= null && caretIndex == anchor) {
+					textModifyFacade.getLineViewWithIndex(caretIndex).getColumnView().refreshOverlayCanvas();
+				}
+		    }
+		}));
+		caretTimer.setCycleCount(-1);
+		caretTimer.play();
+		
+		caretMovementTimer = new Timeline(new KeyFrame(Duration.millis(GlobalAppSettings.fastDeviceFrameMillis), new EventHandler<ActionEvent>(){
+			@Override
+		    public void handle(ActionEvent event) {
+			//	System.out.println("Start x: " + startX + ", y: " + startY + ", Destination x: " + destinationX + ", y: " + destinationY + ", Screen x: " + screenX + ", y:" + screenY);
+				totalDestination += GlobalAppSettings.fastDeviceFrameMillis;
+				screenX = interpolation.apply(startX, destinationX, totalDestination / GlobalAppSettings.caretMovementTime);
+				screenY = interpolation.apply(startY, destinationY, totalDestination / GlobalAppSettings.caretMovementTime);
+				if(totalDestination > GlobalAppSettings.caretMovementTime){
+					screenX = destinationX;
+					screenY = destinationY;
+					caretMovementTimer.stop();
+					totalDestination = 0;
+				}
+				if(caretParagraph!= null && caretIndex == anchor) {
+					textModifyFacade.getLineViewWithIndex(caretIndex).getColumnView().refreshOverlayCanvas();
+				}
+		    }
+		}));
+		caretMovementTimer.setCycleCount(-1);
 	}
 	
-	public void setCaretIndex(int index){
+	private void calculateCaretLine(int index){
 		this.caretIndex = index;
-		this.style = documentText.getStyleAt(caretIndex);
+		this.activeLineView = textModifyFacade.getLineViewWithIndex(index);
+		caretParagraph = activeLineView.getParentParagraph();
+		textModifyFacade.textSelectionSet(caretIndex, anchor);
+		Vector2 caretPos = activeLineView.getLetterPosition(caretIndex);
+		
+		System.out.println("Setting visual position to " + caretPos);
+		setVisualPosition(caretPos.x, caretPos.y);
+		isCaretVisible = true;
+		caretTimer.playFromStart();
+		
+		activeLineView.getColumnView().refresh();
 	}
 	
-	public void setAnchor(int relativeIndex){
-		this.anchor = relativeIndex;
+	private void calculateAnchorLine(int index){
+		this.anchor = index;
+		this.anchorLineView = textModifyFacade.getLineViewWithIndex(index);
+		anchorParagraph = anchorLineView.getParentParagraph();
+		textModifyFacade.textSelectionSet(caretIndex, anchor);
+		
+		anchorLineView.getColumnView().refresh();
 	}
 	
 	public int getCaretIndex(){
@@ -56,29 +122,16 @@ public class Caret{
 	}
 	
 	public void setVisualPosition(float x, float y){
-		this.x = x;
-		this.y = y;
-	}
-
-	public TextStyle getStyle() {
-		return style;
-	}
-
-	public void setRelativeCaretIndex(int index) {
-		this.setCaretIndex(getCaretIndex() + index);
-	}
-	
-	public int getSelectionStart(){
-		return Math.min(caretIndex + anchor, caretIndex);
-	}
-	
-	public int getSelectionEnd(){
-		return Math.max(caretIndex + anchor, caretIndex);
+		totalDestination = 0;
+		startX = destinationX;
+		startY = destinationY;
+		this.destinationX = x;
+		this.destinationY = y;
+		caretMovementTimer.playFromStart();
 	}
 
 	public Column getActiveColumn() {
-		// TODO Auto-generated method stub
-		return null;
+		return activeLineView.getColumnView().getColumn();
 	}
 
 	public void setDocumentText(DocumentText documentText) {
@@ -88,16 +141,40 @@ public class Caret{
 	public boolean isCaretOnParagraph(Paragraph paragraph) {
 		return caretParagraph == paragraph;
 	}
+	
+	public void drawCaret(GraphicsContext context) {
+		if(!isCaretVisible) return;
+		if(anchor == caretIndex) {
+			context.setStroke(Color.BLACK);
+			context.setLineWidth(1);
+			if(caretParagraph != null ) {
+				float lineAngle = caretParagraph.getAngle();
+				TextStyle style = caretParagraph.getStyle();
+				context.strokeLine(screenX, screenY, screenX + style.getLineSpacingHeight() * Math.sin(Math.toRadians(lineAngle)), screenY + style.getLineSpacingHeight() * Math.cos(Math.toRadians(lineAngle)));
+			}
+		}
+		else{
+			//iterate over lines to draw selection
+			textModifyFacade.textSelectionSet(caretIndex, anchor);
+		}
+	}
 
-	public void setCaretIndex(LineOnCanvas lineOnCanvas, int index) {
-		caretIndex = lineOnCanvas.getStartIndexInStyledTextProperty().get() + index;
-		caretParagraph = lineOnCanvas.getParentParagraph();
+	public Paragraph getActiveParagraph() {
+		return caretParagraph;
+	}
+
+	public ColumnView getActiveColumnView() {
+		return activeLineView.getColumnView();
+	}
+
+	public void setCaretIndex(int index) {
+		this.caretIndex = index;
+		calculateCaretLine(index);
 	}
 	
-	public void drawCaret(float lineAngle, GraphicsContext context, TextStyle style) {
-		context.setStroke(Color.BLACK);
-		context.setLineWidth(1);
-		context.strokeLine(x, y, x + style.getLineSpacingHeight() * Math.sin(Math.toRadians(lineAngle)), y + style.getLineSpacingHeight() * Math.cos(Math.toRadians(lineAngle)));
+	public void setAnchorIndex(int index) {
+		this.anchor = index;
+		calculateAnchorLine(anchor);
 	}
 	
 }

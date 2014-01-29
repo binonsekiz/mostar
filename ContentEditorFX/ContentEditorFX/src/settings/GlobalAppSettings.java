@@ -23,6 +23,8 @@ public class GlobalAppSettings {
 	public static final double fastDeviceFrameMillis = 16;
 	public static final float ignoreValuesBelow = 0.001f;
 	public static final float ignoreValuesBelowLarge = 5f;
+	public static final double caretBlinkRate = 1000;
+	public static final float caretMovementTime = 100f;
 	private static boolean guiDebugGuidelines;
 	private static boolean isTestModeOn;
 	

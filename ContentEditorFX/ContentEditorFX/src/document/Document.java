@@ -20,7 +20,7 @@ public class Document {
 		columns = new ArrayList<Column>();
 		columns.add(new Column(measurement, pageInsets));
 		
-		globalText = new DocumentText();
+		globalText = new DocumentText(this);
 	}
 	
 	public ArrayList<Column> getColumns(){

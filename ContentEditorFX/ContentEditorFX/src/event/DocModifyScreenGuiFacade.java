@@ -44,16 +44,15 @@ public class DocModifyScreenGuiFacade {
 		this.docVersatilePane = docVersatilePane;
 		this.docDebugView = docDebugView;
 			
+		textModifyFacade = new TextModifyFacade();
+		widgetModifyFacade = new WidgetModifyFacade(this);
+		caret = new Caret(textModifyFacade);
+		
 		documentView.setGuiFacade(this);
 		docWidgetToolbar.setGuiFacade(this);
 		docOverview.setGuiFacade(this);
-		docBottomToolbar.setGuiFacade(this);
 		docVersatilePane.setGuiFacade(this);
 		docDebugView.setGuiFacade(this);
-		
-		textModifyFacade = new TextModifyFacade();
-		widgetModifyFacade = new WidgetModifyFacade(this);
-		caret = new Caret();
 		
 		textModifyFacade.setCaret(caret);
 		widgetModifyFacade.setCaret(caret);
@@ -65,7 +64,7 @@ public class DocModifyScreenGuiFacade {
 		docOverview.populateTreeView();
 		textModifyFacade.setDocumentAndView(document, documentView);
 		widgetModifyFacade.setDocumentAndView(document, documentView);
-		debugAssignText("");
+		docBottomToolbar.setGuiFacade(this);
 	}
 	
 	public Document getDocument(){
@@ -89,6 +88,7 @@ public class DocModifyScreenGuiFacade {
 	//TODO: temp solution
 //		docModifyPane.getActivePageView().addEmptyImage();
 		widgetModifyFacade.addImageWidget();
+		documentView.refresh();
 	}
 
 	public void addHtmlWidgetPressed() {
@@ -96,18 +96,21 @@ public class DocModifyScreenGuiFacade {
 	//TODO: temp solution
 //		docModifyPane.getActivePageView().addWebView();
 		widgetModifyFacade.addWebViewWidget();
+		documentView.refresh();
 	}
 
 	public void addMediaWidgetPressed() {
 		// TODO Auto-generated method stub
 //		docModifyPane.getActivePageView().addMediaView();
 		widgetModifyFacade.addMediaViewWidget();
+		documentView.refresh();
 	}
 	
 	public void addImageGalleryWidgetPressed() {
 		// TODO Auto-generated method stub
 //		docModifyPane.getActivePageView().addImageGallery();
 		widgetModifyFacade.addImageGalleryWidget();
+		documentView.refresh();
 	}
 	
 	public void addTextBoxPressed() {
@@ -156,7 +159,6 @@ public class DocModifyScreenGuiFacade {
 	
 	public void notifyRefreshHappened(){
 		docDebugView.refreshCountProperty().set(docDebugView.refreshCountProperty().get() + 1);
-		System.out.println("shouldve increased by one");
 	}
 
 	/*public void addLinePressed() {
@@ -245,13 +247,17 @@ public class DocModifyScreenGuiFacade {
 		documentView.setDebugPointsVisible(value);
 	}
 
-	public void debugAssignText(String value) {
+/*	public void debugAssignText(String value) {
 		documentView.setDebugText(value);
 		documentView.refresh();
 	}
-
+*/
 	public void refocusTextField() {
-		docDebugView.refocusOnTextField();
+		docBottomToolbar.refocusOnTextField();
+	}
+
+	public void setLinePolygonsVisible(boolean value) {
+		documentView.setLinePolygonsVisible(value);
 	}
 
 }

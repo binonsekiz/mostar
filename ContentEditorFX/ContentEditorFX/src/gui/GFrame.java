@@ -128,7 +128,7 @@ public class GFrame extends Application {
 		mainStage.setMinWidth(800);
 		mainStage.setOpacity(0);
 		sceneChangePane = new StackPane();
-		sceneChangePane.setId("scenechange-pane");
+//		sceneChangePane.setId("scenechange-pane");
 		sceneChangePane.setMinSize(800, 480);
 		mainScene = new Scene(sceneChangePane, 800, 480, Color.WHITE);
 		mainScene.getStylesheets().add("gui/styles/skin1.css");

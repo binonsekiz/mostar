@@ -3,6 +3,7 @@ package gui.columnview;
 import java.util.ArrayList;
 import java.util.Random;
 
+import control.TextModifyFacade;
 import settings.GlobalAppSettings;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -61,6 +62,8 @@ public class DocumentView extends Pane implements CanvasOwner{
 	private boolean isDebugPointsVisible;
 
 	private boolean isRefreshInProgress;
+
+	private boolean areLinePolygonsVisible;
 
 	public DocumentView(){
 		selfReference = this;
@@ -143,6 +146,84 @@ public class DocumentView extends Pane implements CanvasOwner{
 		});
 	}
 
+	public LineOnCanvas getLineThatIncludesIndex(int index) {
+		int columnIndex = 0;
+		int paragraphIndex = 0;
+		int lineIndex = 0;
+		
+		for(int i = 0; i < columnViews.size(); i++) {
+			if(index >= columnViews.get(i).getStartIndex() && index <= columnViews.get(i).getEndIndex()) {
+				columnIndex = i;
+				break;
+			}
+		}
+		
+		ArrayList<ParagraphOnCanvas> paragraphs = columnViews.get(columnIndex).getParagraphsOnCanvas();
+		for(int i = 0; i < paragraphs.size(); i++) {
+			if(index >= paragraphs.get(i).getStartIndex() && index <= paragraphs.get(i).getEndIndex()) {
+				paragraphIndex = i;
+				break;
+			}
+		}
+		
+		ArrayList<LineOnCanvas> lines = paragraphs.get(paragraphIndex).getLinesOnCanvas();
+		for(int i = 0; i < lines.size(); i++) {
+			if(index >= lines.get(i).getStartIndex() && index <= lines.get(i).getEndIndex()) {
+				lineIndex = i;
+				return lines.get(lineIndex);
+			}
+		}
+		return null;
+	}
+	
+	public void textSelectionSet(int lowerIndex, int higherIndex) {
+		int columnIndex = 0;
+		int paragraphIndex = 0;
+		int lineIndex = 0;
+		
+		for(int i = 0; i < columnViews.size(); i++) {
+			if(lowerIndex > columnViews.get(i).getStartIndex() && lowerIndex < columnViews.get(i).getEndIndex()) {
+				columnIndex = i;
+				break;
+			}
+		}
+		
+		ArrayList<ParagraphOnCanvas> paragraphs = columnViews.get(columnIndex).getParagraphsOnCanvas();
+		for(int i = 0; i < paragraphs.size(); i++) {
+			if(lowerIndex > paragraphs.get(i).getStartIndex() && lowerIndex < paragraphs.get(i).getEndIndex()) {
+				paragraphIndex = i;
+				break;
+			}
+		}
+		
+		ArrayList<LineOnCanvas> lines = paragraphs.get(paragraphIndex).getLinesOnCanvas();
+		for(int i = 0; i < lines.size(); i++) {
+			if(lowerIndex > lines.get(i).getStartIndex() && lowerIndex < lines.get(i).getEndIndex()) {
+				lineIndex = i;
+				lines.get(i).setSelectedIndex(lowerIndex, higherIndex);
+				break;
+			}
+		}
+		
+		//now we'll select all the lines until 
+		for(int i = columnIndex; i < columnViews.size(); i++) {
+			for(int j = paragraphIndex; j < paragraphs.size(); j++){
+				for(int k = lineIndex; k < lines.size(); k++){
+					lines.get(k).setSelectedIndex(lowerIndex, higherIndex);
+					if(higherIndex < lines.get(k).getEndIndex()) {
+						break;
+					}
+				}
+				if(higherIndex < paragraphs.get(j).getEndIndex()) {
+					break;
+				}
+			}
+			if(higherIndex < columnViews.get(i).getEndIndex()){
+				break;
+			}
+		}
+	}
+	
 	public void associateWithDocument(Document document) {
 		this.document = document;
 		initialPopulate();
@@ -181,6 +262,8 @@ public class DocumentView extends Pane implements CanvasOwner{
 		
 		guiFacade.notifyRefreshHappened();
 		fixCanvasSize();
+	//	TextModifyFacade textModifyFacade = guiFacade.getTextModifyFacade();
+	//	textModifyFacade.getCaret().drawCaret(overlayContext);
 		overlayCanvas.toFront();
 	}
 	
@@ -306,5 +389,14 @@ public class DocumentView extends Pane implements CanvasOwner{
 	public void refocusTextField() {
 		guiFacade.refocusTextField();
 	}
+
+	public void setLinePolygonsVisible(boolean value) {
+		this.areLinePolygonsVisible = value;
+	}
+
+	public boolean getLinePolygonsVisible() {
+		return areLinePolygonsVisible;
+	}
+	
 
 }

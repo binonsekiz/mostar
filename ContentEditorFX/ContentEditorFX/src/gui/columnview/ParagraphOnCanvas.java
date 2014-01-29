@@ -36,16 +36,7 @@ public class ParagraphOnCanvas {
 		this.textModifyFacade = facade;
 		lines = new ArrayList<LineOnCanvas>();
 	}
-	
-	private void debug() {
-		paragraph = new Paragraph();
-		if(style == null)
-			style = TextStyle.defaultStyle;
-		paragraph.setText("DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME DENEME ");
-		paragraph.setStyle(style);
-		paragraph.computeStringWidths();
-	}
-	
+
 	public Rectangle getAllowedSpace() {
 		return allowedSpace;
 	}
@@ -89,7 +80,7 @@ public class ParagraphOnCanvas {
 	
 	public void refreshOverlay() {
 		GraphicsContext context = parent.getOverlayContext();
-		textModifyFacade.getCaret().drawCaret(0, context, style);
+		textModifyFacade.getCaret().drawCaret(context);
 	}
 
 	public String getText() {
@@ -136,5 +127,17 @@ public class ParagraphOnCanvas {
 
 	public Paragraph getParagraph() {
 		return paragraph;
+	}
+
+	public ArrayList<LineOnCanvas> getLinesOnCanvas() {
+		return lines;
+	}
+
+	public int getStartIndex() {
+		return lines.get(0).getStartIndex();
+	}
+
+	public int getEndIndex() {
+		return lines.get(lines.size()-1).getEndIndex();
 	}
 }

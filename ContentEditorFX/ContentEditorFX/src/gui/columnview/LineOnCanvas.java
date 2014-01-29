@@ -56,6 +56,10 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	private String text;
 
 	private boolean isDebugColorOn;
+
+	private int selectedStartIndex;
+
+	private int selectedEndIndex;
 	
 	public LineOnCanvas(ColumnView parent, ParagraphOnCanvas parentParagraph, TextModifyFacade textModifyFacade) {
 		this.parent = parent;
@@ -119,18 +123,16 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		context.setLineWidth(2);
 		LineSegment line = lineSegmentProperty.get();
 	//	context.strokeLine(line.getFirstPoint().x, line.getFirstPoint().y, line.getSecondPoint().x, line.getSecondPoint().y);
-		context.strokePolygon(shape.getTransformedXVertices(), shape.getTransformedYVertices(), shape.getEdgeCount());
 		
-		context.setFill(Color.BLACK);
+		if(this.getColumnView().getDocumentView().getLinePolygonsVisible()) {
+			context.strokePolygon(shape.getTransformedXVertices(), shape.getTransformedYVertices(), shape.getEdgeCount());
+		}
+		
+		context.setFill(parentParagraph.getStyle().getStrokeColor());
 		context.setLineWidth(1.5f);
 		context.setFont(parentParagraph.getFont());
-		
-	//	context.setStroke(Color.GREEN);
-	//	context.setLineWidth(5);
-	//	context.strokeLine(lowerLineSegment.getFirstPoint().x, lowerLineSegment.getFirstPoint().y, lowerLineSegment.getSecondPoint().x, lowerLineSegment.getSecondPoint().y);
-		
+	
 		if(text != null) {
-		//	context.strokeText(text.substring(startIndexInStyledText.get(), endIndexInStyledText.get()), line.getFirstPoint().x, line.getFirstPoint().y);
 			float startX = 0;
 			float startY = 0;
 			if(isTextUpsideDown()){
@@ -141,7 +143,32 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 				startX = line.getLeftPoint().x;
 				startY = line.getLeftPoint().y;
 			}
-			context.fillText(text, startX, startY + this.height);
+			
+			if((selectedEndIndex == 0 && selectedStartIndex == 0) || selectedEndIndex == selectedStartIndex) {
+				System.out.println("YOYOYOYstart: " + startIndexInStyledText.get() + ", end: " + endIndexInStyledText.get() + ", caretStart: " + selectedStartIndex + ", caretEnd: " + selectedEndIndex);
+				context.fillText(text, startX, startY + this.height);
+			}
+			else{
+				if(caretPositions == null) {
+					initializeLetterSizes();
+				}
+				
+				System.out.println("ü~ start: " + startIndexInStyledText.get() + ", end: " + endIndexInStyledText.get() + ", caretStart: " + selectedStartIndex + ", caretEnd: " + selectedEndIndex);
+				
+				int startIndexAdjusted = selectedStartIndex - startIndexInStyledText.get();
+				int endIndexAdjusted = selectedEndIndex - endIndexInStyledText.get();
+				
+				context.fillText(text.substring(0, startIndexAdjusted), startX, startY + this.height);
+				context.save();
+				context.setFill(parentParagraph.getStyle().getSelectionColor());
+				
+				context.fillRect(startX + caretPositions.get(startIndexAdjusted), startY, caretPositions.get(endIndexAdjusted) - caretPositions.get(startIndexAdjusted), this.height);
+				context.setFill(parentParagraph.getStyle().getInvertedStrokeColor());
+				context.fillText(text.substring(startIndexAdjusted, endIndexAdjusted), startX + caretPositions.get(startIndexAdjusted), startY + this.height);
+				
+				context.restore();
+				context.fillText(text.substring(endIndexAdjusted), startX + caretPositions.get(endIndexAdjusted), startY + this.height);
+			}
 		}
 	}
 	
@@ -263,7 +290,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		this.setStartIndex(startIndex);
 		this.setEndIndex(endIndex);
 		if(text != null)
-			this.text = text.trim();
+			this.text = text/*.trim()*/;
 		else
 			this.text = null;
 		letterSizes = null;
@@ -331,19 +358,26 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	private void updateCaret(MouseEvent event) {
 		int index = findClickedIndex(event);
 		Caret caret = textModifyFacade.getCaret();
-		caret.setCaretIndex(this, index);
+		caret.setCaretIndex(index);
 		System.out.println("CARET INDEX: " + index);
 		
 		for(int i = 0; i < letterSizes.size(); i++) {
 			System.out.println("\tLetter[" + i + "]= " + letterSizes.get(i) + ", Caret[" + i + "]= " + caretPositions.get(i));
 		}
 
-		Vector2 caretPos;
+//		Vector2 caretPos = getLetterPosition(index);
+//		caret.setVisualPosition(caretPos.x, caretPos.y);
+	}
+	
+	public Vector2 getLetterPosition(int index) {
+		System.out.println("\n##GetLetterPosition, index: " + index);
+		Vector2 pos;
+		initializeLetterSizes();
 		if(caretPositions == null || caretPositions.size() == 0)
-			caretPos = lineSegmentProperty.get().getDistanceCoordinate(0);
+			pos = lineSegmentProperty.get().getDistanceCoordinate(0);
 		else
-			caretPos = lineSegmentProperty.get().getDistanceCoordinate(caretPositions.get(Math.min(index,letterSizes.size())));
-		caret.setVisualPosition(caretPos.x, caretPos.y);
+			pos = lineSegmentProperty.get().getDistanceCoordinate(caretPositions.get(Math.min(index,letterSizes.size())));
+		return pos;
 	}
 
 	public void mouseClick(MouseEvent event) {
@@ -357,6 +391,15 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 
 	public LineSegment getLowerLineSegment() {
 		return lowerLineSegment;
+	}
+	
+	public void setSelectedIndex(int startIndex, int endIndex) {
+		this.selectedStartIndex = startIndex;
+		this.selectedEndIndex = endIndex;
+	}
+
+	public ColumnView getColumnView() {
+		return parent;
 	}
 
 }

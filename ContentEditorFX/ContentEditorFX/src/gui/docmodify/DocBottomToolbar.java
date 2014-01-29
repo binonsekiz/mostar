@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import settings.Translator;
 import event.DocModifyScreenGuiFacade;
+import gui.SecretTextField;
 
 public class DocBottomToolbar extends ToolBar{
 	
@@ -33,6 +34,8 @@ public class DocBottomToolbar extends ToolBar{
 	private Button zoomIncreaseButton;
 	private TextField zoomField;
 	private Button zoomDecreaseButton;
+	
+	private SecretTextField secretField;
 	
 	private double zoomFactor;
 	private boolean isZoomChanged;
@@ -147,6 +150,8 @@ public class DocBottomToolbar extends ToolBar{
 		zoomField.setTranslateX(20);
 		zoomIncreaseButton.setTranslateX(20);
 		
+		secretField = new SecretTextField();
+		
 		pageBox.getChildren().addAll(prevColumnButton,currentPageText,nextColumnButton);
 		sectionBox.getChildren().addAll(prevSectionButton, currentSectionText, nextSectionButton);
 		chapterBox.getChildren().addAll(prevChapterButton, currentChapterText, nextChapterButton);
@@ -156,11 +161,12 @@ public class DocBottomToolbar extends ToolBar{
 			this.getItems().add(debugLabel);
 		}
 		
-		this.getItems().addAll(chapterBox, sectionBox, pageBox, zoomDecreaseButton, zoomField, zoomIncreaseButton);
+		this.getItems().addAll(chapterBox, sectionBox, pageBox, zoomDecreaseButton, zoomField, zoomIncreaseButton, secretField);
 	}
 	
 	public void setGuiFacade(DocModifyScreenGuiFacade guiFacade){
 		this.guiFacade = guiFacade;
+		secretField.setTextModifyFacade(guiFacade.getTextModifyFacade());
 	}
 
 	public int getActivePage() {
@@ -180,6 +186,10 @@ public class DocBottomToolbar extends ToolBar{
 		if(isDebugLabelVisible){
 			debugLabel.setText(text);
 		}
+	}
+	
+	public void refocusOnTextField() {
+		secretField.requestFocus();
 	}
 	
 	public enum DocNavigationButtons{

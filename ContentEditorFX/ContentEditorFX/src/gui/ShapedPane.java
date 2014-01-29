@@ -131,7 +131,7 @@ public abstract class ShapedPane extends Pane implements VisualView {
 		this.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 		    @Override
 		    public void handle(MouseEvent event) {
-		        System.out.println("clicked on shaped pane");
+		        
 		    }
 		});
 		
@@ -174,7 +174,6 @@ public abstract class ShapedPane extends Pane implements VisualView {
 		    @Override
 		    public void handle(MouseEvent event) {
 		        onMouseMoved(event);
-		        System.out.println("mouse on shapedpane");
 		    }
 		});
 	}
@@ -195,6 +194,7 @@ public abstract class ShapedPane extends Pane implements VisualView {
 	public void onMouseEntered(MouseEvent event) {
 		isMouseInside = true;
 		if(isShapeInitialized == false){
+			System.out.println("SHAPE INIT YO");
 			initializeShape();
 			isShapeInitialized = true;
 		}
@@ -209,7 +209,6 @@ public abstract class ShapedPane extends Pane implements VisualView {
 	public void onMouseMoved(MouseEvent event) {
 		updateMousePosition(event);
 		canvasOwner.notifyOverlayRepaintNeeded();
-		System.out.println("Pane mouse");
 	}
 	
 	public void onMousePressed(MouseEvent event) {
@@ -224,7 +223,6 @@ public abstract class ShapedPane extends Pane implements VisualView {
 					resizeIndex = i;
 					canvasOwner.notifyModificationStart(ModificationType.Resize, selfReference, event);
 					isResizeHappening = true;
-					System.out.println("RESIZE");
 					break;
 				}
 			}
@@ -262,7 +260,7 @@ public abstract class ShapedPane extends Pane implements VisualView {
 		}
 	}
 
-	protected void initializeShape() {
+	public void initializeShape() {
 		Polygon defaultShape = GeometryHelper.getRectanglePolygon(this.getWidth(), this.getHeight());
 		defaultShape.move((float)this.getLayoutX(), (float)this.getLayoutY());
 		initializeShape(defaultShape);

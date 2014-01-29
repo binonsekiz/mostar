@@ -7,20 +7,16 @@ import java.util.ArrayList;
 public class DocumentText {
 
 	private ArrayList<Paragraph> globalText;
+	private Document document;
 	
-	//TODO: this entity means that model has a grasp of the view
-	// I am not sure if this is the best way to do this.
-	// Should probably find some kind of observer thing for this.
-	private ArrayList<ParagraphOnCanvas> paragraphViews;
-	
-	public DocumentText () {
+	public DocumentText (Document document) {
+		this.document = document;
 		globalText = new ArrayList<Paragraph>();
-		paragraphViews = new ArrayList<>();
 		debug();
 	}
 	
 	private void debug() {
-		globalText.add(new Paragraph());
+		globalText.add(new Paragraph(this));
 	}
 	
 	public void setDebugText(String value, ParagraphOnCanvas paragraphView) {
@@ -46,6 +42,10 @@ public class DocumentText {
 
 	public Paragraph getDebugParagraph() {
 		return globalText.get(0);
+	}
+
+	public ArrayList<Paragraph> getParagraphs() {
+		return globalText;
 	}
 	
 	
