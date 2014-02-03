@@ -1,10 +1,7 @@
 package event.input;
 
 import gui.columnview.DocumentView;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.input.MouseEvent;
 
 public class OverlayCanvas extends Canvas{
 

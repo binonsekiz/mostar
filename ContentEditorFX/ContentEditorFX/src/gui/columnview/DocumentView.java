@@ -1,37 +1,28 @@
 package gui.columnview;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-import control.TextModifyFacade;
-import settings.GlobalAppSettings;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
-import javafx.scene.transform.Transform;
 import javafx.util.Duration;
+import settings.GlobalAppSettings;
 import document.Column;
 import document.Document;
 import event.DocModifyScreenGuiFacade;
 import event.input.OverlayCanvas;
 import event.modification.ModificationType;
-import geometry.libgdxmath.MathUtils;
 import gui.ShapedPane;
 
 /**
@@ -59,19 +50,18 @@ public class DocumentView extends Pane implements CanvasOwner{
 
 	private boolean isOverlayCanvasVisible;
 	private boolean isTextCanvasVisible;
-	private boolean isDebugPointsVisible;
 
 	private boolean isRefreshInProgress;
 
 	private boolean areLinePolygonsVisible;
+
+	private boolean isPageInsetVisible;
 
 	public DocumentView(){
 		selfReference = this;
 		columnViews = new ArrayList<ColumnView>();
 		initGui();
 		initEvents();	
-		
-		debug();
 	}
 	
 	private void initGui() {
@@ -97,8 +87,8 @@ public class DocumentView extends Pane implements CanvasOwner{
 		
 		isOverlayCanvasVisible = true;
 		isTextCanvasVisible = true;
-		isDebugPointsVisible = true;
 		isRefreshInProgress = false;
+		areLinePolygonsVisible = true;
 		zoomFactor = 1;	
 		
 		pane.getChildren().addAll(gridPane, overlayCanvas);
@@ -151,29 +141,39 @@ public class DocumentView extends Pane implements CanvasOwner{
 		int paragraphIndex = 0;
 		int lineIndex = 0;
 		
+		System.out.println("\n\n################\nQuerying with " + index);
+		
 		for(int i = 0; i < columnViews.size(); i++) {
+			System.out.println("Looking at column " + i + ", has start index: " + columnViews.get(i).getStartIndex() + ", end index: " + columnViews.get(i).getEndIndex());
 			if(index >= columnViews.get(i).getStartIndex() && index <= columnViews.get(i).getEndIndex()) {
 				columnIndex = i;
+				System.out.println("Found in column " + i);
 				break;
 			}
 		}
 		
 		ArrayList<ParagraphOnCanvas> paragraphs = columnViews.get(columnIndex).getParagraphsOnCanvas();
 		for(int i = 0; i < paragraphs.size(); i++) {
+			System.out.println("Looking at paragraph " + i + ", has start index: " + paragraphs.get(i).getStartIndex() + ", end index: " + paragraphs.get(i).getEndIndex());
 			if(index >= paragraphs.get(i).getStartIndex() && index <= paragraphs.get(i).getEndIndex()) {
 				paragraphIndex = i;
+				System.out.println("Found in paragraph " + i);
 				break;
 			}
 		}
 		
 		ArrayList<LineOnCanvas> lines = paragraphs.get(paragraphIndex).getLinesOnCanvas();
 		for(int i = 0; i < lines.size(); i++) {
+			System.out.println("Looking at line " + i + ", has start index: " + lines.get(i).getStartIndex() + ", end index: " + lines.get(i).getEndIndex());
 			if(index >= lines.get(i).getStartIndex() && index <= lines.get(i).getEndIndex()) {
 				lineIndex = i;
+				System.out.println("Found in lines " + i);
 				return lines.get(lineIndex);
 			}
 		}
-		return null;
+		
+		//if not returned so far, find the last modified place
+		return null;	
 	}
 	
 	public void textSelectionSet(int lowerIndex, int higherIndex) {
@@ -205,14 +205,20 @@ public class DocumentView extends Pane implements CanvasOwner{
 			}
 		}
 		
+		System.out.println("Found first index at: " + columnIndex + ", " + paragraphIndex + ", " + lineIndex);
+		
+		int lastSetEndIndex = 0;
+		
 		//now we'll select all the lines until 
 		for(int i = columnIndex; i < columnViews.size(); i++) {
 			for(int j = paragraphIndex; j < paragraphs.size(); j++){
 				for(int k = lineIndex; k < lines.size(); k++){
-					lines.get(k).setSelectedIndex(lowerIndex, higherIndex);
-					if(higherIndex < lines.get(k).getEndIndex()) {
+					if(higherIndex < lines.get(k).getEndIndex() || lines.get(k).getEndIndex() == lastSetEndIndex) {
 						break;
 					}
+					System.out.println("Found second index at: " + i + ", " + j + ", " + k);
+					lines.get(k).setSelectedIndex(lowerIndex, higherIndex);
+					lastSetEndIndex = lines.get(k).getEndIndex();
 				}
 				if(higherIndex < paragraphs.get(j).getEndIndex()) {
 					break;
@@ -342,12 +348,6 @@ public class DocumentView extends Pane implements CanvasOwner{
 		// TODO Auto-generated method stub
 		
 	}
-	
-	private void debug(){
-//		scrollPane.setId("scrollpane-custom");
-//		scrollContent.setId("scrollpane-content");
-//		this.setId("docmodify-pane");
-	}
 
 	@Override
 	public GraphicsContext getGraphicsContext() {
@@ -362,24 +362,12 @@ public class DocumentView extends Pane implements CanvasOwner{
 		this.isTextCanvasVisible = value;
 	}
 	
-	public void setDebugPointsVisible(boolean value) {
-		this.isDebugPointsVisible = value;
-	}
-	
 	public boolean isOverlayCanvasVisible() {
 		return this.isOverlayCanvasVisible;
 	}
 	
 	public boolean isTextCanvasVisible() {
 		return this.isTextCanvasVisible;
-	}
-	
-	public boolean isDebugPointsVisible() {
-		return this.isDebugPointsVisible;
-	}
-
-	public void setDebugText(String value) {
-		columnViews.get(0).setDebugText(value);
 	}
 
 	public Affine getOverlayContextTransformForChild(ColumnView columnView) {
@@ -397,6 +385,17 @@ public class DocumentView extends Pane implements CanvasOwner{
 	public boolean getLinePolygonsVisible() {
 		return areLinePolygonsVisible;
 	}
+
+	public void setInsetVisible(boolean value) {
+		this.isPageInsetVisible = value;
+	}
 	
+	public boolean isInsetVisible() {
+		return isPageInsetVisible;
+	}
+
+	public ArrayList<ColumnView> getColumnViews() {
+		return columnViews;
+	}
 
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import document.PageSpecs.Measurement;
 
 public class Document {
+	public static Document instance;
 	
 	//defaults for every new page
 	private Measurement measurement;
@@ -14,6 +15,8 @@ public class Document {
 	private ArrayList<Column> columns;
 	
 	public Document(){
+		System.out.println("Document initialized");
+		instance = this;
 		this.measurement = PageSpecs.P640x768;
 		this.pageInsets = new PageInsets(measurement);
 		

@@ -1,8 +1,5 @@
 package gui.docmodify;
 
-import event.DocModifyScreenGuiFacade;
-import gui.SecretTextField;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -10,9 +7,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
+import document.Document;
+import event.DocModifyScreenGuiFacade;
 
 public class DocDebugView extends FlowPane {
 
@@ -20,20 +19,28 @@ public class DocDebugView extends FlowPane {
 	
 	private DocModifyScreenGuiFacade guiFacade;
 	
+	private Text debugLabel1;
+	private Text debugLabel2;
+	private Text debugLabel3;
+	private Text debugLabel4;
 	private Text title;
 	
 	private CheckBox overlayVisible;
 	private CheckBox textCanvasVisible;
-	private CheckBox debugPointsVisible;
 	private CheckBox linePolygonsVisible;
+	private CheckBox insetVisible;
 	private Button refresh;
+	
+	private TextArea totalDocument;
 	
 	private Text totalRefreshCount;
 	private SimpleIntegerProperty refreshCount;
 	
 	public DocDebugView() {
 		instance = this;
-		this.setMaxWidth(150);
+		this.setMinWidth(200);
+		this.setPrefWidth(200);
+		this.setMaxWidth(200);
 		
 		initGui();
 		initEvents();
@@ -61,17 +68,17 @@ public class DocDebugView extends FlowPane {
 			}
 		});
 		
-		debugPointsVisible.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				guiFacade.setDebugPointsVisible(debugPointsVisible.selectedProperty().get());
-			}
-		});
-		
 		linePolygonsVisible.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
 				guiFacade.setLinePolygonsVisible(linePolygonsVisible.selectedProperty().get());
+			}
+		});
+		
+		insetVisible.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				guiFacade.setInsetVisible(insetVisible.selectedProperty().get());
 			}
 		});
 		
@@ -93,21 +100,47 @@ public class DocDebugView extends FlowPane {
 		refreshCount = new SimpleIntegerProperty(0);
 		overlayVisible = new CheckBox("Overlay Visible");
 		textCanvasVisible = new CheckBox("Text Canvas Visible");
-		debugPointsVisible = new CheckBox("Debug Points Visible");
 		linePolygonsVisible = new CheckBox("Line Polygons Visible");
+		insetVisible = new CheckBox("Page Insets Visible");
 		refresh = new Button("Refresh");
+		debugLabel1 = new Text("Debug label1");
+		debugLabel2 = new Text("Debug label2");
+		debugLabel3 = new Text("Debug label3");
+		debugLabel4 = new Text("Debug label4");
 		totalRefreshCount = new Text("Total refresh count: " + refreshCount.get());
+		totalDocument = new TextArea();
+		totalDocument.setWrapText(true);
 		
 		overlayVisible.selectedProperty().set(true);
 		textCanvasVisible.selectedProperty().set(true);
-		debugPointsVisible.selectedProperty().set(true);
 		linePolygonsVisible.selectedProperty().set(true);
+		insetVisible.selectedProperty().set(true);
 		
-		this.getChildren().addAll(title, overlayVisible, textCanvasVisible, debugPointsVisible, linePolygonsVisible, refresh, totalRefreshCount);
+		this.getChildren().addAll(title, overlayVisible, textCanvasVisible, linePolygonsVisible, 
+				insetVisible, refresh, totalRefreshCount, debugLabel1, debugLabel2, debugLabel3, debugLabel4, totalDocument);
 	}
 
 	public void setGuiFacade(DocModifyScreenGuiFacade docModifyScreenGuiFacade) {
 		this.guiFacade = docModifyScreenGuiFacade;
+	}
+	
+	public void setDebugText(String text, int index){
+		switch (index) {
+		case 1: debugLabel1.setText(text); break;
+		case 2: debugLabel1.setText(text); break;
+		case 3: debugLabel1.setText(text); break;
+		case 4: debugLabel1.setText(text); break;
+		default: break;
+		}
+		debugLabel1.setText(text);
+	}
+	
+	public void appendDebugText(String text){
+		debugLabel1.setText(debugLabel1.getText() + text);
+	}
+	
+	public void debugRefreshTotalDocument(Document document) {
+		totalDocument.setText(document.getDocumentText().exportString());
 	}
 
 	public void putText(String string) {

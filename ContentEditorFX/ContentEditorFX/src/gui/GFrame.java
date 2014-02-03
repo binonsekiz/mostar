@@ -124,13 +124,13 @@ public class GFrame extends Application {
 
 	private void initializeMainScene() {
 		mainStage.setTitle("Mostar - Sürüm 0.0.2 Demo - 15.08.2013");
-		mainStage.setMinHeight(480);
-		mainStage.setMinWidth(800);
+		mainStage.setMinHeight(GlobalAppSettings.frameHeight);
+		mainStage.setMinWidth(GlobalAppSettings.frameWidth);
 		mainStage.setOpacity(0);
 		sceneChangePane = new StackPane();
 //		sceneChangePane.setId("scenechange-pane");
-		sceneChangePane.setMinSize(800, 480);
-		mainScene = new Scene(sceneChangePane, 800, 480, Color.WHITE);
+		sceneChangePane.setMinSize(GlobalAppSettings.frameWidth, GlobalAppSettings.frameHeight);
+		mainScene = new Scene(sceneChangePane, GlobalAppSettings.frameWidth, GlobalAppSettings.frameHeight, Color.WHITE);
 		mainScene.getStylesheets().add("gui/styles/skin1.css");
 		mainStage.setScene(mainScene);
 		

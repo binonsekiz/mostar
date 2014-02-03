@@ -34,21 +34,30 @@ public class LayoutMachine {
 	
 	public ParagraphOnCanvas getParagraphSpace(ColumnView requester, Rectangle allowedSpace, TextStyle style, Paragraph text, TextModifyFacade facade){
 		ParagraphOnCanvas paragraph = new ParagraphOnCanvas(requester, allowedSpace, style, facade);
+		paragraph.setStyle(style);
+		paragraph.setParagraph(text);
 		
-		//TODO: take textstyle into account
-		for(int y = (int) allowedSpace.y; y <= allowedSpace.height; y+= style.getLineSpacingHeight() + 2){
+		for(float y = allowedSpace.y; y <= allowedSpace.height + allowedSpace.y; y+= style.getLineSpacingHeight() + 2){
+			System.out.println("\nGetParagraphSpace");
 			LineOnCanvas newLine = new LineOnCanvas(requester, paragraph, facade);
 			newLine.initialPositionSetup(allowedSpace.x, y, allowedSpace.width, style.getLineSpacingHeight(), 0);
 			ArrayList<LineOnCanvas> trimmedLine = buildLineOnCanvas(requester, newLine, paragraph, facade);
 			paragraph.insertLines(trimmedLine);
 		}
 		
-		paragraph.setParagraph(text);
+		text.setParagraphOnCanvas(paragraph);
+		
+		for(int i = 0; i < paragraph.getLines().size(); i++) {
+			LineOnCanvas tempLine = paragraph.getLines().get(i);
+			tempLine.setTextLine(text.getTextLines().get(i));
+		}
 		
 		return paragraph;
 	}
 	
 	private ArrayList<LineOnCanvas> buildLineOnCanvas(ColumnView requester, LineOnCanvas newLine, ParagraphOnCanvas parentParagraph, TextModifyFacade facade) {
+		System.out.println("BUILD LINE ON CANVAS!!!!!");
+		
 		ArrayList<LineOnCanvas> lines = new ArrayList<LineOnCanvas>();
 		ArrayList<LineSegment> segments = new ArrayList<LineSegment>();
 		
@@ -100,13 +109,20 @@ public class LayoutMachine {
 		}
 		
 		//construct the lineoncanvases.
-		for(int i = 0; i < segments.size(); i++){
+		Paragraph paragraph = parentParagraph.getParagraph();
+		paragraph.startTextDivision();
+		
+		for(int i = 0; i < segments.size(); i++) {
+			System.out.println("\n\nbuildlineoncanvas1");
+			System.out.println("buildlineoncanvas2");
+			System.out.println("buildlineoncanvas3");
+			System.out.println("buildlineoncanvas4");
 			LineOnCanvas tempLine = new LineOnCanvas(requester, parentParagraph, facade);
 			tempLine.setLineSegment(segments.get(i));
 			
 			tempLine.setHeight(newLine.getHeight());
 			tempLine.setAngle(newLine.getAngle());
-			
+
 			lines.add(tempLine);
 		}
 		

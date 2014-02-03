@@ -1,21 +1,16 @@
 package gui.columnview;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import com.sun.javafx.tk.FontMetrics;
-
-import control.Caret;
-import control.TextModifyFacade;
-import document.Paragraph;
 import geometry.GeometryHelper;
 import geometry.libgdxmath.LineSegment;
 import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Vector2;
+import gui.docmodify.DocDebugView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,21 +19,24 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
+import com.sun.javafx.tk.FontMetrics;
+
+import control.Caret;
+import control.TextModifyFacade;
+import document.Paragraph;
+import document.TextLine;
+
 public class LineOnCanvas implements Comparable<LineOnCanvas>{
 
-	private DoubleProperty preferredWidthProperty;
+	private static int debugObjectCounter = 1;
+	private int debugObjectCount;
 	
-	private IntegerProperty startIndexInStyledText;
-	private IntegerProperty endIndexInStyledText;
+	private DoubleProperty preferredWidthProperty;
 	
 	private ColumnView parent;
 	private ParagraphOnCanvas parentParagraph;
 	private ArrayList<Float> letterSizes;
 	private ArrayList<Float> caretPositions;
-//	private StyleTextPair text;
-	
-	private LineOnCanvas previousLine;
-	private LineOnCanvas nextLine;
 
 	private SimpleObjectProperty<LineSegment> lineSegmentProperty;
 	private LineSegment lowerLineSegment;
@@ -52,16 +50,17 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	private float angle;
 	
 	private TextModifyFacade textModifyFacade;
-	//TODO: debug variable
-	private String text;
-
-	private boolean isDebugColorOn;
+	private TextLine textLine;
 
 	private int selectedStartIndex;
-
 	private int selectedEndIndex;
+	private Color polygonColor;
 	
 	public LineOnCanvas(ColumnView parent, ParagraphOnCanvas parentParagraph, TextModifyFacade textModifyFacade) {
+		debugObjectCount = debugObjectCounter;
+		debugObjectCounter++;
+		
+		System.out.println("Line on Canvas initialized: " + debugObjectCount);
 		this.parent = parent;
 		this.parentParagraph = parentParagraph;
 		this.textModifyFacade = textModifyFacade;
@@ -69,10 +68,9 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		preferredWidthProperty = new SimpleDoubleProperty();
 		alignmentProperty = new SimpleObjectProperty<TextAlignment>();
 		alignmentProperty.set(TextAlignment.JUSTIFY);
-		startIndexInStyledText = new SimpleIntegerProperty();
-		endIndexInStyledText = new SimpleIntegerProperty();
 		lineSegmentProperty = new SimpleObjectProperty<LineSegment>();
 		lineSegmentProperty.set(new LineSegment(new Vector2(), new Vector2()));
+		polygonColor = Color.DARKRED;
 		
 		initEvents();
 	}
@@ -87,6 +85,10 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		revalidateLineSegment();
 	}
 	
+	public void setTextLine(TextLine line) {
+		this.textLine = line;
+	}
+	
 	private void revalidateLineSegment() {
 		LineSegment lineSegment = new LineSegment(
 				new Vector2(layoutX, layoutY), 
@@ -95,10 +97,10 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		lineSegmentProperty.set(lineSegment);
 	}
 	
-	public void initialTextSetup(int startIndex, int endIndex) {
+/*	public void initialTextSetup(int startIndex, int endIndex) {
 		startIndexInStyledText.set(startIndex);
 		endIndexInStyledText.set(endIndex);
-	}
+	}*/
 	
 	public void setLineSegment(LineSegment line) {
 		lineSegmentProperty.set(line);
@@ -113,18 +115,13 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 
 	public void refresh(){
 		GraphicsContext context = parent.getGraphicsContext();
-		//TODO: uncomment next line, lines should get texts from paragraphs.
-//		String text = parentParagraph.getText(startIndexInStyledText.get(), endIndexInStyledText.get());
+		String text = parentParagraph.getText(textLine);
 		
-		if(isDebugColorOn)
-			context.setStroke(Color.GREEN);
-		else
-			context.setStroke(Color.RED);
 		context.setLineWidth(2);
 		LineSegment line = lineSegmentProperty.get();
-	//	context.strokeLine(line.getFirstPoint().x, line.getFirstPoint().y, line.getSecondPoint().x, line.getSecondPoint().y);
-		
+
 		if(this.getColumnView().getDocumentView().getLinePolygonsVisible()) {
+			context.setStroke(polygonColor);
 			context.strokePolygon(shape.getTransformedXVertices(), shape.getTransformedYVertices(), shape.getEdgeCount());
 		}
 		
@@ -145,7 +142,6 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 			}
 			
 			if((selectedEndIndex == 0 && selectedStartIndex == 0) || selectedEndIndex == selectedStartIndex) {
-				System.out.println("YOYOYOYstart: " + startIndexInStyledText.get() + ", end: " + endIndexInStyledText.get() + ", caretStart: " + selectedStartIndex + ", caretEnd: " + selectedEndIndex);
 				context.fillText(text, startX, startY + this.height);
 			}
 			else{
@@ -153,10 +149,8 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 					initializeLetterSizes();
 				}
 				
-				System.out.println("ü~ start: " + startIndexInStyledText.get() + ", end: " + endIndexInStyledText.get() + ", caretStart: " + selectedStartIndex + ", caretEnd: " + selectedEndIndex);
-				
-				int startIndexAdjusted = selectedStartIndex - startIndexInStyledText.get();
-				int endIndexAdjusted = selectedEndIndex - endIndexInStyledText.get();
+				int startIndexAdjusted = selectedStartIndex - textLine.getStartIndex();
+				int endIndexAdjusted = selectedEndIndex - textLine.getEndIndex();
 				
 				context.fillText(text.substring(0, startIndexAdjusted), startX, startY + this.height);
 				context.save();
@@ -195,25 +189,6 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 			}
 		});
 		
-		startIndexInStyledText.addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> arg0,
-					Number oldValue, Number newValue) {
-				int wordLength = endIndexInStyledText.get() - oldValue.intValue();
-				endIndexInStyledText.set(startIndexInStyledText.getValue() + wordLength);
-			}
-		});
-		
-		endIndexInStyledText.addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> arg0,
-					Number arg1, Number arg2) {
-				if(nextLine != null){
-					nextLine.getStartIndexInStyledTextProperty().set(endIndexInStyledText.getValue());
-				}
-			}
-		});
-		
 		lineSegmentProperty.addListener(new ChangeListener<LineSegment>() {
 			@Override
 			public void changed(ObservableValue<? extends LineSegment> arg0,
@@ -229,28 +204,12 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		});
 	}
 	
-	public IntegerProperty getStartIndexInStyledTextProperty() {
-		return startIndexInStyledText;
-	}
-	
-	public IntegerProperty getEndIndexInStyledTextProperty() {
-		return endIndexInStyledText;
-	}
-	
 	public int getStartIndex() {
-		return startIndexInStyledText.get();
+		return textLine.getStartIndex();
 	}
 	
 	public int getEndIndex() {
-		return endIndexInStyledText.get();
-	}
-	
-	private void setStartIndex(int index) {
-		this.startIndexInStyledText.set(index);
-	}
-	
-	private void setEndIndex(int index) {
-		this.endIndexInStyledText.set(index);
+		return textLine.getEndIndex();
 	}
 
 	public void setLayout(float x, float y) {
@@ -259,7 +218,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	}
 	
 	@Override
-	public String toString(){
+	public String toString() {
 		return "x: " + layoutX + ", y: " + layoutY + " width: " + preferredWidthProperty.get();
 	}
 
@@ -284,18 +243,16 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 			return value;
 	}
 
-	public void setDebugText(String text, int startIndex, int endIndex) {
-		if(text!= null)
-			System.out.println("Line received text: " + text);
+	/*public void setDebugText(String text, int startIndex, int endIndex) {
 		this.setStartIndex(startIndex);
 		this.setEndIndex(endIndex);
 		if(text != null)
 			this.text = text/*.trim()*/;
-		else
+	/*	else
 			this.text = null;
 		letterSizes = null;
 		caretPositions = null;
-	}
+	}*/
 
 	public boolean containsCoordinate(double x, double y) {
 		return shape.contains((float)x, (float)y);
@@ -329,6 +286,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		FontMetrics metrics = parentParagraph.getStyle().getFontMetrics();
 		letterSizes = new ArrayList<Float>();
 		caretPositions = new ArrayList<Float>();
+		String text = parentParagraph.getText(textLine);
 		if(text != null){
 			System.out.println("text: " + text  + ", size: " + text.length());
 			float currentWidth = 0;
@@ -384,6 +342,10 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		updateCaret(event);
 		parent.refreshOverlayCanvas();
 	}
+	
+	public void mouseMoved(MouseEvent evet) {
+		DocDebugView.instance.setDebugText("LineOnCanvas, x: "  + this.layoutX + ", y: " + this.layoutY + ", width: " + this.width, 0);
+	}
 
 	public Paragraph getParentParagraph() {
 		return parentParagraph.getParagraph();
@@ -400,6 +362,10 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 
 	public ColumnView getColumnView() {
 		return parent;
+	}
+
+	public void setPolygonColor(Color polygonColor) {
+		this.polygonColor = polygonColor;
 	}
 
 }

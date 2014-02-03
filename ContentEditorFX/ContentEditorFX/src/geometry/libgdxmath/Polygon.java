@@ -587,11 +587,9 @@ public class Polygon {
 			if(result){
 				if(point1 == null){
 					point1 = point;
-					requester.debugPoint(point1);
 				}
 				else if(point2 == null){
 					point2 = point;
-					requester.debugPoint(point2);
 				}
 			}
 		}

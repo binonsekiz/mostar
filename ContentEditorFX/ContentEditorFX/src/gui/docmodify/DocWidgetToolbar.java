@@ -57,7 +57,6 @@ public class DocWidgetToolbar extends FlowPane{
 	private Button drawGraphicButton;
 	
 	private Button lineButton;
-	private Button debugButton;
 	private DocModifyScreenGuiFacade guiFacade;
 	
 	public DocWidgetToolbar(){
@@ -75,7 +74,6 @@ public class DocWidgetToolbar extends FlowPane{
 		
 		deactivateControls();
 		
-		debugButton = new Button(Translator.get("Debug"));
 		lineButton = new Button(Translator.get("Line"));
 		
 		this.setVgap(GAP_CONST);
@@ -285,15 +283,7 @@ public class DocWidgetToolbar extends FlowPane{
 			public void handle(ActionEvent arg0) {
 				guiFacade.pageBackgroundPressed();
 			}
-		});
-		
-		debugButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				//TODO: handle debug events
-			}
-		});
-		
+		});		
 	}
 
 	public void setGuiFacade(DocModifyScreenGuiFacade guiFacade) {

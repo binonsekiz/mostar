@@ -1,14 +1,10 @@
 package control;
 
-import java.util.ArrayList;
-
 import gui.columnview.DocumentView;
 import gui.columnview.LineOnCanvas;
-import gui.columnview.ParagraphOnCanvas;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import zzzzdeprecated.ColumnViewPane;
-import zzzzdeprecated.StyledTextDeprecated;
+
+import java.util.ArrayList;
+
 import document.Document;
 import document.DocumentText;
 import document.Paragraph;
@@ -45,10 +41,10 @@ public class TextModifyFacade{
 		return caret;
 	}
 
-	public void setActiveParagraphText(String arg2) {
+/*	public void setActiveParagraphText(String arg2) {
 		caret.getActiveParagraph().setText(arg2);
 		caret.getActiveColumnView().notifyTextRepaintNeeded();
-	}
+	}*/
 
 	public Paragraph getParagraphWithIndex(int caretIndex) {
 		ArrayList<Paragraph> paragraphs =  documentText.getParagraphs();
@@ -67,7 +63,12 @@ public class TextModifyFacade{
 		int lowerIndex = Math.min(caretIndex, anchor);
 		int higherIndex = Math.max(caretIndex, anchor); 
 		
+		System.out.println("Lower index: " + lowerIndex + ", higher index: " + higherIndex);
 		documentView.textSelectionSet(lowerIndex, higherIndex);
+	}
+
+	public void insertSingleChar(String character) {
+		caret.insertSingleChar(character);
 	}
 	
 	

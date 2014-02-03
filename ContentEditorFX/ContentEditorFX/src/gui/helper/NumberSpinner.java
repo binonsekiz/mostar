@@ -179,7 +179,6 @@ public class NumberSpinner extends HBox {
         return numberField.getNumber();
     }
 
-    // debugging layout bounds
     public void dumpSizes() {
         System.out.println("numberField (layout)=" + numberField.getLayoutBounds());
         System.out.println("buttonInc (layout)=" + incrementButton.getLayoutBounds());

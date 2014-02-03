@@ -1,15 +1,17 @@
 package gui.columnview;
 
 import geometry.libgdxmath.Rectangle;
+import gui.docmodify.DocDebugView;
 
 import java.util.ArrayList;
 
-import control.TextModifyFacade;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
+import control.TextModifyFacade;
+import document.Document;
 import document.Paragraph;
+import document.TextLine;
 import document.TextStyle;
 
 
@@ -20,6 +22,9 @@ import document.TextStyle;
  */
 public class ParagraphOnCanvas {
 
+	private static int debugIndexCounter;
+	private int debugIndex;
+	
 	private ColumnView parent;
 	
 	private Rectangle allowedSpace;
@@ -30,11 +35,14 @@ public class ParagraphOnCanvas {
 	private TextModifyFacade textModifyFacade;
 	
 	public ParagraphOnCanvas(ColumnView parent, Rectangle allowedSpace, TextStyle style, TextModifyFacade facade) {
+		System.out.println("ParagraphView initialized");
 		this.parent = parent;
 		this.allowedSpace = allowedSpace;
 		this.style = style;
 		this.textModifyFacade = facade;
 		lines = new ArrayList<LineOnCanvas>();
+		debugIndex = debugIndexCounter;
+		debugIndexCounter ++;
 	}
 
 	public Rectangle getAllowedSpace() {
@@ -62,20 +70,11 @@ public class ParagraphOnCanvas {
 	}
 	
 	public void refresh() {
-		paragraph.startTextDivision();
-		int startIndex = 0;
-		int endIndex = 0;
 		for(int i = 0; i < lines.size(); i++){
-			LineOnCanvas line = lines.get(i);
-			float allowedWidth = line.getWidth();
-			String text = paragraph.getNextLine(allowedWidth);
-			if(text != null) {
-				endIndex = startIndex + text.length();
-			}
-			line.setDebugText(text, startIndex, endIndex);
-			line.refresh();
-			startIndex = endIndex;
+			lines.get(i).refresh();
 		}
+		
+		DocDebugView.instance.debugRefreshTotalDocument(Document.instance);
 	}
 	
 	public void refreshOverlay() {
@@ -100,6 +99,7 @@ public class ParagraphOnCanvas {
 
 	public void setParagraph(Paragraph paragraph) {
 		this.paragraph = paragraph;
+		paragraph.setStyle(style);
 	}
 	
 	public String toString() {
@@ -111,12 +111,19 @@ public class ParagraphOnCanvas {
 	}
 
 	public void mouseClick(MouseEvent event) {
-		//check to see which line this is
-		System.out.println("~~Clicked on paragraph");
 		for(int i = 0; i < lines.size(); i++) {
 			LineOnCanvas line = lines.get(i);
 			if(line.containsCoordinate(event.getX(),event.getY())) {
 				line.mouseClick(event);
+			}
+		}
+	}
+	
+	public void mouseMoved(MouseEvent event) {
+		for(int i = 0; i < lines.size(); i++) {
+			LineOnCanvas line = lines.get(i);
+			if(line.containsCoordinate(event.getX(),event.getY())) {
+				line.mouseMoved(event);
 			}
 		}
 	}
@@ -140,4 +147,18 @@ public class ParagraphOnCanvas {
 	public int getEndIndex() {
 		return lines.get(lines.size()-1).getEndIndex();
 	}
+
+	public void setStyle(TextStyle style) {
+		this.style = style;
+	}
+
+	public String getText(int i, int j) {
+		return paragraph.subSequence(i, j);
+	}
+
+	public String getText(TextLine textLine) {
+		return getText(textLine.getStartIndex(), textLine.getEndIndex());
+	}
+
+	
 }

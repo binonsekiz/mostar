@@ -87,11 +87,15 @@ public class Caret{
 		    }
 		}));
 		caretMovementTimer.setCycleCount(-1);
+		
+		caretIndex = 0;
+		anchor = 0;
 	}
 	
-	private void calculateCaretLine(int index){
+	private void calculateCaretLine(int index) {
 		this.caretIndex = index;
 		this.activeLineView = textModifyFacade.getLineViewWithIndex(index);
+		System.out.println("active line view: " + activeLineView);
 		caretParagraph = activeLineView.getParentParagraph();
 		textModifyFacade.textSelectionSet(caretIndex, anchor);
 		Vector2 caretPos = activeLineView.getLetterPosition(caretIndex);
@@ -104,7 +108,7 @@ public class Caret{
 		activeLineView.getColumnView().refresh();
 	}
 	
-	private void calculateAnchorLine(int index){
+	private void calculateAnchorLine(int index) {
 		this.anchor = index;
 		this.anchorLineView = textModifyFacade.getLineViewWithIndex(index);
 		anchorParagraph = anchorLineView.getParentParagraph();
@@ -166,6 +170,10 @@ public class Caret{
 	public ColumnView getActiveColumnView() {
 		return activeLineView.getColumnView();
 	}
+	
+	public LineOnCanvas getActiveLineView() {
+		return activeLineView;
+	}
 
 	public void setCaretIndex(int index) {
 		this.caretIndex = index;
@@ -175,6 +183,23 @@ public class Caret{
 	public void setAnchorIndex(int index) {
 		this.anchor = index;
 		calculateAnchorLine(anchor);
+	}
+
+	public void insertSingleChar(String text) {
+		//TODO:debug, delete the following line.
+		System.out.println("INSERTING CHAR: " + text);
+		if(caretParagraph == null) caretParagraph = documentText.getParagraph(0);
+		
+		if(caretIndex == anchor) {
+			caretParagraph.insertText(text, caretIndex);
+			caretIndex += text.length();
+			anchor = caretIndex;
+		}
+		else {
+			caretParagraph.insertText(text, caretIndex, anchor);
+			anchor = caretIndex;
+		}
+		
 	}
 	
 }

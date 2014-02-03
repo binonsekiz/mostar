@@ -1,7 +1,5 @@
 package document;
 
-import gui.columnview.ParagraphOnCanvas;
-
 import java.util.ArrayList;
 
 public class DocumentText {
@@ -10,20 +8,22 @@ public class DocumentText {
 	private Document document;
 	
 	public DocumentText (Document document) {
+		System.out.println("DocumentText initialized");
 		this.document = document;
 		globalText = new ArrayList<Paragraph>();
-		debug();
+		addParagraph();
 	}
 	
-	private void debug() {
-		globalText.add(new Paragraph(this));
+	public void addParagraph() {
+		int index = globalText.size();
+		globalText.add(new Paragraph(this, index));
 	}
 	
-	public void setDebugText(String value, ParagraphOnCanvas paragraphView) {
-		globalText.get(0).setText(value);
-		paragraphView.setParagraph(globalText.get(0));
-		
-		System.out.println("DocumentText::setDebugText: global.get(0): " + globalText.get(0) + ", paragraphview: " + paragraphView);
+	public void addParagraph(int index) {
+		globalText.add(new Paragraph(this, index));
+		for(int i = index; i < globalText.size(); i++) {
+			globalText.get(i).setIndexInParent(i);
+		}
 	}
 
 	public Paragraph getStyleTextPair(int index) {
@@ -39,14 +39,28 @@ public class DocumentText {
 		// TODO Auto-generated method stub
 		
 	}
-
-	public Paragraph getDebugParagraph() {
-		return globalText.get(0);
+	
+	public String exportString() {
+		String total = "";
+		for(int i = 0; i < globalText.size(); i++) {
+			total = total + "\nParagraph " + i + ":\n" + globalText.get(i).getText();
+		}
+		return total;
 	}
 
 	public ArrayList<Paragraph> getParagraphs() {
 		return globalText;
 	}
 	
+	public Paragraph getParagraph(int index) {
+		return globalText.get(index);
+	}
+
+	protected void updateIndexAfter(int indexInParent) {
+		if(globalText.size() > indexInParent + 1) {
+			Paragraph paragraph = globalText.get(indexInParent + 1);
+			paragraph.setStartIndexInBigText(globalText.get(indexInParent).getEndIndex());
+		}
+	}
 	
 }

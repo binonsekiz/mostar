@@ -1,15 +1,14 @@
 package gui.columnview;
 
 import geometry.libgdxmath.LineSegment;
-import geometry.libgdxmath.Vector2;
 import gui.ShapedPane;
+import gui.helper.DebugHelper;
 import gui.helper.LayoutMachine;
 import gui.widget.WidgetModifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import control.TextModifyFacade;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleObjectProperty;
@@ -24,12 +23,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import settings.GlobalAppSettings;
-import zzzzdeprecated.StyledTextDeprecated;
+import control.TextModifyFacade;
 import document.Column;
 import document.DocumentText;
-import document.TextStyle;
 import document.widget.Widget;
-import event.DocModifyScreenGuiFacade;
 import event.modification.ModificationInstance;
 import event.modification.ModificationType;
 import event.modification.ResizeModification;
@@ -59,11 +56,10 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	private float lastFilledLineHeight;
 	private ArrayList<LineSegment> backupLines;
 	
-	private ArrayList<Vector2> debugPoints;
-	
 	private HashMap<ShapedPane, ModificationInstance> modificationHash;
 	
 	public ColumnView(DocumentView parent, TextModifyFacade textModifyFacade){
+		System.out.println("ColumnView initialized");
 		this.parent = parent;
 		this.textModifyFacade = textModifyFacade;
 		selfReference = this;
@@ -79,22 +75,33 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		layoutMachine = new LayoutMachine();
 		this.text = new SimpleObjectProperty<DocumentText>();
 		backupLines = new ArrayList<LineSegment>();
+		
 		lastFilledLineHeight = 0;
 		modificationHash = new HashMap<ShapedPane, ModificationInstance>();
 		initEvents();
 		this.getChildren().add(canvas);
-		
-		debugPoints = new ArrayList<Vector2>();
 	}
 	
+	private void populateParagraphViews() {
+		for(int i = 0; i < text.get().getParagraphs().size(); i++) {
+			paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, DebugHelper.rect1, DebugHelper.debugStyle1, text.get().getParagraph(0), textModifyFacade));
+		}
+	}
+	
+	/*private void debug() {
+		new DebugHelper();
+		paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, DebugHelper.rect1, DebugHelper.debugStyle1, text.get().getParagraph(0), textModifyFacade));
+		paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, DebugHelper.rect2, DebugHelper.debugStyle2, text.get().getParagraph(1), textModifyFacade));
+		paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, DebugHelper.rect3, DebugHelper.debugStyle3, text.get().getParagraph(2), textModifyFacade));
+	}*/
+
 	private void initEvents(){
 		text.addListener(new ChangeListener<DocumentText>(){
 			@Override
 			public void changed(ObservableValue<? extends DocumentText> arg0,
 					DocumentText arg1, DocumentText newText) {	
-				paragraphsOnCanvas.clear();
-				paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, column.getInsets().getUsableRectangle(), TextStyle.defaultStyle, text.get().getDebugParagraph(), textModifyFacade));
-				parent.refresh();
+				populateParagraphViews();
+				refreshTextCanvas();
 			}
 		});
 		
@@ -102,15 +109,25 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		    @Override
 		    public void handle(MouseEvent event) {
 		        selfReference.onMouseClick(event);
+		        parent.refocusTextField();
 		    }
 		});
 		
-		this.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent> () {
+		this.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent> () {
 			@Override
 			public void handle(MouseEvent arg0) {
-				parent.refocusTextField();
+				selfReference.onMouseMoved(arg0);
 			}
 		});
+	}
+	
+	protected void onMouseMoved(MouseEvent event) {
+		// TODO Auto-generated method stub
+		for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
+			if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
+				paragraphsOnCanvas.get(i).mouseMoved(event);
+			}
+		}
 	}
 
 	protected void onMouseClick(MouseEvent event) {
@@ -148,10 +165,6 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 			isRefreshInProgress = false;
 		}
 	}
-	
-	public void debugPoint(Vector2 point){
-		this.debugPoints.add(new Vector2(point));
-	}
 
 	private void refreshAll(){
 		if(parent.isOverlayCanvasVisible()) {
@@ -163,15 +176,6 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		else {
 			clearTextCanvas();
 		}
-	}
-
-	private void refreshDebugPoints() {
-		context.setStroke(Color.GREEN);
-		context.setLineWidth(2);
-		for(Vector2 point:debugPoints){
-			context.strokeOval(point.x-1, point.y-1, 3, 3);
-		}
-		debugPoints.clear();
 	}
 
 	public void refreshOverlayCanvas(){
@@ -201,12 +205,11 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	
 	private void refreshTextValuesOnly() {
 		clearTextCanvas();
-		drawInsets();
+		if(parent.isInsetVisible()) {
+			drawInsets();
+		}
 		for(ParagraphOnCanvas paragraph: paragraphsOnCanvas) {
 			paragraph.refresh();
-		}
-		if(parent.isDebugPointsVisible()){
-			refreshDebugPoints();
 		}
 	}
 	
@@ -214,15 +217,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		clearTextCanvas();
 		canvas.toBack();
 		drawInsets();
-		
-		paragraphsOnCanvas.clear();
-		paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(this, column.getInsets().getUsableRectangle(), TextStyle.defaultStyle, text.get().getDebugParagraph(), textModifyFacade));
-		
 		refreshTextValuesOnly();
-		
-		if(parent.isDebugPointsVisible()){
-			refreshDebugPoints();
-		}
 	}
 	
 	/**
@@ -312,10 +307,6 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	
 	private void clearTextCanvas() {
 		context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-	}
-
-	public void setDebugText(String value) {
-		text.get().setDebugText(value, paragraphsOnCanvas.get(0));
 	}
 
 	public void setDocumentText(DocumentText documentText) {

@@ -1,6 +1,5 @@
 package gui.textbox;
 
-import javafx.scene.input.MouseEvent;
 import gui.ShapedPane;
 import gui.columnview.ColumnView;
 

@@ -76,12 +76,16 @@ public class TextStyle {
 		this.fontName = string;
 	}
 
-	public void setFontSize(int parseInt) {
+	public void setFontSize(double parseInt) {
 		this.fontSize = parseInt;
 	}
 
 	public void setFontColor(String string) {
 		this.strokeColor = Color.web(string);
+	}
+	
+	public void setFontColor(Color color) {
+		this.strokeColor = color;
 	}
 
 	public Font getFont() {

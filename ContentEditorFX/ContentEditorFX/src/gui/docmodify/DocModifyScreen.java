@@ -5,8 +5,6 @@ import gui.GFrame.WindowType;
 import gui.ScreenType;
 import gui.columnview.DocumentView;
 import gui.helper.StyleRepository;
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 

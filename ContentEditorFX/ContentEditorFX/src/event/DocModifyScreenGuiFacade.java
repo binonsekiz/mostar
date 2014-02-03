@@ -6,6 +6,7 @@ import gui.docmodify.DocDebugView;
 import gui.docmodify.DocOverview;
 import gui.docmodify.DocVersatilePane;
 import gui.docmodify.DocWidgetToolbar;
+import gui.helper.DebugHelper;
 import gui.widget.WidgetModifier;
 
 import java.io.File;
@@ -19,6 +20,7 @@ import control.Caret;
 import control.TextModifyFacade;
 import control.WidgetModifyFacade;
 import document.Document;
+import event.input.KeyboardManager;
 
 public class DocModifyScreenGuiFacade {
 
@@ -28,6 +30,7 @@ public class DocModifyScreenGuiFacade {
 	private DocBottomToolbar docBottomToolbar;
 	private DocVersatilePane docVersatilePane;
 	private DocDebugView docDebugView;
+	private DebugHelper debugHelper;
 	
 	private TextModifyFacade textModifyFacade;
 	private WidgetModifyFacade widgetModifyFacade;
@@ -43,10 +46,12 @@ public class DocModifyScreenGuiFacade {
 		this.docBottomToolbar = docBottomToolbar;
 		this.docVersatilePane = docVersatilePane;
 		this.docDebugView = docDebugView;
+		this.debugHelper = new DebugHelper();
 			
 		textModifyFacade = new TextModifyFacade();
 		widgetModifyFacade = new WidgetModifyFacade(this);
 		caret = new Caret(textModifyFacade);
+		KeyboardManager.instance.setTextFacade(textModifyFacade);
 		
 		documentView.setGuiFacade(this);
 		docWidgetToolbar.setGuiFacade(this);
@@ -243,10 +248,6 @@ public class DocModifyScreenGuiFacade {
 		documentView.refresh();
 	}
 
-	public void setDebugPointsVisible(boolean value) {
-		documentView.setDebugPointsVisible(value);
-	}
-
 /*	public void debugAssignText(String value) {
 		documentView.setDebugText(value);
 		documentView.refresh();
@@ -258,6 +259,10 @@ public class DocModifyScreenGuiFacade {
 
 	public void setLinePolygonsVisible(boolean value) {
 		documentView.setLinePolygonsVisible(value);
+	}
+
+	public void setInsetVisible(boolean value) {
+		documentView.setInsetVisible(value);
 	}
 
 }

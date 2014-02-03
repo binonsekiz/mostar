@@ -38,6 +38,7 @@ public class Column {
 	}
 	
 	protected Column(Measurement measurement, PageInsets newInsets){
+		System.out.println("Document initialized");
 		this.pageSize = measurement;
 		textLineSpaces = new ArrayList<TextLineSpace>();
 		widgets = new ArrayList<Widget>();

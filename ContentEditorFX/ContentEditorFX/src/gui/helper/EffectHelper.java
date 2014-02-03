@@ -1,5 +1,7 @@
 package gui.helper;
 
+import java.util.Random;
+
 import javafx.animation.FillTransition;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -28,6 +30,7 @@ public class EffectHelper {
 	
 	private static Stop[] stops;
 	private static LinearGradient linearGradient;
+	private static Random random;
 	
 	private static boolean isInitialized = false;
 	
@@ -40,6 +43,7 @@ public class EffectHelper {
 		titleReflection.setFraction(0.5f);
 		titleBlend.setTopInput(titleBlur);
 		titleBlend.setBottomInput(titleReflection);
+		random = new Random();
 		
 		stops = new Stop[]{new Stop(0, Color.WHITE), new Stop(0.2, Color.BLACK), new Stop(0.8, Color.BLACK), new Stop(1, Color.WHITE)};
 		linearGradient = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
@@ -120,6 +124,10 @@ public class EffectHelper {
 	
 	public static void setAsATitle(Text text){
 		setAsATitle(text, 48);
+	}
+	
+	public static Color getRandomColor() {
+		return new Color(random.nextDouble(), random.nextDouble(), random.nextDouble(), 1);
 	}
 	
 }
