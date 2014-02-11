@@ -4,10 +4,13 @@ import geometry.libgdxmath.Interpolation;
 import geometry.libgdxmath.Vector2;
 import gui.columnview.ColumnView;
 import gui.columnview.LineOnCanvas;
+import gui.columnview.ParagraphOnCanvas;
+import gui.docmodify.DocDebugView;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -95,24 +98,35 @@ public class Caret{
 	private void calculateCaretLine(int index) {
 		this.caretIndex = index;
 		this.activeLineView = textModifyFacade.getLineViewWithIndex(index);
-		System.out.println("active line view: " + activeLineView);
+
 		caretParagraph = activeLineView.getParentParagraph();
-		textModifyFacade.textSelectionSet(caretIndex, anchor);
-		Vector2 caretPos = activeLineView.getLetterPosition(caretIndex);
-		
-		System.out.println("Setting visual position to " + caretPos);
+		Vector2 caretPos = activeLineView.getLetterPosition(caretIndex - activeLineView.getStartIndex());
+		anchor = caretIndex;
+		anchorParagraph = caretParagraph;
+		anchorLineView = activeLineView;
+				
 		setVisualPosition(caretPos.x, caretPos.y);
 		isCaretVisible = true;
+		
+		textModifyFacade.textSelectionSet(caretIndex, anchor);
 		caretTimer.playFromStart();
 		
+		DocDebugView.instance.setDebugText("Caret Index: " + caretIndex, 2);
+		DocDebugView.instance.setDebugText("Anchor Index: " + anchor, 3);
+
 		activeLineView.getColumnView().refresh();
 	}
 	
-	private void calculateAnchorLine(int index) {
-		this.anchor = index;
-		this.anchorLineView = textModifyFacade.getLineViewWithIndex(index);
+	private void calculateAnchorLine(int anchorIndex) {
+		this.anchor = anchorIndex;
+		this.anchorLineView = textModifyFacade.getLineViewWithIndex(anchorIndex);
+		
 		anchorParagraph = anchorLineView.getParentParagraph();
+
 		textModifyFacade.textSelectionSet(caretIndex, anchor);
+		
+		DocDebugView.instance.setDebugText("Caret Index: " + caretIndex, 2);
+		DocDebugView.instance.setDebugText("Anchor Index: " + anchor, 3);
 		
 		anchorLineView.getColumnView().refresh();
 	}
@@ -159,7 +173,7 @@ public class Caret{
 		}
 		else{
 			//iterate over lines to draw selection
-			textModifyFacade.textSelectionSet(caretIndex, anchor);
+		//	textModifyFacade.textSelectionSet(caretIndex, anchor);
 		}
 	}
 
@@ -175,31 +189,62 @@ public class Caret{
 		return activeLineView;
 	}
 
+	/**
+	 * This sets both caret and anchor
+	 * @param index
+	 */
 	public void setCaretIndex(int index) {
-		this.caretIndex = index;
+		System.out.println("setting caret at: " + index);
 		calculateCaretLine(index);
 	}
 	
 	public void setAnchorIndex(int index) {
-		this.anchor = index;
-		calculateAnchorLine(anchor);
+		System.out.println("setting anchor at: " + index);
+		calculateAnchorLine(index);
 	}
 
 	public void insertSingleChar(String text) {
-		//TODO:debug, delete the following line.
-		System.out.println("INSERTING CHAR: " + text);
 		if(caretParagraph == null) caretParagraph = documentText.getParagraph(0);
 		
 		if(caretIndex == anchor) {
 			caretParagraph.insertText(text, caretIndex);
-			caretIndex += text.length();
-			anchor = caretIndex;
 		}
 		else {
-			caretParagraph.insertText(text, caretIndex, anchor);
-			anchor = caretIndex;
+			caretParagraph.insertText(text, Math.min(caretIndex, anchor), Math.max(caretIndex,anchor));
 		}
+		setCaretIndex(Math.min(caretIndex, anchor) + text.length());
+	}
+
+	public void leftKey(boolean shiftDown, boolean controlDown) {
+		// TODO Auto-generated method stub
 		
 	}
+
+	public void rightKey(boolean shiftDown, boolean controlDown) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void changeMousePointer(Cursor cursorType) {
+		textModifyFacade.changeMousePointer(cursorType);
+	}
+
+	public boolean isSelectionStyleEquals(TextStyle style) {
+		if(caretIndex == anchor && caretParagraph.getStyle().isEqual(style))
+			return true;
 	
+		//iterate over paragraphs to see if all of them have the same style
+		for(int i = Math.min(caretIndex, anchor); i <= Math.max(caretIndex, anchor); i++){
+			if(!documentText.getStyleAt(i).isEqual(style))
+				return false;
+		}
+		
+		return true;
+	}
+
+	public boolean isAtEnd() {
+		if(caretIndex == anchor && caretIndex == documentText.getEndIndex())
+			return true;
+		else return false;
+	}
 }

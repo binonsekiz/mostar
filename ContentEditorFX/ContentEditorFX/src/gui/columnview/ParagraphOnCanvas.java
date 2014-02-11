@@ -11,6 +11,7 @@ import javafx.scene.text.Font;
 import control.TextModifyFacade;
 import document.Document;
 import document.Paragraph;
+import document.ParagraphSpace;
 import document.TextLine;
 import document.TextStyle;
 
@@ -22,30 +23,25 @@ import document.TextStyle;
  */
 public class ParagraphOnCanvas {
 
-	private static int debugIndexCounter;
-	private int debugIndex;
-	
 	private ColumnView parent;
 	
-	private Rectangle allowedSpace;
+	private ParagraphSpace allowedSpace;
 	private ArrayList<LineOnCanvas> lines; 
 	private TextStyle style;
 	private Paragraph paragraph;
 
 	private TextModifyFacade textModifyFacade;
 	
-	public ParagraphOnCanvas(ColumnView parent, Rectangle allowedSpace, TextStyle style, TextModifyFacade facade) {
+	public ParagraphOnCanvas(ColumnView parent, ParagraphSpace allowedSpace, TextStyle style, TextModifyFacade facade) {
 		System.out.println("ParagraphView initialized");
-		this.parent = parent;
+		this.parent = parent; 
 		this.allowedSpace = allowedSpace;
 		this.style = style;
 		this.textModifyFacade = facade;
 		lines = new ArrayList<LineOnCanvas>();
-		debugIndex = debugIndexCounter;
-		debugIndexCounter ++;
 	}
 
-	public Rectangle getAllowedSpace() {
+	public ParagraphSpace getAllowedSpace() {
 		return allowedSpace;
 	}
 	
@@ -53,7 +49,7 @@ public class ParagraphOnCanvas {
 		return style;
 	}
 	
-	public void setAllowedSpace(Rectangle allowedSpace) {
+	public void setAllowedSpace(ParagraphSpace allowedSpace) {
 		this.allowedSpace = allowedSpace;
 	}
 	
@@ -73,6 +69,8 @@ public class ParagraphOnCanvas {
 		for(int i = 0; i < lines.size(); i++){
 			lines.get(i).refresh();
 		}
+		
+		allowedSpace.draw(parent.getGraphicsContext());
 		
 		DocDebugView.instance.debugRefreshTotalDocument(Document.instance);
 	}
@@ -107,7 +105,7 @@ public class ParagraphOnCanvas {
 	}
 
 	public boolean containsCoordinate(float x, float y) {
-		return allowedSpace.contains(x, y);
+		return allowedSpace.getShape().contains(x, y);
 	}
 
 	public void mouseClick(MouseEvent event) {
@@ -115,6 +113,15 @@ public class ParagraphOnCanvas {
 			LineOnCanvas line = lines.get(i);
 			if(line.containsCoordinate(event.getX(),event.getY())) {
 				line.mouseClick(event);
+			}
+		}
+	}
+	
+	public void mouseDrag(MouseEvent event) {
+		for(int i = 0; i < lines.size(); i++) {
+			LineOnCanvas line = lines.get(i);
+			if(line.containsCoordinate(event.getX(),event.getY())) {
+				line.mouseDrag(event);
 			}
 		}
 	}
@@ -160,5 +167,4 @@ public class ParagraphOnCanvas {
 		return getText(textLine.getStartIndex(), textLine.getEndIndex());
 	}
 
-	
 }

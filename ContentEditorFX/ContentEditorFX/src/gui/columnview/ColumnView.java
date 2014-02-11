@@ -1,7 +1,7 @@
 package gui.columnview;
 
-import geometry.libgdxmath.LineSegment;
 import gui.ShapedPane;
+import gui.docmodify.DocDebugView;
 import gui.helper.DebugHelper;
 import gui.helper.LayoutMachine;
 import gui.widget.WidgetModifier;
@@ -16,6 +16,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
@@ -52,10 +53,6 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	private ArrayList<ParagraphOnCanvas> paragraphsOnCanvas;
 	
 	private LayoutMachine layoutMachine;
-	
-	private float lastFilledLineHeight;
-	private ArrayList<LineSegment> backupLines;
-	
 	private HashMap<ShapedPane, ModificationInstance> modificationHash;
 	
 	public ColumnView(DocumentView parent, TextModifyFacade textModifyFacade){
@@ -74,9 +71,6 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		this.setId("columnview-selected");
 		layoutMachine = new LayoutMachine();
 		this.text = new SimpleObjectProperty<DocumentText>();
-		backupLines = new ArrayList<LineSegment>();
-		
-		lastFilledLineHeight = 0;
 		modificationHash = new HashMap<ShapedPane, ModificationInstance>();
 		initEvents();
 		this.getChildren().add(canvas);
@@ -84,16 +78,9 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	
 	private void populateParagraphViews() {
 		for(int i = 0; i < text.get().getParagraphs().size(); i++) {
-			paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, DebugHelper.rect1, DebugHelper.debugStyle1, text.get().getParagraph(0), textModifyFacade));
+			paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, DebugHelper.paragraphSpaces.get(i), DebugHelper.debugStyle4, text.get().getParagraph(i), textModifyFacade));
 		}
 	}
-	
-	/*private void debug() {
-		new DebugHelper();
-		paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, DebugHelper.rect1, DebugHelper.debugStyle1, text.get().getParagraph(0), textModifyFacade));
-		paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, DebugHelper.rect2, DebugHelper.debugStyle2, text.get().getParagraph(1), textModifyFacade));
-		paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, DebugHelper.rect3, DebugHelper.debugStyle3, text.get().getParagraph(2), textModifyFacade));
-	}*/
 
 	private void initEvents(){
 		text.addListener(new ChangeListener<DocumentText>(){
@@ -105,11 +92,12 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 			}
 		});
 		
-		this.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+		this.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
 		    @Override
 		    public void handle(MouseEvent event) {
 		        selfReference.onMouseClick(event);
 		        parent.refocusTextField();
+		        DebugHelper.mouseClickEvent();
 		    }
 		});
 		
@@ -119,10 +107,31 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 				selfReference.onMouseMoved(arg0);
 			}
 		});
+		
+		this.addEventFilter(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				selfReference.onMouseDragged(arg0);
+				DebugHelper.mouseDragEvent();
+			}
+		});
+		
+		this.addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				textModifyFacade.getCaret().changeMousePointer(Cursor.TEXT);
+			}
+		});
+		
+		this.addEventFilter(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				textModifyFacade.getCaret().changeMousePointer(Cursor.DEFAULT);
+			}
+		});
 	}
 	
 	protected void onMouseMoved(MouseEvent event) {
-		// TODO Auto-generated method stub
 		for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
 			if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
 				paragraphsOnCanvas.get(i).mouseMoved(event);
@@ -131,7 +140,6 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	}
 
 	protected void onMouseClick(MouseEvent event) {
-		//check to see which paragraph this is
 		for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
 			if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
 				paragraphsOnCanvas.get(i).mouseClick(event);
@@ -139,6 +147,15 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		}
 	}
 
+	protected void onMouseDragged(MouseEvent event) {
+		for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
+			if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
+				paragraphsOnCanvas.get(i).mouseDrag(event);
+			}
+		}
+	}
+
+	
 	public void associateWithColumn(Column column){
 		this.column = column;
 		this.setWidth(column.getWidth());
@@ -147,7 +164,6 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		canvas.setWidth(column.getWidth());
 		canvas.setHeight(column.getHeight());
 		layoutMachine.setPageInsets(column.getInsets());
-		lastFilledLineHeight = column.getInsets().getMinY();
 		layoutMachine.setParentShape(column.getPaneShape());
 		parent.refresh();
 	}

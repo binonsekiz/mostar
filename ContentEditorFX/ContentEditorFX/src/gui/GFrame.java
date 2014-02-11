@@ -20,6 +20,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -134,7 +135,7 @@ public class GFrame extends Application {
 		mainScene.getStylesheets().add("gui/styles/skin1.css");
 		mainStage.setScene(mainScene);
 		
-		mainScene.setOnKeyPressed(new EventHandler<KeyEvent>(){
+	/*	mainScene.setOnKeyPressed(new EventHandler<KeyEvent>(){
 			@Override
 			public void handle(KeyEvent event) {
 				keyboardManager.keyPressed(event);
@@ -153,7 +154,11 @@ public class GFrame extends Application {
 			public void handle(KeyEvent event) {
 				keyboardManager.keyTyped(event);
 			}
-		});
+		});*/
+		
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardManager);
+		mainScene.addEventHandler(KeyEvent.KEY_RELEASED, keyboardManager);
+		mainScene.addEventHandler(KeyEvent.KEY_TYPED, keyboardManager);
 	}
 
 	public Pane changePane(WindowType windowType, WindowType referringPage){

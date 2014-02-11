@@ -1,10 +1,8 @@
 package document;
 
-import gui.ShapedPane;
 import gui.columnview.LineOnCanvas;
 import gui.columnview.ParagraphOnCanvas;
 
-import java.awt.event.TextListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.IntStream;
@@ -15,7 +13,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 import com.sun.javafx.tk.FontMetrics;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 /**
  * This class resresents exactly one style and its associated text.
@@ -27,7 +24,6 @@ public class Paragraph implements CharSequence{
 	private TextStyle style;
 	private StringBuffer textBuffer;
 	private SimpleIntegerProperty startIndexInBigText;
-	private SimpleIntegerProperty endIndexInBigText;
 	private ArrayList<TextLine> textLines;
 	
 	private SimpleFloatProperty angle;
@@ -57,12 +53,12 @@ public class Paragraph implements CharSequence{
 		cummulativeWordSizes = new ArrayList<Float>();
 		wordCountToStringIndex = new HashMap<Integer, Integer>();
 		startIndexInBigText = new SimpleIntegerProperty();
-		endIndexInBigText = new SimpleIntegerProperty();
 		angle = new SimpleFloatProperty();
 		textLines = new ArrayList<TextLine>();
 		setText(text);
 		computeStringWidths();
 		initEvents();
+		updateTextLineIndices();
 	}
 	
 	public void setParagraphOnCanvas(ParagraphOnCanvas view) {
@@ -88,15 +84,8 @@ public class Paragraph implements CharSequence{
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number oldValue, Number arg2) {
-				endIndexInBigText.set(startIndexInBigText.getValue() + textBuffer.length());
-			}
-		});
-		endIndexInBigText.addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> arg0,
-					Number arg1, Number arg2) {
-				documentText.updateIndexAfter(indexInParent);
-				System.out.println("~~~~~~~Paragraph end index updated to: " + arg2);
+				System.out.println("Start index set to: " + arg2); 
+				updateTextLineIndices();
 			}
 		});
 		angle.addListener(new ChangeListener<Number>() {
@@ -109,12 +98,50 @@ public class Paragraph implements CharSequence{
 		});
 	}
 
+	protected void updateTextLineIndices() {
+		System.out.println("\n////Update text line indices");
+		if(textLines.size() > 0) {
+			if(indexInParent > 0) {
+				textLines.get(0).setStartIndex(documentText.getParagraph(indexInParent - 1).getEndIndex());
+				System.out.println("\tSet start to: " + documentText.getParagraph(indexInParent - 1).getEndIndex());
+			}
+			else{
+				textLines.get(0).setStartIndex(0);
+			}
+		}
+		else{
+			System.out.println("Early out...");
+		}
+		
+		for(int i = 1; i < textLines.size(); i++) {
+			TextLine temp = textLines.get(i);
+			temp.setStartIndex(textLines.get(i-1).getEndIndex());
+			System.out.println("\tSetting "+ i + "th value to: " + textLines.get(i-1).getEndIndex());
+		}
+		documentText.updateIndexAfter(indexInParent);
+	}
+
+	private void updateTextLines() {
+		ArrayList<LineOnCanvas> lines = paragraphView.getLines();
+		
+		TextLine tempLine = new TextLine(null, 0, 0);
+				
+		computeStringWidths();
+		startTextDivision();
+		for(int i = 0; i < lines.size(); i++) {
+			calculateNextLine(tempLine, lines.get(i).getWidth());
+			textLines.get(i).setStartIndex(tempLine.getStartIndex() + this.startIndexInBigText.get());
+			textLines.get(i).setEndIndex(tempLine.getEndIndex() + this.startIndexInBigText.get());
+		}
+		documentText.updateIndexAfter(indexInParent);
+	}
+	
 	public void setStartIndexInBigText(int index){
 		this.startIndexInBigText.set(index);
 	}
 	
 	public int getStartIndexInBigText(){
-		return startIndexInBigText.get();
+		return textLines.get(0).getStartIndex();
 	}
 	
 	public void setStyle(TextStyle style){
@@ -124,26 +151,6 @@ public class Paragraph implements CharSequence{
 	
 	public TextStyle getStyle(){
 		return style;
-	}
-
-	private void updateTextLines() {
-		System.out.println("\n\n****UPDATING TEXT LINES");
-		System.out.println("Paragraph view: " + paragraphView);
-		ArrayList<LineOnCanvas> lines = paragraphView.getLines();
-		
-		TextLine tempLine = new TextLine(this, 0, 0);
-				
-		computeStringWidths();
-		startTextDivision();
-		System.out.println("Calculated lines:");
-		for(int i = 0; i < lines.size(); i++) {
-			calculateNextLine(tempLine, lines.get(i).getWidth());
-			textLines.get(i).setStartIndex(tempLine.getStartIndex());
-			textLines.get(i).setEndIndex(tempLine.getEndIndex());
-			System.out.println("line " + i + ": " + tempLine.getStartIndex() + ", " + tempLine.getEndIndex() );
-		}
-		
-		this.endIndexInBigText.set(startIndexInBigText.get() + textBuffer.length());
 	}
 
 	public String getText(){
@@ -171,11 +178,8 @@ public class Paragraph implements CharSequence{
 	 * @return
 	 */
 	public String calculateNextLine(TextLine inputLine, double inputSize){
-		System.out.println("\n\n\tCALCULATE NEXT LINE, input size: " + inputSize);
-		
 		float lineEndSize = (float) (cummulativeTextSize + inputSize);
-		System.out.println("Line end size: " + lineEndSize);
-		
+
 		inputLine.setStartIndex(previousIndex);
 		inputLine.setEndIndex(previousIndex);
 		
@@ -195,12 +199,10 @@ public class Paragraph implements CharSequence{
 			wordStartIndex = wordCountToStringIndex.get(wordIndex);
 		}
 		else {
-			System.out.println("Early out 1");
 			return null;
 		}
 				
 		if(wordStartIndex < previousIndex) {
-			System.out.println("Early out 2");
 			return null;
 		}
 		
@@ -232,7 +234,6 @@ public class Paragraph implements CharSequence{
 				float stringWidth = metrics.computeStringWidth(textBuffer.substring(0, i+1));
 				cummulativeWordSizes.add(stringWidth);
 				wordCountToStringIndex.put(wordCount, i);
-				System.out.println("****WordCount to String index put: wordcount: " + wordCount + ", i: " + i);
 				wordCount ++;
 			}
 		}
@@ -289,7 +290,7 @@ public class Paragraph implements CharSequence{
 	}
 
 	public int getEndIndex() {
-		return endIndexInBigText.get();
+		return textLines.get(textLines.size() - 1).getEndIndex();
 	}
 	
 	protected void setIndexInParent(int indexInParent) {
@@ -297,17 +298,18 @@ public class Paragraph implements CharSequence{
 	}
 
 	public void insertText(String text, int caretIndex) {
-		this.textBuffer.insert(caretIndex, text);
+		this.textBuffer.insert(caretIndex - startIndexInBigText.get(), text);
 		updateTextLines();	
 	}
 
 	public void insertText(String text, int caretIndex, int anchor) {
-		this.textBuffer.replace(caretIndex, anchor, text);
+		this.textBuffer.replace(caretIndex - startIndexInBigText.get(), anchor - startIndexInBigText.get(), text);
 		updateTextLines();
 	}
 	
-	public void setText(String text){
+	public void setText(String text) {
 		this.textBuffer = new StringBuffer(text);
+		updateTextLineIndices();
 		if(paragraphView != null) {
 			updateTextLines();
 		}
@@ -315,5 +317,26 @@ public class Paragraph implements CharSequence{
 
 	public ArrayList<TextLine> getTextLines() {
 		return textLines;
+	}	
+
+	public int getIndexInParent() {
+		return indexInParent;
+	}
+
+	public Paragraph divideAtIndex(int caretIndex) {
+		Paragraph newParagraph = new Paragraph(style, textBuffer.substring(caretIndex), documentText, this.indexInParent);
+		this.textBuffer = textBuffer.delete(caretIndex, textBuffer.length());
+		documentText.addParagraph(newParagraph);
+		
+		return newParagraph;
+	}
+
+	protected void tryLowestStartValue(int value) {
+		if(this.startIndexInBigText.get() > value) {
+			startIndexInBigText.set(value);
+			if(textLines.size() > 0) {
+				textLines.get(0).setStartIndex(startIndexInBigText.get());
+			}
+		}
 	}
 }

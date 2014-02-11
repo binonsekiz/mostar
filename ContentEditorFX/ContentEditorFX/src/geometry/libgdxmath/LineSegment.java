@@ -14,6 +14,10 @@ public class LineSegment implements Comparable<LineSegment>{
 		normal.rotate(90).nor();
 	}
 	
+	public LineSegment trimToFitInPolygon(Polygon polygon) {
+		return polygon.getPortionInside(this);
+	}
+	
 	public Vector2 getFirstPoint(){
 		return firstPoint;
 	}
@@ -48,7 +52,7 @@ public class LineSegment implements Comparable<LineSegment>{
 	
 	@Override
 	public String toString(){
-		return "LineSegment x: " + firstPoint + ", y: " + secondPoint; 
+		return "LineSegment P1: " + firstPoint + ", P2: " + secondPoint; 
 	}
 
 	public double getLength() {
@@ -99,6 +103,21 @@ public class LineSegment implements Comparable<LineSegment>{
 						(float)(getSecondPoint().x + height * Math.sin(Math.toRadians(angle))) ,
 						(float)(getSecondPoint().y + height * Math.cos(Math.toRadians(angle)))));
 		return lowerLineSegment;
+	}
+
+	public void fixCoordinates() {
+		if(firstPoint.x > secondPoint.x) {
+			Vector2 firstBackup = firstPoint.cpy();
+			firstPoint = secondPoint;
+			secondPoint = firstBackup;
+		}
+	}
+
+	public LineSegment averageLineSegment(LineSegment trimmedSegmentLower) {
+		LineSegment retVal = new LineSegment(
+				new Vector2((firstPoint.x+trimmedSegmentLower.getFirstPoint().x)/2, (firstPoint.y+trimmedSegmentLower.getFirstPoint().y)/2), 
+				new Vector2((secondPoint.x+trimmedSegmentLower.getSecondPoint().x)/2, (secondPoint.y+trimmedSegmentLower.getSecondPoint().y)/2));
+		return retVal;
 	}
 
 }

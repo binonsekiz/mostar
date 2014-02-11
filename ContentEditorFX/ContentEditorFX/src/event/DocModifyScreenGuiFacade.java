@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import settings.Translator;
 import control.Caret;
+import control.StyleModifyFacade;
 import control.TextModifyFacade;
 import control.WidgetModifyFacade;
 import document.Document;
@@ -34,6 +35,7 @@ public class DocModifyScreenGuiFacade {
 	
 	private TextModifyFacade textModifyFacade;
 	private WidgetModifyFacade widgetModifyFacade;
+	private StyleModifyFacade styleModifyFacade;
 	
 	private Caret caret;
 	
@@ -50,6 +52,7 @@ public class DocModifyScreenGuiFacade {
 			
 		textModifyFacade = new TextModifyFacade();
 		widgetModifyFacade = new WidgetModifyFacade(this);
+		styleModifyFacade = new StyleModifyFacade();
 		caret = new Caret(textModifyFacade);
 		KeyboardManager.instance.setTextFacade(textModifyFacade);
 		
@@ -61,6 +64,8 @@ public class DocModifyScreenGuiFacade {
 		
 		textModifyFacade.setCaret(caret);
 		widgetModifyFacade.setCaret(caret);
+		styleModifyFacade.setCaret(caret);
+		styleModifyFacade.setTextModifyFacade(textModifyFacade);
 	}
 	
 	public void createNewDocument(){
@@ -69,6 +74,7 @@ public class DocModifyScreenGuiFacade {
 		docOverview.populateTreeView();
 		textModifyFacade.setDocumentAndView(document, documentView);
 		widgetModifyFacade.setDocumentAndView(document, documentView);
+		styleModifyFacade.setDocumentAndView(document, documentView);
 		docBottomToolbar.setGuiFacade(this);
 	}
 	
@@ -263,6 +269,16 @@ public class DocModifyScreenGuiFacade {
 
 	public void setInsetVisible(boolean value) {
 		documentView.setInsetVisible(value);
+	}
+
+	public void changeFontName(String arg2) {
+		System.out.println("Font name change");
+		styleModifyFacade.changeFontName(arg2);
+	}
+
+	public void changeFontSize(String arg2) {
+		// TODO Auto-generated method stub
+		styleModifyFacade.changeFontSize(Double.parseDouble(arg2));
 	}
 
 }

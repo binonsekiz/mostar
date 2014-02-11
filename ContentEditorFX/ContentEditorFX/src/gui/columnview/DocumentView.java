@@ -141,33 +141,33 @@ public class DocumentView extends Pane implements CanvasOwner{
 		int paragraphIndex = 0;
 		int lineIndex = 0;
 		
-		System.out.println("\n\n################\nQuerying with " + index);
+//		System.out.println("\n\n################\nQuerying with " + index);
 		
 		for(int i = 0; i < columnViews.size(); i++) {
-			System.out.println("Looking at column " + i + ", has start index: " + columnViews.get(i).getStartIndex() + ", end index: " + columnViews.get(i).getEndIndex());
+//			System.out.println("Looking at column " + i + ", has start index: " + columnViews.get(i).getStartIndex() + ", end index: " + columnViews.get(i).getEndIndex());
 			if(index >= columnViews.get(i).getStartIndex() && index <= columnViews.get(i).getEndIndex()) {
 				columnIndex = i;
-				System.out.println("Found in column " + i);
+//				System.out.println("Found in column " + i);
 				break;
 			}
 		}
 		
 		ArrayList<ParagraphOnCanvas> paragraphs = columnViews.get(columnIndex).getParagraphsOnCanvas();
 		for(int i = 0; i < paragraphs.size(); i++) {
-			System.out.println("Looking at paragraph " + i + ", has start index: " + paragraphs.get(i).getStartIndex() + ", end index: " + paragraphs.get(i).getEndIndex());
+//			System.out.println("Looking at paragraph " + i + ", has start index: " + paragraphs.get(i).getStartIndex() + ", end index: " + paragraphs.get(i).getEndIndex());
 			if(index >= paragraphs.get(i).getStartIndex() && index <= paragraphs.get(i).getEndIndex()) {
 				paragraphIndex = i;
-				System.out.println("Found in paragraph " + i);
+//				System.out.println("Found in paragraph " + i);
 				break;
 			}
 		}
 		
 		ArrayList<LineOnCanvas> lines = paragraphs.get(paragraphIndex).getLinesOnCanvas();
 		for(int i = 0; i < lines.size(); i++) {
-			System.out.println("Looking at line " + i + ", has start index: " + lines.get(i).getStartIndex() + ", end index: " + lines.get(i).getEndIndex());
+//			System.out.println("Looking at line " + i + ", has start index: " + lines.get(i).getStartIndex() + ", end index: " + lines.get(i).getEndIndex());
 			if(index >= lines.get(i).getStartIndex() && index <= lines.get(i).getEndIndex()) {
 				lineIndex = i;
-				System.out.println("Found in lines " + i);
+//				System.out.println("Found in lines " + i);
 				return lines.get(lineIndex);
 			}
 		}
@@ -177,7 +177,9 @@ public class DocumentView extends Pane implements CanvasOwner{
 	}
 	
 	public void textSelectionSet(int lowerIndex, int higherIndex) {
-		int columnIndex = 0;
+		LineOnCanvas.selectedStartIndex = lowerIndex;
+		LineOnCanvas.selectedEndIndex = higherIndex;
+	/*	int columnIndex = 0;
 		int paragraphIndex = 0;
 		int lineIndex = 0;
 		
@@ -205,7 +207,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 			}
 		}
 		
-		System.out.println("Found first index at: " + columnIndex + ", " + paragraphIndex + ", " + lineIndex);
+		//System.out.println("Found first index at: " + columnIndex + ", " + paragraphIndex + ", " + lineIndex);
 		
 		int lastSetEndIndex = 0;
 		
@@ -216,7 +218,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 					if(higherIndex < lines.get(k).getEndIndex() || lines.get(k).getEndIndex() == lastSetEndIndex) {
 						break;
 					}
-					System.out.println("Found second index at: " + i + ", " + j + ", " + k);
+				//	System.out.println("Found second index at: " + i + ", " + j + ", " + k);
 					lines.get(k).setSelectedIndex(lowerIndex, higherIndex);
 					lastSetEndIndex = lines.get(k).getEndIndex();
 				}
@@ -227,7 +229,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 			if(higherIndex < columnViews.get(i).getEndIndex()){
 				break;
 			}
-		}
+		}*/
 	}
 	
 	public void associateWithDocument(Document document) {

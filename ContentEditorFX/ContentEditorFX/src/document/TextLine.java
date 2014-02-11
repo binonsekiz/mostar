@@ -26,6 +26,9 @@ public class TextLine {
 					Number arg1, Number arg2) {
 				int length = endIndex.get() - arg1.intValue();
 				endIndex.set(startIndex.get() + length);
+				if(parent != null) {
+		//			parent.recalculateTextLineIndices();
+				}
 			}
 		});
 		
@@ -33,7 +36,6 @@ public class TextLine {
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
-			
 			}
 		});
 	}
@@ -52,6 +54,10 @@ public class TextLine {
 	
 	public void setEndIndex(int value) {
 		this.endIndex.set(value);
+	}
+
+	public int getLength() {
+		return endIndex.get() - startIndex.get();
 	}
 	
 }

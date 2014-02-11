@@ -14,9 +14,11 @@ import java.util.Collection;
 import java.util.Collections;
 
 import settings.GlobalAppSettings;
+import settings.GlobalAppSettings.LineFitOption;
 import control.TextModifyFacade;
 import document.PageInsets;
 import document.Paragraph;
+import document.ParagraphSpace;
 import document.TextStyle;
 
 public class LayoutMachine {
@@ -32,15 +34,16 @@ public class LayoutMachine {
 		lines = new ArrayList<LineOnCanvas>();
 	}
 	
-	public ParagraphOnCanvas getParagraphSpace(ColumnView requester, Rectangle allowedSpace, TextStyle style, Paragraph text, TextModifyFacade facade){
-		ParagraphOnCanvas paragraph = new ParagraphOnCanvas(requester, allowedSpace, style, facade);
+	public ParagraphOnCanvas getParagraphSpace(ColumnView requester, ParagraphSpace paragraphSpace, TextStyle style, Paragraph text, TextModifyFacade facade){
+		ParagraphOnCanvas paragraph = new ParagraphOnCanvas(requester, paragraphSpace, style, facade);
 		paragraph.setStyle(style);
 		paragraph.setParagraph(text);
 		
-		for(float y = allowedSpace.y; y <= allowedSpace.height + allowedSpace.y; y+= style.getLineSpacingHeight() + 2){
-			System.out.println("\nGetParagraphSpace");
+		Rectangle allowedSpaceBounds = paragraphSpace.getShape().getBoundingRectangle();
+		
+		for(float y = allowedSpaceBounds.y; y <= allowedSpaceBounds.height + allowedSpaceBounds.y; y+= style.getLineSpacingHeight() + 2){
 			LineOnCanvas newLine = new LineOnCanvas(requester, paragraph, facade);
-			newLine.initialPositionSetup(allowedSpace.x, y, allowedSpace.width, style.getLineSpacingHeight(), 0);
+			newLine.initialPositionSetup(allowedSpaceBounds.x, y, allowedSpaceBounds.width, style.getLineSpacingHeight(), 0);
 			ArrayList<LineOnCanvas> trimmedLine = buildLineOnCanvas(requester, newLine, paragraph, facade);
 			paragraph.insertLines(trimmedLine);
 		}
@@ -56,20 +59,56 @@ public class LayoutMachine {
 	}
 	
 	private ArrayList<LineOnCanvas> buildLineOnCanvas(ColumnView requester, LineOnCanvas newLine, ParagraphOnCanvas parentParagraph, TextModifyFacade facade) {
-		System.out.println("BUILD LINE ON CANVAS!!!!!");
-		
 		ArrayList<LineOnCanvas> lines = new ArrayList<LineOnCanvas>();
 		ArrayList<LineSegment> segments = new ArrayList<LineSegment>();
 		
-		segments.add(newLine.getLineSegment()); 
+		LineSegment initialSegment = newLine.getLineSegment();
+		LineSegment trimmedSegment = initialSegment.trimToFitInPolygon(parentParagraph.getAllowedSpace().getShape());
+		if(trimmedSegment == null) {
+			return lines;
+		}
+		
+		LineSegment trimmedSegmentLower = initialSegment.buildLowerLineSegment(newLine.getHeight(), newLine.getAngle());
+		LineSegment segmentToUse = null;
+		
+		trimmedSegmentLower = trimmedSegmentLower.trimToFitInPolygon(parentParagraph.getAllowedSpace().getShape());
+		System.out.println("TRIMMED: " + trimmedSegment + ", LOWER: " + trimmedSegmentLower);
+		
+		if(trimmedSegmentLower == null) {
+			return lines;
+		}
+		
+		if(Math.abs(trimmedSegment.getLength() - trimmedSegmentLower.getLength()) < GlobalAppSettings.ignoreValuesBelow) {
+			System.out.println("EQUAL LENGTH");
+		}
+		
+		if(GlobalAppSettings.selectedFitLineOption == LineFitOption.strictFit) {
+			if(trimmedSegment.getLength() - trimmedSegmentLower.getLength() > GlobalAppSettings.ignoreValuesBelowMedium){	
+				//adjust back to normal height
+				segmentToUse = trimmedSegmentLower.buildLowerLineSegment(-1 * newLine.getHeight(), newLine.getAngle());
+			}
+			else{
+				segmentToUse = trimmedSegment;
+			}
+		}
+		else if(GlobalAppSettings.selectedFitLineOption == LineFitOption.averageFit) {
+			LineSegment averageSegment = trimmedSegment.averageLineSegment(trimmedSegmentLower);
+			averageSegment = averageSegment.buildLowerLineSegment(-0.5f * newLine.getHeight(), newLine.getAngle());
+			segmentToUse = averageSegment;
+		}
+		else {
+			segmentToUse = trimmedSegment;
+		}
+		
+		segments.add(segmentToUse); 
 		LineSegment lowerLineSegment = null;
 		
 		for(int i = 0; i < shapes.size(); i++) {
 			Polygon shape = shapes.get(i).getPaneShape();
 			for(int j = 0; j < segments.size(); j++) {
 				lowerLineSegment = segments.get(j).buildLowerLineSegment(newLine.getHeight(), newLine.getAngle());
-				LineSegmentIntersection intersection = shape.intersect(segments.get(j), requester);
-				LineSegmentIntersection intersection2 = shape.intersect(lowerLineSegment, requester);
+				LineSegmentIntersection intersection = shape.intersect(segments.get(j));
+				LineSegmentIntersection intersection2 = shape.intersect(lowerLineSegment);
 				
 				segments.remove(j);
 				if(intersection.getLineSegment1() != null && intersection.getLineSegment2() == null){
@@ -113,10 +152,6 @@ public class LayoutMachine {
 		paragraph.startTextDivision();
 		
 		for(int i = 0; i < segments.size(); i++) {
-			System.out.println("\n\nbuildlineoncanvas1");
-			System.out.println("buildlineoncanvas2");
-			System.out.println("buildlineoncanvas3");
-			System.out.println("buildlineoncanvas4");
 			LineOnCanvas tempLine = new LineOnCanvas(requester, parentParagraph, facade);
 			tempLine.setLineSegment(segments.get(i));
 			

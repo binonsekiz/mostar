@@ -1,5 +1,8 @@
 package gui.docmodify;
 
+import settings.GlobalAppSettings;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -9,11 +12,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import document.Document;
 import event.DocModifyScreenGuiFacade;
 
-public class DocDebugView extends FlowPane {
+public class DocDebugView extends VBox {
 
 	public static DocDebugView instance;
 	
@@ -32,12 +38,16 @@ public class DocDebugView extends FlowPane {
 	private Button refresh;
 	
 	private TextArea totalDocument;
+	private TextArea memoryStats;
 	
 	private Text totalRefreshCount;
 	private SimpleIntegerProperty refreshCount;
+	private Timeline memoryCounter;
+	private Runtime rt;
 	
 	public DocDebugView() {
 		instance = this;
+		rt = Runtime.getRuntime();
 		this.setMinWidth(200);
 		this.setPrefWidth(200);
 		this.setMaxWidth(200);
@@ -89,6 +99,19 @@ public class DocDebugView extends FlowPane {
 				totalRefreshCount.setText("Total refresh count: " + refreshCount.get());
 			}
 		});
+		
+		memoryCounter = new Timeline(new KeyFrame(Duration.millis(GlobalAppSettings.memoryStatUpdateRate), new EventHandler<ActionEvent>(){
+			@Override
+		    public void handle(ActionEvent event) {
+				 memoryStats.setText(
+						 "Memory summary: \nUsed in VM: " + ((rt.totalMemory() - rt.freeMemory())/1000000) +
+						 " MB\nFree in VM: " + (rt.freeMemory()/1000000) + 
+						 " MB\nTotal in VM: " + (rt.totalMemory()/1000000) + 
+						 " MB");
+		    }
+		}));
+		memoryCounter.setCycleCount(-1);
+		memoryCounter.play();
 	}
 	
 	public SimpleIntegerProperty refreshCountProperty(){
@@ -109,7 +132,9 @@ public class DocDebugView extends FlowPane {
 		debugLabel4 = new Text("Debug label4");
 		totalRefreshCount = new Text("Total refresh count: " + refreshCount.get());
 		totalDocument = new TextArea();
+		memoryStats = new TextArea();
 		totalDocument.setWrapText(true);
+		memoryStats.setWrapText(true);
 		
 		overlayVisible.selectedProperty().set(true);
 		textCanvasVisible.selectedProperty().set(true);
@@ -117,7 +142,7 @@ public class DocDebugView extends FlowPane {
 		insetVisible.selectedProperty().set(true);
 		
 		this.getChildren().addAll(title, overlayVisible, textCanvasVisible, linePolygonsVisible, 
-				insetVisible, refresh, totalRefreshCount, debugLabel1, debugLabel2, debugLabel3, debugLabel4, totalDocument);
+				insetVisible, refresh, totalRefreshCount, debugLabel1, debugLabel2, debugLabel3, debugLabel4, totalDocument, memoryStats);
 	}
 
 	public void setGuiFacade(DocModifyScreenGuiFacade docModifyScreenGuiFacade) {
@@ -126,13 +151,12 @@ public class DocDebugView extends FlowPane {
 	
 	public void setDebugText(String text, int index){
 		switch (index) {
-		case 1: debugLabel1.setText(text); break;
-		case 2: debugLabel1.setText(text); break;
-		case 3: debugLabel1.setText(text); break;
-		case 4: debugLabel1.setText(text); break;
-		default: break;
+			case 1: debugLabel1.setText(text); break;
+			case 2: debugLabel2.setText(text); break;
+			case 3: debugLabel3.setText(text); break;
+			case 4: debugLabel4.setText(text); break;
+			default: break;
 		}
-		debugLabel1.setText(text);
 	}
 	
 	public void appendDebugText(String text){

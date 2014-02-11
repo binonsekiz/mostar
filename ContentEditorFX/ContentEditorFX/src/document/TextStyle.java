@@ -1,6 +1,8 @@
 package document;
 
+import settings.GlobalAppSettings;
 import gui.helper.FontHelper;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -13,6 +15,7 @@ public class TextStyle {
 	public static String defaultFontName = "Vera";
 	public static double defaultFontSize = 24;
 	public static Color defaultStrokeColor = Color.DARKSLATEGRAY;
+	public static Color defaultFillColor = Color.ALICEBLUE;
 	public static final TextStyle defaultStyle = new TextStyle();
 	public static float defaultLineSpacingHeight = 3; 
 	
@@ -22,6 +25,7 @@ public class TextStyle {
 	private double fontSize;
 	private float lineSpacingHeight;
 	private Color strokeColor;
+	private Color fillColor;
 	
 	/**
 	 * Initializes textstyle from 
@@ -50,6 +54,18 @@ public class TextStyle {
 		this.fontSize = fontSize;
 		this.strokeColor = strokeColor;
 		this.lineSpacingHeight = defaultLineSpacingHeight;
+		this.fillColor = defaultFillColor;
+	}
+	
+	public boolean isEqual(TextStyle other) {
+		if( this.getFontName().equals(other.getFontName()) &&
+			Math.abs(this.getFontSize() - other.getFontSize()) < GlobalAppSettings.ignoreValuesBelow &&
+			this.getFillColor().equals(other.getFillColor()) && 
+			this.getSelectionColor().equals(other.getSelectionColor()) && 
+			this.getStrokeColor().equals(other.getStrokeColor()) && 
+			Math.abs(this.getLineSpacingHeight() - other.getLineSpacingHeight()) < GlobalAppSettings.ignoreValuesBelow)
+			return true;
+		else return false;
 	}
 	
 	public TextStyle() {
@@ -67,6 +83,10 @@ public class TextStyle {
 	public Color getStrokeColor(){
 		return strokeColor;
 	}
+	
+	public Color getFillColor(){
+		return fillColor;
+	}
 
 	public FontMetrics getFontMetrics() {
 		return Toolkit.getToolkit().getFontLoader().getFontMetrics(FontHelper.getFont(fontName, fontSize));
@@ -82,6 +102,14 @@ public class TextStyle {
 
 	public void setFontColor(String string) {
 		this.strokeColor = Color.web(string);
+	}
+	
+	public void setFillColor(String string) {
+		this.fillColor = Color.web(string);
+	}
+	
+	public void setFillColor(Color color) {
+		this.fillColor = color;
 	}
 	
 	public void setFontColor(Color color) {
@@ -103,6 +131,12 @@ public class TextStyle {
 
 	public Paint getInvertedStrokeColor() {
 		return strokeColor.invert();
+	}
+
+	public void prepareContext(GraphicsContext context) {
+		context.setFont(getFont());
+		context.setStroke(strokeColor);
+		context.setFill(fillColor);
 	}
 
 }

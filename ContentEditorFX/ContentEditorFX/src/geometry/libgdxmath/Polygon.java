@@ -1,5 +1,7 @@
 package geometry.libgdxmath;
 
+import settings.GlobalAppSettings;
+import javafx.scene.canvas.GraphicsContext;
 import gui.columnview.ColumnView;
 
 /*******************************************************************************
@@ -560,13 +562,90 @@ public class Polygon {
 			retVal += "[" + localVertices[i*2] + ":" + localVertices[(i*2)+1] +"] ";
 		}
 		retVal += "\nWorld Vertices:\t";
-		for(int i = 0; i < getEdgeCount(); i++) {
-			retVal += "[" + worldVertices[i*2] + ":" + worldVertices[(i*2)+1] +"] ";
+		if(worldVertices != null) { 
+			for(int i = 0; i < getEdgeCount(); i++) {
+				retVal += "[" + worldVertices[i*2] + ":" + worldVertices[(i*2)+1] +"] ";
+			}
 		}
 		return retVal;
 	}
+	
+	/**
+	 * Returns a part of the line segment that is inside this polygon.
+	 * @param input
+	 * @return
+	 */
+	public LineSegment getPortionInside(LineSegment input) {
+		System.out.println("\nTrimming operation started");
+		LineSegment retVal = null;
+		
+		final float[] vertices = getTransformedVertices();
+		final int numFloats = vertices.length;
+		
+		Vector2 point1 = null;
+		Vector2 point2 = null;
+	
+		for(int i = 0; i < numFloats; i+= 2){
+			Vector2 point = new Vector2();
+			
+			boolean result = Intersector.intersectSegments(
+					new Vector2(vertices[i], vertices[i+1]), 
+					new Vector2(vertices[(i+2) % numFloats], vertices[(i+3) % numFloats]), 
+					input.getLeftPoint(),
+					input.getRightPoint(),
+					point);
+			
+			if(result){
+				if(point1 == null){
+					point1 = point;
+					System.out.println("\tFound point 1: " + point1);
+					//if this point is very close to the initial point, disregard.
+					if( point1.dst(input.getFirstPoint()) < GlobalAppSettings.ignoreValuesBelowMedium ||
+						point1.dst(input.getSecondPoint()) < GlobalAppSettings.ignoreValuesBelowMedium) {	
+						System.out.println("\t\tPoint 1 is too close");
+						point1 = null;
+					}
+					
+				}
+				else if(point2 == null){
+					point2 = point;
+					System.out.println("\tFound point 2: " + point2);
+				}
+			}
+		}
+		if(point1 == null && point2 == null){
+			if(this.contains(input.getFirstPoint()) && this.contains(input.getSecondPoint())){
+				retVal = new LineSegment(input.getFirstPoint(), input.getSecondPoint());
+			}
+		}
+		else if(point1 != null && point2 == null) {
+			if(this.contains(input.getFirstPoint())) {
+				retVal = new LineSegment(input.getFirstPoint(), point1);
+				retVal.fixCoordinates();
+			}
+			else if(this.contains(input.getSecondPoint())) {
+				retVal = new LineSegment(input.getSecondPoint(), point1);
+				retVal.fixCoordinates();
+			}
+			else{
+				throw new RuntimeException("biseyler yanlis gitti");
+			}
+		}
+		else if(point1 != null && point2 != null) {
+			retVal = new LineSegment(point1, point2);
+			retVal.fixCoordinates();
+		}
+		
+		System.out.println("Trimming operation complete\n");
+		
+		return retVal;
+	}
 
-	public LineSegmentIntersection intersect(LineSegment lineSegment, ColumnView requester) {
+	private boolean contains(Vector2 firstPoint) {
+		return contains(firstPoint.x, firstPoint.y);
+	}
+
+	public LineSegmentIntersection intersect(LineSegment lineSegment) {
 		LineSegmentIntersection intersection = new LineSegmentIntersection();
 		final float[] vertices = getTransformedVertices();
 		final int numFloats = vertices.length;
@@ -636,5 +715,9 @@ public class Polygon {
 			}
 			return intersection;
 		}
+	}
+
+	public void draw(GraphicsContext context) {
+		context.strokePolygon(getTransformedXVertices(), getTransformedYVertices(), getVertices().length / 2);
 	}
 }

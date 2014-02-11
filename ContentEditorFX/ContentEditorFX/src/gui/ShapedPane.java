@@ -317,7 +317,7 @@ public abstract class ShapedPane extends Pane implements VisualView {
 	private void paintBorder(GraphicsContext context) {
 		context.setStroke(strokeColor);
 		context.setFill(fillColor);
-		context.strokePolygon(shape.getTransformedXVertices(), shape.getTransformedYVertices(), shape.getVertices().length / 2);
+		shape.draw(context);
 	}
 	
 	private void paintEdges(GraphicsContext context) {

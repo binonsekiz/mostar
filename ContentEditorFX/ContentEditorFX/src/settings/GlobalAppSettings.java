@@ -22,13 +22,23 @@ public class GlobalAppSettings {
 	
 	public static final double fastDeviceFrameMillis = 16;
 	public static final float ignoreValuesBelow = 0.001f;
+	public static final float ignoreValuesBelowMedium = 0.1f;
 	public static final float ignoreValuesBelowLarge = 5f;
 	public static final double caretBlinkRate = 1000;
 	public static final float caretMovementTime = 100f;
-	public static double frameWidth =1440;
+	public static double frameWidth = 1080;
 	public static double frameHeight = 960;
 	private static boolean guiDebugGuidelines;
 	private static boolean isTestModeOn;
+	public static boolean areLineViewCountsVisible = true;
+	public static double memoryStatUpdateRate = 500f;
+	public static LineFitOption selectedFitLineOption = LineFitOption.averageFit;
+	
+	public enum LineFitOption {
+		strictFit,
+		averageFit,
+		looseFit
+	}
 	
 	public static void loadAppSettings(){
 		loadTestConfigSettings();

@@ -1,5 +1,7 @@
 package gui.docmodify;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -72,7 +74,7 @@ public class DocWidgetToolbar extends FlowPane{
 		initImportControls();
 		initShapeContols();
 		
-		deactivateControls();
+	//	deactivateControls();
 		
 		lineButton = new Button(Translator.get("Line"));
 		
@@ -176,7 +178,7 @@ public class DocWidgetToolbar extends FlowPane{
 		strokeColorPicker.getStyleClass().add("last");
 		
 		colorPane.getStyleClass().add("segmented-button-bar-class");
-	//	colorPane.getChildren().addAll(frontColorPicker, highlightColorPicker, strokeColorPicker);
+		colorPane.getChildren().addAll(frontColorPicker, highlightColorPicker, strokeColorPicker);
 	}
 
 	private void initComboBoxes() {
@@ -211,7 +213,7 @@ public class DocWidgetToolbar extends FlowPane{
 		styleBox.getStyleClass().add("first");
 		
 		fontPane.getStyleClass().add("segmented-button-bar-class");
-//		fontPane.getChildren().addAll(styleBox, fontBox, fontSizeBox);
+		fontPane.getChildren().addAll(styleBox, fontBox, fontSizeBox);
 	}
 
 	private void initEvents() {
@@ -283,7 +285,23 @@ public class DocWidgetToolbar extends FlowPane{
 			public void handle(ActionEvent arg0) {
 				guiFacade.pageBackgroundPressed();
 			}
-		});		
+		});
+		
+		fontBox.valueProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> arg0,
+					String arg1, String arg2) {
+				guiFacade.changeFontName(arg2);
+			}
+		});
+		
+		fontSizeBox.valueProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> arg0,
+					String arg1, String arg2) {
+				guiFacade.changeFontSize(arg2);
+			}
+		});
 	}
 
 	public void setGuiFacade(DocModifyScreenGuiFacade guiFacade) {
