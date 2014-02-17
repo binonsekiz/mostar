@@ -1,11 +1,12 @@
 package gui.helper;
 
-import java.util.ArrayList;
-
 import geometry.GeometryHelper;
 import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Rectangle;
 import gui.docmodify.DocDebugView;
+
+import java.util.ArrayList;
+
 import javafx.scene.paint.Color;
 import document.Column;
 import document.ParagraphSpace;

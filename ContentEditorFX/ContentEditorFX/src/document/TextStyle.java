@@ -1,11 +1,11 @@
 package document;
 
-import settings.GlobalAppSettings;
 import gui.helper.FontHelper;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import settings.GlobalAppSettings;
 
 import com.sun.javafx.tk.FontMetrics;
 import com.sun.javafx.tk.Toolkit;

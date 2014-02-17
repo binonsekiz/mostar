@@ -1,8 +1,7 @@
 package geometry.libgdxmath;
 
-import settings.GlobalAppSettings;
 import javafx.scene.canvas.GraphicsContext;
-import gui.columnview.ColumnView;
+import settings.GlobalAppSettings;
 
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
@@ -576,7 +575,6 @@ public class Polygon {
 	 * @return
 	 */
 	public LineSegment getPortionInside(LineSegment input) {
-		System.out.println("\nTrimming operation started");
 		LineSegment retVal = null;
 		
 		final float[] vertices = getTransformedVertices();
@@ -598,18 +596,15 @@ public class Polygon {
 			if(result){
 				if(point1 == null){
 					point1 = point;
-					System.out.println("\tFound point 1: " + point1);
 					//if this point is very close to the initial point, disregard.
 					if( point1.dst(input.getFirstPoint()) < GlobalAppSettings.ignoreValuesBelowMedium ||
 						point1.dst(input.getSecondPoint()) < GlobalAppSettings.ignoreValuesBelowMedium) {	
-						System.out.println("\t\tPoint 1 is too close");
 						point1 = null;
 					}
 					
 				}
 				else if(point2 == null){
 					point2 = point;
-					System.out.println("\tFound point 2: " + point2);
 				}
 			}
 		}
@@ -635,9 +630,7 @@ public class Polygon {
 			retVal = new LineSegment(point1, point2);
 			retVal.fixCoordinates();
 		}
-		
-		System.out.println("Trimming operation complete\n");
-		
+				
 		return retVal;
 	}
 

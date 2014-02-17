@@ -1,19 +1,17 @@
 package gui.columnview;
 
-import geometry.libgdxmath.Rectangle;
 import gui.docmodify.DocDebugView;
 
 import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Font;
 import control.TextModifyFacade;
 import document.Document;
 import document.Paragraph;
+import document.ParagraphSet;
 import document.ParagraphSpace;
 import document.TextLine;
-import document.TextStyle;
 
 
 /**
@@ -27,26 +25,20 @@ public class ParagraphOnCanvas {
 	
 	private ParagraphSpace allowedSpace;
 	private ArrayList<LineOnCanvas> lines; 
-	private TextStyle style;
-	private Paragraph paragraph;
-
+	private ParagraphSet paragraphSet;
+	
 	private TextModifyFacade textModifyFacade;
 	
-	public ParagraphOnCanvas(ColumnView parent, ParagraphSpace allowedSpace, TextStyle style, TextModifyFacade facade) {
+	public ParagraphOnCanvas(ColumnView parent, ParagraphSpace allowedSpace, TextModifyFacade facade) {
 		System.out.println("ParagraphView initialized");
 		this.parent = parent; 
 		this.allowedSpace = allowedSpace;
-		this.style = style;
 		this.textModifyFacade = facade;
 		lines = new ArrayList<LineOnCanvas>();
 	}
 
 	public ParagraphSpace getAllowedSpace() {
 		return allowedSpace;
-	}
-	
-	public TextStyle getStyle() {
-		return style;
 	}
 	
 	public void setAllowedSpace(ParagraphSpace allowedSpace) {
@@ -81,11 +73,7 @@ public class ParagraphOnCanvas {
 	}
 
 	public String getText() {
-		return paragraph.getText();
-	}
-
-	public Font getFont() {
-		return style.getFont();
+		return paragraphSet.getText();
 	}
 
 	/**
@@ -95,13 +83,12 @@ public class ParagraphOnCanvas {
 		parent.refresh();
 	}
 
-	public void setParagraph(Paragraph paragraph) {
-		this.paragraph = paragraph;
-		paragraph.setStyle(style);
+	public void setParagraphSet(ParagraphSet paragraph) {
+		this.paragraphSet = paragraph;
 	}
 	
 	public String toString() {
-		return paragraph.getText();
+		return paragraphSet.toString();
 	}
 
 	public boolean containsCoordinate(float x, float y) {
@@ -135,12 +122,16 @@ public class ParagraphOnCanvas {
 		}
 	}
 	
-	public ArrayList<Float> getCummulativeWordSizes() {
+	/*public ArrayList<Float> getCummulativeWordSizes() {
 		return paragraph.getCummulativeWordSizes();
-	}
+	}*/
 
-	public Paragraph getParagraph() {
-		return paragraph;
+	public Paragraph getParagraph(int index) {
+		return paragraphSet.getParagraph(index);
+	}
+	
+	public ParagraphSet getParagraphSet() {
+		return paragraphSet;
 	}
 
 	public ArrayList<LineOnCanvas> getLinesOnCanvas() {
@@ -155,12 +146,8 @@ public class ParagraphOnCanvas {
 		return lines.get(lines.size()-1).getEndIndex();
 	}
 
-	public void setStyle(TextStyle style) {
-		this.style = style;
-	}
-
 	public String getText(int i, int j) {
-		return paragraph.subSequence(i, j);
+		return paragraphSet.getText(i, j);
 	}
 
 	public String getText(TextLine textLine) {

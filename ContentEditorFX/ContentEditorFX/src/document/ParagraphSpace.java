@@ -1,7 +1,6 @@
 package document;
 
 import geometry.libgdxmath.Polygon;
-import geometry.libgdxmath.Rectangle;
 
 import java.util.ArrayList;
 
@@ -23,7 +22,6 @@ public class ParagraphSpace {
 		this.parent = parent;
 		paragraphs = new ArrayList<Paragraph>();
 		this.allowedShape = shape;
-		System.out.println("PARAGRAPH SHAPE: " + shape);
 	}
 
 	public Polygon getShape() {

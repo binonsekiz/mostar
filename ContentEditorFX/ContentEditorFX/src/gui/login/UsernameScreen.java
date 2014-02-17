@@ -1,6 +1,5 @@
 package gui.login;
 
-import event.GlobalGuiFacade;
 import gui.GFrame;
 import gui.GFrame.WindowType;
 import gui.ScreenType;
@@ -51,8 +50,6 @@ public class UsernameScreen extends BorderPane implements ScreenType{
 		loginButton.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent arg0) {
-				GlobalGuiFacade.loginEvent(usernameField.getText(), passwordField.getText());
-				
 				try {
 					Socket sock = new Socket("localhost", 1018);
 				} catch (UnknownHostException e) {

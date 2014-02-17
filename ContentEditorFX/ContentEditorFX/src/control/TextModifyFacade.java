@@ -44,7 +44,7 @@ public class TextModifyFacade {
 	public Paragraph getParagraphWithIndex(int caretIndex) {
 		ArrayList<Paragraph> paragraphs =  documentText.getParagraphs();
 		for(int i = 0; i < paragraphs.size(); i++) {
-			if(caretIndex < paragraphs.get(i).getStartIndexInBigText())
+			if(caretIndex < paragraphs.get(i).getStartIndex())
 				return paragraphs.get(i - 1);
 		}
 		return paragraphs.get(paragraphs.size() - 1);
@@ -60,8 +60,8 @@ public class TextModifyFacade {
 		documentView.textSelectionSet(lowerIndex, higherIndex);
 	}
 
-	public void insertSingleChar(String character) {
-		caret.insertSingleChar(character);
+	public void insertString(String text) {
+		caret.insertString(text);
 		caret.getActiveColumnView().refresh();
 	}
 	
@@ -98,11 +98,23 @@ public class TextModifyFacade {
 	}
 
 	public void backspace() {
-		
+		if(caret.getCaretIndex() == caret.getAnchor()){
+			caret.setAnchorIndexRelative(-1);
+			insertString("");
+		}
+		else{
+			insertString("");
+		}
 	}
 
 	public void delete() {
-
+		if(caret.getCaretIndex() == caret.getAnchor()){
+			caret.setAnchorIndexRelative(1);
+			insertString("");
+		}
+		else{
+			insertString("");
+		}
 	}
 
 	public void enter() {
@@ -111,6 +123,12 @@ public class TextModifyFacade {
 
 	public void changeMousePointer(Cursor cursorType) {
 		documentView.setCursor(cursorType);
+	}
+
+	public void startTextDivisionForAll() {
+		for(int i = 0; i < documentText.getParagraphs().size(); i++) {
+			documentText.getParagraph(i).startTextDivision();
+		}
 	}
 
 	

@@ -33,7 +33,7 @@ public class Column {
 	}
 	
 	protected Column(Measurement measurement, PageInsets newInsets){
-		System.out.println("Document initialized");
+		System.out.println("Column initialized");
 		debugInstance = this;
 		this.pageSize = measurement;
 		widgets = new ArrayList<Widget>();

@@ -1,6 +1,5 @@
 package control;
 
-import javafx.scene.text.Font;
 import gui.columnview.DocumentView;
 import document.Document;
 import document.DocumentText;

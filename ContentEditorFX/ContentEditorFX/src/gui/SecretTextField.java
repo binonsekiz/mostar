@@ -1,10 +1,5 @@
  package gui;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.TextField;
-import control.Caret;
-import control.TextModifyFacade;
 
 /*public class SecretTextField extends TextField{
 

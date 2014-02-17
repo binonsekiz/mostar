@@ -1,7 +1,8 @@
 package document;
 
-import gui.columnview.LineOnCanvas;
+import geometry.libgdxmath.LineSegment;
 import gui.columnview.ParagraphOnCanvas;
+import gui.helper.MathHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +31,6 @@ public class Paragraph implements CharSequence{
 
 	private int previousIndex = 0;
 	private float cummulativeTextSize = 0;
-	private boolean hasNext;
 	
 	private int startIndexSaveOnly;
 	private int endIndexSaveOnly;
@@ -40,6 +40,8 @@ public class Paragraph implements CharSequence{
 	private DocumentText documentText;
 	private int indexInParent;
 	private ParagraphOnCanvas paragraphView;
+	private ParagraphSet paragraphSet;
+	private boolean hasElements;
 	
 	public Paragraph(DocumentText parent, int index){
 		this(TextStyle.defaultStyle, "", parent, index);
@@ -55,6 +57,7 @@ public class Paragraph implements CharSequence{
 		startIndexInBigText = new SimpleIntegerProperty();
 		angle = new SimpleFloatProperty();
 		textLines = new ArrayList<TextLine>();
+		hasElements = false;
 		setText(text);
 		computeStringWidths();
 		initEvents();
@@ -63,22 +66,8 @@ public class Paragraph implements CharSequence{
 	
 	public void setParagraphOnCanvas(ParagraphOnCanvas view) {
 		this.paragraphView = view;
-		initializeTextLines();
 	}
 	
-	private void initializeTextLines() {
-		textLines.clear();
-		ArrayList<LineOnCanvas> lines = paragraphView.getLines();
-		for(int i = 0; i < lines.size(); i++) {
-			TextLine tempLine = new TextLine(this, 0, 0);
-			textLines.add(tempLine);
-		}
-		
-		if(paragraphView != null) {
-			updateTextLines();
-		}
-	}
-
 	private void initEvents() {
 		startIndexInBigText.addListener(new ChangeListener<Number>() {
 			@Override
@@ -122,25 +111,16 @@ public class Paragraph implements CharSequence{
 	}
 
 	private void updateTextLines() {
-		ArrayList<LineOnCanvas> lines = paragraphView.getLines();
-		
-		TextLine tempLine = new TextLine(null, 0, 0);
-				
-		computeStringWidths();
-		startTextDivision();
-		for(int i = 0; i < lines.size(); i++) {
-			calculateNextLine(tempLine, lines.get(i).getWidth());
-			textLines.get(i).setStartIndex(tempLine.getStartIndex() + this.startIndexInBigText.get());
-			textLines.get(i).setEndIndex(tempLine.getEndIndex() + this.startIndexInBigText.get());
-		}
-		documentText.updateIndexAfter(indexInParent);
+		ArrayList<LineSegment> lineSegments = paragraphSet.getLineSegments();
+		paragraphSet.startTextDivision();
+		paragraphSet.updateWithAvailableText(lineSegments);
 	}
-	
+
 	public void setStartIndexInBigText(int index){
 		this.startIndexInBigText.set(index);
 	}
 	
-	public int getStartIndexInBigText(){
+	public int getStartIndex(){
 		return textLines.get(0).getStartIndex();
 	}
 	
@@ -164,11 +144,8 @@ public class Paragraph implements CharSequence{
 	public void startTextDivision(){
 		previousIndex = 0;
 		cummulativeTextSize = 0;
-		hasNext = true;
-	}
-	
-	public boolean hasNextLine(){
-		return hasNext;
+		computeStringWidths();
+		hasElements = true;
 	}
 	
 	/**
@@ -180,11 +157,16 @@ public class Paragraph implements CharSequence{
 	public String calculateNextLine(TextLine inputLine, double inputSize){
 		float lineEndSize = (float) (cummulativeTextSize + inputSize);
 
+System.out.println("1, text: " + this.getText());
+		inputLine.setParent(this);
 		inputLine.setStartIndex(previousIndex);
 		inputLine.setEndIndex(previousIndex);
+System.out.println("2");		
 		
 		//TODO: use binary search instead of linear search
 		int wordIndex = -1;
+		
+		textLines.add(inputLine);
 
 		for(int i = cummulativeWordSizes.size() - 1; i >= 0; i--) {
 			if(cummulativeWordSizes.get(i) < lineEndSize) {
@@ -192,29 +174,37 @@ public class Paragraph implements CharSequence{
 				break;
 			}
 		}
-		
+System.out.println("3");		
 		int wordStartIndex = previousIndex;
 		
 		if(wordIndex >= 0 && wordCountToStringIndex.containsKey(wordIndex)){
 			wordStartIndex = wordCountToStringIndex.get(wordIndex);
 		}
 		else {
+			hasElements = false;
+			System.out.println("out 1");
 			return null;
 		}
+System.out.println("4");
 				
 		if(wordStartIndex < previousIndex) {
+			hasElements = false;
+			System.out.println("out 2");
 			return null;
 		}
-		
+System.out.println("5");		
 		String retVal = textBuffer.substring(previousIndex, wordStartIndex 	+ 1);
 		startIndexSaveOnly = previousIndex;
 		endIndexSaveOnly = wordStartIndex;
 		previousIndex = wordStartIndex + 1;
-		
+System.out.println("6");		
 		inputLine.setStartIndex(startIndexSaveOnly);
 		inputLine.setEndIndex(previousIndex);
-		
+System.out.println("7");		
 		cummulativeTextSize = cummulativeWordSizes.get(wordIndex);
+		
+		System.out.println("Added " + inputLine + " to " + this);
+		
 		return retVal;
 	}
 	
@@ -262,7 +252,9 @@ public class Paragraph implements CharSequence{
 
 	@Override
 	public String subSequence(int arg0, int arg1) {
-		return textBuffer.substring(arg0 - startIndexInBigText.get(), arg1 - startIndexInBigText.get());
+		return textBuffer.substring(
+				MathHelper.clamp(0 ,arg0 - startIndexInBigText.get(), getEndIndex() - getStartIndex()), 
+				MathHelper.clamp(0 ,arg1 - startIndexInBigText.get(), getEndIndex() - getStartIndex()));
 	}
 	
 	public ArrayList<Float> getCummulativeWordSizes() {
@@ -338,5 +330,35 @@ public class Paragraph implements CharSequence{
 				textLines.get(0).setStartIndex(startIndexInBigText.get());
 			}
 		}
+	}
+
+	/**
+	 * This should only be called from paragraph set.
+	 * @param paragraphSet
+	 */
+	protected void setParagraphSet(ParagraphSet paragraphSet) {
+		this.paragraphSet = paragraphSet;
+	}
+	
+	public ParagraphSet getParagraphSet() {
+		return paragraphSet;
+	}
+
+	public boolean includesIndex(int index) {
+		if(textLines.size() == 0) 
+			return false;
+		if(index == getStartIndex() && index == getEndIndex())
+			return true;
+		if(index < getEndIndex() && index >= getStartIndex())
+			return true; 
+		return false;
+	}
+
+	public boolean hasElements() {
+		return hasElements;
+	}
+	
+	public String toString() {
+		return "Paragraph: " + getText() + ", is being divided: " + hasElements;
 	}
 }

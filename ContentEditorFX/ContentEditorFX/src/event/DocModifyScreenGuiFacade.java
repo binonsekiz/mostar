@@ -54,6 +54,7 @@ public class DocModifyScreenGuiFacade {
 		widgetModifyFacade = new WidgetModifyFacade(this);
 		styleModifyFacade = new StyleModifyFacade();
 		caret = new Caret(textModifyFacade);
+		textModifyFacade.setCaret(caret);
 		KeyboardManager.instance.setTextFacade(textModifyFacade);
 		
 		documentView.setGuiFacade(this);
@@ -62,7 +63,6 @@ public class DocModifyScreenGuiFacade {
 		docVersatilePane.setGuiFacade(this);
 		docDebugView.setGuiFacade(this);
 		
-		textModifyFacade.setCaret(caret);
 		widgetModifyFacade.setCaret(caret);
 		styleModifyFacade.setCaret(caret);
 		styleModifyFacade.setTextModifyFacade(textModifyFacade);
@@ -70,12 +70,12 @@ public class DocModifyScreenGuiFacade {
 	
 	public void createNewDocument(){
 		document = new Document();
-		documentView.associateWithDocument(document);
-		docOverview.populateTreeView();
 		textModifyFacade.setDocumentAndView(document, documentView);
 		widgetModifyFacade.setDocumentAndView(document, documentView);
 		styleModifyFacade.setDocumentAndView(document, documentView);
 		docBottomToolbar.setGuiFacade(this);
+		documentView.associateWithDocument(document);
+		docOverview.populateTreeView();
 	}
 	
 	public Document getDocument(){
@@ -279,6 +279,10 @@ public class DocModifyScreenGuiFacade {
 	public void changeFontSize(String arg2) {
 		// TODO Auto-generated method stub
 		styleModifyFacade.changeFontSize(Double.parseDouble(arg2));
+	}
+
+	public void debugResetTextIndices() {
+		document.getDocumentText().debugValidateAllTextLines();
 	}
 
 }

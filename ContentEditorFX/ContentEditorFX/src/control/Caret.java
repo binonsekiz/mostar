@@ -4,8 +4,8 @@ import geometry.libgdxmath.Interpolation;
 import geometry.libgdxmath.Vector2;
 import gui.columnview.ColumnView;
 import gui.columnview.LineOnCanvas;
-import gui.columnview.ParagraphOnCanvas;
 import gui.docmodify.DocDebugView;
+import gui.helper.MathHelper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -74,7 +74,6 @@ public class Caret{
 		caretMovementTimer = new Timeline(new KeyFrame(Duration.millis(GlobalAppSettings.fastDeviceFrameMillis), new EventHandler<ActionEvent>(){
 			@Override
 		    public void handle(ActionEvent event) {
-			//	System.out.println("Start x: " + startX + ", y: " + startY + ", Destination x: " + destinationX + ", y: " + destinationY + ", Screen x: " + screenX + ", y:" + screenY);
 				totalDestination += GlobalAppSettings.fastDeviceFrameMillis;
 				screenX = interpolation.apply(startX, destinationX, totalDestination / GlobalAppSettings.caretMovementTime);
 				screenY = interpolation.apply(startY, destinationY, totalDestination / GlobalAppSettings.caretMovementTime);
@@ -99,7 +98,7 @@ public class Caret{
 		this.caretIndex = index;
 		this.activeLineView = textModifyFacade.getLineViewWithIndex(index);
 
-		caretParagraph = activeLineView.getParentParagraph();
+		caretParagraph = documentText.getParagraphThatIncludesIndex(caretIndex);
 		Vector2 caretPos = activeLineView.getLetterPosition(caretIndex - activeLineView.getStartIndex());
 		anchor = caretIndex;
 		anchorParagraph = caretParagraph;
@@ -121,7 +120,7 @@ public class Caret{
 		this.anchor = anchorIndex;
 		this.anchorLineView = textModifyFacade.getLineViewWithIndex(anchorIndex);
 		
-		anchorParagraph = anchorLineView.getParentParagraph();
+		anchorParagraph = documentText.getParagraphThatIncludesIndex(anchor);
 
 		textModifyFacade.textSelectionSet(caretIndex, anchor);
 		
@@ -194,16 +193,14 @@ public class Caret{
 	 * @param index
 	 */
 	public void setCaretIndex(int index) {
-		System.out.println("setting caret at: " + index);
 		calculateCaretLine(index);
 	}
 	
 	public void setAnchorIndex(int index) {
-		System.out.println("setting anchor at: " + index);
 		calculateAnchorLine(index);
 	}
 
-	public void insertSingleChar(String text) {
+	public void insertString(String text) {
 		if(caretParagraph == null) caretParagraph = documentText.getParagraph(0);
 		
 		if(caretIndex == anchor) {
@@ -216,13 +213,27 @@ public class Caret{
 	}
 
 	public void leftKey(boolean shiftDown, boolean controlDown) {
-		// TODO Auto-generated method stub
-		
+		int indexCountToMove = -1;
+		if(controlDown) {
+	//		indexCountToMove = documentText.getRelativeWordStartIndexBefore(caretIndex);
+		}
+
+		if(!shiftDown) {
+			setCaretIndexRelative(indexCountToMove);
+		}
+		setAnchorIndexRelative(indexCountToMove);
 	}
 
 	public void rightKey(boolean shiftDown, boolean controlDown) {
-		// TODO Auto-generated method stub
-		
+		int indexCountToMove = 1;
+		if(controlDown) {
+	//		indexCountToMove = documentText.getRelativeWordStartIndexBefore(caretIndex);
+		}
+
+		if(!shiftDown) {
+			setCaretIndexRelative(indexCountToMove);
+		}
+		setAnchorIndexRelative(indexCountToMove);
 	}
 
 	public void changeMousePointer(Cursor cursorType) {
@@ -246,5 +257,13 @@ public class Caret{
 		if(caretIndex == anchor && caretIndex == documentText.getEndIndex())
 			return true;
 		else return false;
+	}
+
+	public void setAnchorIndexRelative(int i) {
+		setAnchorIndex(MathHelper.clamp(0, anchor + i, documentText.getEndIndex()));
+	}
+	
+	public void setCaretIndexRelative(int i) {
+		setCaretIndex(MathHelper.clamp(0, caretIndex + i, documentText.getEndIndex()));
 	}
 }

@@ -32,7 +32,7 @@ public class GlobalAppSettings {
 	private static boolean isTestModeOn;
 	public static boolean areLineViewCountsVisible = true;
 	public static double memoryStatUpdateRate = 500f;
-	public static LineFitOption selectedFitLineOption = LineFitOption.averageFit;
+	public static LineFitOption selectedFitLineOption = LineFitOption.looseFit;
 	
 	public enum LineFitOption {
 		strictFit,

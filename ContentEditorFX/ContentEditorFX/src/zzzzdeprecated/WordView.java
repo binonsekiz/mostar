@@ -1,11 +1,11 @@
-package gui.columnview;
+package zzzzdeprecated;
 
+import gui.columnview.VisualView;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
-import zzzzdeprecated.LineViewDeprecated;
 
 import com.sun.javafx.tk.FontMetrics;
 

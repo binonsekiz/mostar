@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
-public class TextLine {
+public class TextLine implements Comparable<TextLine> {
 
 	private SimpleIntegerProperty startIndex;
 	private SimpleIntegerProperty endIndex;
@@ -12,7 +12,7 @@ public class TextLine {
 	private Paragraph parent;
 	
 	public TextLine(Paragraph parent, int startIndex, int endIndex) {
-		System.out.println("TextLine initialized");
+		System.out.println("TextLine initialized, start: " + startIndex + ", end: " + endIndex);
 		this.startIndex = new SimpleIntegerProperty(startIndex);
 		this.endIndex = new SimpleIntegerProperty(endIndex);
 		this.parent = parent;
@@ -39,6 +39,10 @@ public class TextLine {
 			}
 		});
 	}
+	
+	public TextStyle getStyle() {
+		return parent.getStyle();
+	}
 
 	public int getStartIndex() {
 		return startIndex.get();
@@ -58,6 +62,19 @@ public class TextLine {
 
 	public int getLength() {
 		return endIndex.get() - startIndex.get();
+	}
+
+	@Override
+	public int compareTo(TextLine other) {
+		return this.getStartIndex() - other.getStartIndex();
+	}
+	
+	public String toString() {
+		return "TextLine: [" + startIndex + ", " + endIndex + "], parent: " + parent;
+	}
+
+	public void setParent(Paragraph paragraph) {
+		this.parent = paragraph;
 	}
 	
 }

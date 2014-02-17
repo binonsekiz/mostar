@@ -1,7 +1,6 @@
 package gui.columnview;
 
 import gui.ShapedPane;
-import gui.docmodify.DocDebugView;
 import gui.helper.DebugHelper;
 import gui.helper.LayoutMachine;
 import gui.widget.WidgetModifier;
@@ -77,8 +76,9 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	}
 	
 	private void populateParagraphViews() {
-		for(int i = 0; i < text.get().getParagraphs().size(); i++) {
-			paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, DebugHelper.paragraphSpaces.get(i), DebugHelper.debugStyle4, text.get().getParagraph(i), textModifyFacade));
+		for(int i = 0; i < text.get().getParagraphSets().size(); i++) {
+			System.out.println("Number of paragraph sets: " + text.get().getParagraphSets().size());
+			paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, DebugHelper.paragraphSpaces.get(i), text.get().getParagraphSet(i), textModifyFacade));
 		}
 	}
 
@@ -164,7 +164,6 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		canvas.setWidth(column.getWidth());
 		canvas.setHeight(column.getHeight());
 		layoutMachine.setPageInsets(column.getInsets());
-		layoutMachine.setParentShape(column.getPaneShape());
 		parent.refresh();
 	}
 	

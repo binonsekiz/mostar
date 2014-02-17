@@ -1,18 +1,10 @@
 package zzzzdeprecated;
 
-import gui.helper.FontHelper;
-
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-
 import javafx.scene.text.Font;
 
 import com.sun.javafx.tk.FontMetrics;
-import com.sun.javafx.tk.Toolkit;
 
 import document.Column;
-import document.TextLineSpace;
-import document.TextLineSpace.Slot;
 import document.TextStyle;
 
 /**

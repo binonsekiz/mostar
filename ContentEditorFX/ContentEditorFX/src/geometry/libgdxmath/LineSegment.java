@@ -55,7 +55,7 @@ public class LineSegment implements Comparable<LineSegment>{
 		return "LineSegment P1: " + firstPoint + ", P2: " + secondPoint; 
 	}
 
-	public double getLength() {
+	public float getLength() {
 		return firstPoint.dst(secondPoint);
 	}
 
@@ -118,6 +118,19 @@ public class LineSegment implements Comparable<LineSegment>{
 				new Vector2((firstPoint.x+trimmedSegmentLower.getFirstPoint().x)/2, (firstPoint.y+trimmedSegmentLower.getFirstPoint().y)/2), 
 				new Vector2((secondPoint.x+trimmedSegmentLower.getSecondPoint().x)/2, (secondPoint.y+trimmedSegmentLower.getSecondPoint().y)/2));
 		return retVal;
+	}
+
+	/**
+	 * Returns the angle of the line segment in degrees.
+	 * @return
+	 */
+	public float getAngle() {
+		float length =this.getLength();
+		float yDiff = this.getSecondPoint().y - this.getFirstPoint().y;
+		
+		if(Math.abs(length) < GlobalAppSettings.ignoreValuesBelow) 
+			return 0;
+		return (float) Math.toDegrees(Math.asin(yDiff / length));
 	}
 
 }

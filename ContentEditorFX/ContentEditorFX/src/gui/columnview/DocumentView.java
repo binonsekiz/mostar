@@ -144,6 +144,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 //		System.out.println("\n\n################\nQuerying with " + index);
 		
 		for(int i = 0; i < columnViews.size(); i++) {
+
 //			System.out.println("Looking at column " + i + ", has start index: " + columnViews.get(i).getStartIndex() + ", end index: " + columnViews.get(i).getEndIndex());
 			if(index >= columnViews.get(i).getStartIndex() && index <= columnViews.get(i).getEndIndex()) {
 				columnIndex = i;

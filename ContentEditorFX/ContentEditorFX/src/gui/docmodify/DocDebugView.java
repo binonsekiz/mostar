@@ -1,6 +1,5 @@
 package gui.docmodify;
 
-import settings.GlobalAppSettings;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -11,11 +10,10 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import settings.GlobalAppSettings;
 import document.Document;
 import event.DocModifyScreenGuiFacade;
 
@@ -36,6 +34,7 @@ public class DocDebugView extends VBox {
 	private CheckBox linePolygonsVisible;
 	private CheckBox insetVisible;
 	private Button refresh;
+	private Button refreshTextIndices;
 	
 	private TextArea totalDocument;
 	private TextArea memoryStats;
@@ -100,6 +99,13 @@ public class DocDebugView extends VBox {
 			}
 		});
 		
+		refreshTextIndices.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				guiFacade.debugResetTextIndices();
+			}
+		});
+		
 		memoryCounter = new Timeline(new KeyFrame(Duration.millis(GlobalAppSettings.memoryStatUpdateRate), new EventHandler<ActionEvent>(){
 			@Override
 		    public void handle(ActionEvent event) {
@@ -126,6 +132,7 @@ public class DocDebugView extends VBox {
 		linePolygonsVisible = new CheckBox("Line Polygons Visible");
 		insetVisible = new CheckBox("Page Insets Visible");
 		refresh = new Button("Refresh");
+		refreshTextIndices = new Button("Refresh Text Indices");
 		debugLabel1 = new Text("Debug label1");
 		debugLabel2 = new Text("Debug label2");
 		debugLabel3 = new Text("Debug label3");
@@ -142,7 +149,7 @@ public class DocDebugView extends VBox {
 		insetVisible.selectedProperty().set(true);
 		
 		this.getChildren().addAll(title, overlayVisible, textCanvasVisible, linePolygonsVisible, 
-				insetVisible, refresh, totalRefreshCount, debugLabel1, debugLabel2, debugLabel3, debugLabel4, totalDocument, memoryStats);
+				insetVisible, refresh, refreshTextIndices, totalRefreshCount, debugLabel1, debugLabel2, debugLabel3, debugLabel4, totalDocument, memoryStats);
 	}
 
 	public void setGuiFacade(DocModifyScreenGuiFacade docModifyScreenGuiFacade) {

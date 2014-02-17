@@ -1,10 +1,10 @@
 package event.input;
 
-import control.Caret;
-import control.TextModifyFacade;
+import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.event.EventHandler;
+import control.Caret;
+import control.TextModifyFacade;
 
 public class KeyboardManager implements EventHandler<KeyEvent>{
 	
@@ -30,13 +30,13 @@ public class KeyboardManager implements EventHandler<KeyEvent>{
 				textFacade.delete();
 			}
 			else if(code == KeyCode.LEFT){
-				caret.leftKey(event.isShiftDown(), event.isControlDown());
+				caret.leftKey(false, false);
 			}
 			else if(code == KeyCode.RIGHT){
-				caret.rightKey(event.isShiftDown(), event.isControlDown());
+				caret.rightKey(false, false);
 			}
 		//	else if(code.isLetterKey()){
-				textFacade.insertSingleChar(event.getText());
+				textFacade.insertString(event.getText());
 	//		}
 	//		else{
 		//		System.out.println("UNDEFINED KEY PRESSED");
@@ -50,10 +50,10 @@ public class KeyboardManager implements EventHandler<KeyEvent>{
 //		System.out.println("Global key released (CHAR): \t" + event.getCharacter());
 		
 		if(event.getCode() == KeyCode.SPACE) {
-			textFacade.insertSingleChar(" ");
+			textFacade.insertString(" ");
 		}
 		else if(event.getCode() == KeyCode.TAB) {
-			textFacade.insertSingleChar("\t");
+			textFacade.insertString("\t");
 		}
 	}
 

@@ -10,7 +10,6 @@ import gui.helper.DebugHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import settings.GlobalAppSettings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -20,12 +19,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import settings.GlobalAppSettings;
 
 import com.sun.javafx.tk.FontMetrics;
 
 import control.Caret;
 import control.TextModifyFacade;
-import document.Paragraph;
 import document.TextLine;
 
 public class LineOnCanvas implements Comparable<LineOnCanvas>{
@@ -90,6 +89,20 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		revalidateLineSegment();
 	}
 	
+	public void setLineSegment(LineSegment line) {
+		layoutX = line.getFirstPoint().x;
+		layoutY = line.getFirstPoint().y;
+		this.angle = line.getAngle();
+		this.preferredWidthProperty.set(line.getLength());
+		width = (float) line.getLength();
+		
+		//TODO: debug
+		this.height = 40;
+		//TODO: end debug
+		
+		lineSegmentProperty.set(line);
+	}
+	
 	public void setTextLine(TextLine line) {
 		this.textLine = line;
 	}
@@ -102,18 +115,6 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		lineSegmentProperty.set(lineSegment);
 	}
 	
-/*	public void initialTextSetup(int startIndex, int endIndex) {
-		startIndexInStyledText.set(startIndex);
-		endIndexInStyledText.set(endIndex);
-	}*/
-	
-	public void setLineSegment(LineSegment line) {
-		lineSegmentProperty.set(line);
-		layoutX = line.getFirstPoint().x;
-		layoutY = line.getFirstPoint().y;
-		width = (float) line.getLength();
-	}
-	
 	public void setPreferredWidth(double width) {
 		this.preferredWidthProperty.set(width);
 	}
@@ -121,7 +122,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	public void refresh(){
 		GraphicsContext context = parent.getGraphicsContext();
 		String text = parentParagraph.getText(textLine);
-		
+	
 		context.setLineWidth(0.3);
 		LineSegment line = lineSegmentProperty.get();
 
@@ -137,9 +138,9 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 			context.fillText(textLine.getEndIndex() + "", line.getRightPoint().x + 5, line.getRightPoint().y + 15);
 		}
 		
-		context.setFill(parentParagraph.getStyle().getStrokeColor());
+		context.setFill(textLine.getStyle().getStrokeColor());
 		context.setLineWidth(1f);
-		context.setFont(parentParagraph.getFont());
+		context.setFont(textLine.getStyle().getFont());
 	
 		if(text != null) {
 			float startX = 0;
@@ -166,16 +167,13 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 				
 				startIndexAdjusted = Math.max(0, Math.min(textLine.getLength(), startIndexAdjusted));
 				endIndexAdjusted = Math.max(0, Math.min(textLine.getLength(), endIndexAdjusted));
-				
-				System.out.println("Selected Start Index: " + selectedStartIndex + ", text start: " + textLine.getStartIndex());
-				System.out.println("Selected End Index: " + selectedEndIndex + ", text end: " + textLine.getEndIndex());
-				
+					
 				context.fillText(text.substring(0, startIndexAdjusted), startX, startY + this.height);
 				context.save();
-				context.setFill(parentParagraph.getStyle().getSelectionColor());
+				context.setFill(textLine.getStyle().getSelectionColor());
 				
 				context.fillRect(startX + caretPositions.get(startIndexAdjusted), startY, caretPositions.get(endIndexAdjusted) - caretPositions.get(startIndexAdjusted), this.height);
-				context.setFill(parentParagraph.getStyle().getInvertedStrokeColor());
+				context.setFill(textLine.getStyle().getInvertedStrokeColor());
 				context.fillText(text.substring(startIndexAdjusted, endIndexAdjusted), startX + caretPositions.get(startIndexAdjusted), startY + this.height);
 				
 				context.restore();
@@ -286,12 +284,11 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	}
 	
 	private void initializeLetterSizes() {
-		FontMetrics metrics = parentParagraph.getStyle().getFontMetrics();
+		FontMetrics metrics = textLine.getStyle().getFontMetrics();
 		letterSizes = new ArrayList<Float>();
 		caretPositions = new ArrayList<Float>();
 		String text = parentParagraph.getText(textLine);
 		if(text != null){
-			System.out.println("text: " + text  + ", size: " + text.length());
 			float currentWidth = 0;
 			caretPositions.add(0f);
 			for(int i = 1; i <= text.length(); i++) {
@@ -300,8 +297,6 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 				caretPositions.add(nextWidth);
 				currentWidth = nextWidth;
 			}
-			
-			System.out.println("CALCULATED with size: " + letterSizes.size() + ", caretPosSize: " + caretPositions.size());
 		}
 	}
 	
@@ -330,7 +325,6 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	}
 
 	public Vector2 getLetterPosition(int index) {
-		System.out.println("\n##GetLetterPosition, index: " + index);
 		Vector2 pos;
 		initializeLetterSizes();
 		if(caretPositions == null || caretPositions.size() == 0)
@@ -350,10 +344,6 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	
 	public void mouseMoved(MouseEvent evet) {
 		DocDebugView.instance.setDebugText("LineOnCanvas, x: "  + this.layoutX + ", y: " + this.layoutY + ", width: " + this.width, 0);
-	}
-
-	public Paragraph getParentParagraph() {
-		return parentParagraph.getParagraph();
 	}
 
 	public LineSegment getLowerLineSegment() {

@@ -4,7 +4,6 @@ import geometry.libgdxmath.LineSegment;
 import geometry.libgdxmath.Polygon;
 import gui.ShapedPane;
 import gui.columnview.ColumnView;
-import gui.columnview.WordView;
 
 import java.util.ArrayList;
 
