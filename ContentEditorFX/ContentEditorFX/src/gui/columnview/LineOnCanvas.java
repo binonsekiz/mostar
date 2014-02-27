@@ -97,7 +97,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		width = (float) line.getLength();
 		
 		//TODO: debug
-		this.height = 40;
+//		this.height = textLine.getStyle();
 		//TODO: end debug
 		
 		lineSegmentProperty.set(line);
@@ -105,6 +105,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	
 	public void setTextLine(TextLine line) {
 		this.textLine = line;
+		height = textLine.getStyle().getLineSpacingHeight();
 	}
 	
 	private void revalidateLineSegment() {
@@ -215,6 +216,8 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 					setPreferredWidth(arg0.getValue().getLength());
 					shape = GeometryHelper.getRectanglePolygon(lineSegmentProperty.get(), height, angle);
 					lowerLineSegment = arg0.getValue().buildLowerLineSegment(height, angle);
+					
+					System.out.println("LineOnCanvas " + debugObjectCount + " segment change: " + arg2 + ", text line: " + textLine + ", text: " + parentParagraph.getText(textLine));
 				}
 			}
 		});

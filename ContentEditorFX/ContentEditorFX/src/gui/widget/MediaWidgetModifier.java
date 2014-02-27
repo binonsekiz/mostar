@@ -40,6 +40,7 @@ public class MediaWidgetModifier extends WidgetModifier{
 		setMediaFile(url);
 		initGui();
 		widget = new MediaWidget(this.getLayoutX(), this.getLayoutY(), this.getWidth(), this.getHeight());
+		widget.setShape(getPaneShape());
 		super.initializeGui();
 		super.initializeEvents();
 		initEvents();	
@@ -55,6 +56,7 @@ public class MediaWidgetModifier extends WidgetModifier{
 		setMediaFile(null);
 		initGui();
 		widget = new MediaWidget(this.getLayoutX(), this.getLayoutY(), this.getWidth(), this.getHeight());
+		widget.setShape(getPaneShape());
 		super.initializeGui();
 		super.initializeEvents();
 		initEvents();

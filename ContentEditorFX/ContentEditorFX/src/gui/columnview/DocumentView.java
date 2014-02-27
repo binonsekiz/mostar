@@ -9,6 +9,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
@@ -45,8 +46,11 @@ public class DocumentView extends Pane implements CanvasOwner{
 	private OverlayCanvas overlayCanvas;
 	private GraphicsContext overlayContext;
 	
+	private Canvas debugCanvas;
+	private GraphicsContext debugContext;
+	
 	private Document document;
-	private DocumentView selfReference;
+	private static DocumentView selfReference;
 
 	private boolean isOverlayCanvasVisible;
 	private boolean isTextCanvasVisible;
@@ -62,6 +66,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 		columnViews = new ArrayList<ColumnView>();
 		initGui();
 		initEvents();	
+		System.out.println("Document view initialized");
 	}
 	
 	private void initGui() {
@@ -83,6 +88,11 @@ public class DocumentView extends Pane implements CanvasOwner{
 		pane.setLayoutY(0);
 		overlayCanvas.setLayoutX(0);
 		overlayCanvas.setLayoutY(0);
+		
+		debugCanvas = new OverlayCanvas(this);
+		debugContext = debugCanvas.getGraphicsContext2D();
+		debugCanvas.setLayoutX(0);
+		debugCanvas.setLayoutY(0);
 		fixCanvasSize();
 		
 		isOverlayCanvasVisible = true;
@@ -91,11 +101,12 @@ public class DocumentView extends Pane implements CanvasOwner{
 		areLinePolygonsVisible = true;
 		zoomFactor = 1;	
 		
-		pane.getChildren().addAll(gridPane, overlayCanvas);
+		pane.getChildren().addAll(gridPane, overlayCanvas, debugCanvas);
 		scrollContent.getChildren().add(pane);
 		this.getChildren().addAll(scrollPane/*, overlayCanvas*/);
 		scrollPane.toFront();
 		overlayCanvas.toFront();
+		debugCanvas.toFront();
 	}
 	
 	private void initEvents(){
@@ -180,57 +191,6 @@ public class DocumentView extends Pane implements CanvasOwner{
 	public void textSelectionSet(int lowerIndex, int higherIndex) {
 		LineOnCanvas.selectedStartIndex = lowerIndex;
 		LineOnCanvas.selectedEndIndex = higherIndex;
-	/*	int columnIndex = 0;
-		int paragraphIndex = 0;
-		int lineIndex = 0;
-		
-		for(int i = 0; i < columnViews.size(); i++) {
-			if(lowerIndex > columnViews.get(i).getStartIndex() && lowerIndex < columnViews.get(i).getEndIndex()) {
-				columnIndex = i;
-				break;
-			}
-		}
-		
-		ArrayList<ParagraphOnCanvas> paragraphs = columnViews.get(columnIndex).getParagraphsOnCanvas();
-		for(int i = 0; i < paragraphs.size(); i++) {
-			if(lowerIndex > paragraphs.get(i).getStartIndex() && lowerIndex < paragraphs.get(i).getEndIndex()) {
-				paragraphIndex = i;
-				break;
-			}
-		}
-		
-		ArrayList<LineOnCanvas> lines = paragraphs.get(paragraphIndex).getLinesOnCanvas();
-		for(int i = 0; i < lines.size(); i++) {
-			if(lowerIndex > lines.get(i).getStartIndex() && lowerIndex < lines.get(i).getEndIndex()) {
-				lineIndex = i;
-				lines.get(i).setSelectedIndex(lowerIndex, higherIndex);
-				break;
-			}
-		}
-		
-		//System.out.println("Found first index at: " + columnIndex + ", " + paragraphIndex + ", " + lineIndex);
-		
-		int lastSetEndIndex = 0;
-		
-		//now we'll select all the lines until 
-		for(int i = columnIndex; i < columnViews.size(); i++) {
-			for(int j = paragraphIndex; j < paragraphs.size(); j++){
-				for(int k = lineIndex; k < lines.size(); k++){
-					if(higherIndex < lines.get(k).getEndIndex() || lines.get(k).getEndIndex() == lastSetEndIndex) {
-						break;
-					}
-				//	System.out.println("Found second index at: " + i + ", " + j + ", " + k);
-					lines.get(k).setSelectedIndex(lowerIndex, higherIndex);
-					lastSetEndIndex = lines.get(k).getEndIndex();
-				}
-				if(higherIndex < paragraphs.get(j).getEndIndex()) {
-					break;
-				}
-			}
-			if(higherIndex < columnViews.get(i).getEndIndex()){
-				break;
-			}
-		}*/
 	}
 	
 	public void associateWithDocument(Document document) {
@@ -271,9 +231,8 @@ public class DocumentView extends Pane implements CanvasOwner{
 		
 		guiFacade.notifyRefreshHappened();
 		fixCanvasSize();
-	//	TextModifyFacade textModifyFacade = guiFacade.getTextModifyFacade();
-	//	textModifyFacade.getCaret().drawCaret(overlayContext);
 		overlayCanvas.toFront();
+		debugCanvas.toFront();
 	}
 	
 
@@ -304,6 +263,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 		guiFacade.notifyRefreshHappened();
 		fixCanvasSize();
 		overlayCanvas.toFront();
+		debugCanvas.toFront();
 	}
 
 	private void fixCanvasSize() {
@@ -311,6 +271,11 @@ public class DocumentView extends Pane implements CanvasOwner{
 			overlayCanvas.setWidth(scrollPane.getViewportBounds().getWidth());
 		if(overlayCanvas.getHeight() != scrollPane.getViewportBounds().getHeight())
 			overlayCanvas.setHeight(scrollPane.getViewportBounds().getHeight());
+		
+		if(debugCanvas.getWidth() != scrollPane.getViewportBounds().getWidth())
+			debugCanvas.setWidth(scrollPane.getViewportBounds().getWidth());
+		if(debugCanvas.getHeight() != scrollPane.getViewportBounds().getHeight())
+			debugCanvas.setHeight(scrollPane.getViewportBounds().getHeight());
 	}
 
 	public ColumnView getActiveColumnView() {
@@ -357,6 +322,10 @@ public class DocumentView extends Pane implements CanvasOwner{
 		return overlayContext;
 	}
 
+	public static GraphicsContext getDebugContext() {
+		return selfReference.debugContext;
+	}
+	
 	public void setOverlayCanvasVisible(boolean value) {
 		this.isOverlayCanvasVisible = value;
 	}

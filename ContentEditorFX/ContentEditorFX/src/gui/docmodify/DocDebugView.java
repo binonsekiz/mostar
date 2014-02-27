@@ -35,6 +35,7 @@ public class DocDebugView extends VBox {
 	private CheckBox insetVisible;
 	private Button refresh;
 	private Button refreshTextIndices;
+	private Button collectGarbage;
 	
 	private TextArea totalDocument;
 	private TextArea memoryStats;
@@ -91,6 +92,13 @@ public class DocDebugView extends VBox {
 			}
 		});
 		
+		collectGarbage.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				System.gc();
+			}
+		});
+		
 		refreshCount.addListener(new ChangeListener<Number>(){
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
@@ -133,6 +141,7 @@ public class DocDebugView extends VBox {
 		insetVisible = new CheckBox("Page Insets Visible");
 		refresh = new Button("Refresh");
 		refreshTextIndices = new Button("Refresh Text Indices");
+		collectGarbage = new Button("Call Garbage Collector");
 		debugLabel1 = new Text("Debug label1");
 		debugLabel2 = new Text("Debug label2");
 		debugLabel3 = new Text("Debug label3");
@@ -149,7 +158,7 @@ public class DocDebugView extends VBox {
 		insetVisible.selectedProperty().set(true);
 		
 		this.getChildren().addAll(title, overlayVisible, textCanvasVisible, linePolygonsVisible, 
-				insetVisible, refresh, refreshTextIndices, totalRefreshCount, debugLabel1, debugLabel2, debugLabel3, debugLabel4, totalDocument, memoryStats);
+				insetVisible, refresh, refreshTextIndices, collectGarbage, totalRefreshCount, debugLabel1, debugLabel2, debugLabel3, debugLabel4, totalDocument, memoryStats);
 	}
 
 	public void setGuiFacade(DocModifyScreenGuiFacade docModifyScreenGuiFacade) {

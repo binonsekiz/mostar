@@ -27,6 +27,7 @@ public class ImageGalleryWidgetModifier extends WidgetModifier {
 		initGui();
 		isResizeAllowed = false;
 		widget = new ImageGalleryWidget(this.getLayoutX(), this.getLayoutY(), this.getWidth(), this.getHeight());
+		widget.setShape(getPaneShape());
 		super.initializeGui();
 		super.initializeEvents();
 		initEvents();

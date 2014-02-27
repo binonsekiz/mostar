@@ -1,11 +1,13 @@
 package document.widget;
 
+import geometry.libgdxmath.Polygon;
 
 public abstract class Widget {
 
 	private int pageNumber;
 	private Border borders;
 	private WidgetType type;
+	private Polygon shape;
 	private TextWrapType textWrap;
 	
 	public Widget(){
@@ -78,6 +80,14 @@ public abstract class Widget {
 	 * @return
 	 */
 	public abstract WidgetType getType();
+
+	public Polygon getShape() {
+		return shape;
+	}
+
+	public void setShape(Polygon shape) {
+		this.shape = shape;
+	}
 
 	class Border{
 		public double x, y, width, height;

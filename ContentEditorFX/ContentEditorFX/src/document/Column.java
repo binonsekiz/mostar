@@ -2,6 +2,7 @@ package document;
 
 import geometry.GeometryHelper;
 import geometry.libgdxmath.Polygon;
+import gui.helper.LayoutMachine;
 
 import java.util.ArrayList;
 
@@ -17,12 +18,12 @@ public class Column {
 	public static Column debugInstance;
 	private Measurement pageSize;
 	private SimpleObjectProperty<PageInsets> insets;
-	
 	private ArrayList<Widget> widgets;	
 	private Image background;
-
 	private Polygon shape;
-	private ArrayList<ParagraphSpace> paragraphSpaces;
+	private ArrayList<ParagraphSet> paragraphSets;
+	
+	private LayoutMachine layoutMachine;
 		
 	protected Column(){
 		this(PageSpecs.DefaultMeasurement);
@@ -37,7 +38,7 @@ public class Column {
 		debugInstance = this;
 		this.pageSize = measurement;
 		widgets = new ArrayList<Widget>();
-		paragraphSpaces = new ArrayList<ParagraphSpace>();
+		paragraphSets = new ArrayList<ParagraphSet>();
 		
 		this.insets = new SimpleObjectProperty<PageInsets>();
 		this.insets.addListener(new ChangeListener<PageInsets>() {
@@ -48,10 +49,15 @@ public class Column {
 			}
 		});
 		this.insets.set(newInsets);
+		layoutMachine = new LayoutMachine(this);
 	}
 	
-	public void addParagraphSpace(ParagraphSpace newSpace) {
-		this.paragraphSpaces.add(newSpace);
+	protected void initialSetup() {
+		layoutMachine.initialSetup();
+	}
+	
+	public void addParagraphSet(ParagraphSet newSpace) {
+		this.paragraphSets.add(newSpace);
 	}
 
 	public ArrayList<Widget> getWidgets(){
@@ -68,6 +74,7 @@ public class Column {
 	
 	public void addWidget(Widget widget){
 		this.widgets.add(widget);
+		layoutMachine.addSingleElement(widget.getShape());
 	}
 	
 	public void removeWidget(Widget widget){
@@ -96,5 +103,17 @@ public class Column {
 
 	public Polygon getPaneShape() {
 		return shape;
+	}
+
+	public LayoutMachine getLayoutMachine() {
+		return layoutMachine;
+	}
+
+	public ArrayList<ParagraphSet> getParagraphSets() {
+		return paragraphSets;
+	}
+
+	public void removeParagraphSet(ParagraphSet paragraphSet) {
+		paragraphSets.remove(paragraphSet);
 	}
 }

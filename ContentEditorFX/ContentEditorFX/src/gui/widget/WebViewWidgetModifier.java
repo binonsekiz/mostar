@@ -26,6 +26,7 @@ public class WebViewWidgetModifier extends WidgetModifier{
 		url = string;
 		initGui();
 		widget = new WebViewWidget(this.getLayoutX(), this.getLayoutY(), this.getWidth(), this.getHeight());
+		widget.setShape(getPaneShape());
 		
 		super.initializeGui();
 		super.initializeEvents();

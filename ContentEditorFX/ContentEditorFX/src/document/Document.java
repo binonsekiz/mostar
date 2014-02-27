@@ -24,6 +24,10 @@ public class Document {
 		columns.add(new Column(measurement, pageInsets));
 		
 		globalText = new DocumentText(this);
+		
+		for(int i = 0; i < columns.size(); i++) {
+			columns.get(i).initialSetup();
+		}
 	}
 	
 	public ArrayList<Column> getColumns(){

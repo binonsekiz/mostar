@@ -18,9 +18,10 @@ public class KeyboardManager implements EventHandler<KeyEvent>{
 	}
 
 	public void keyPressed(KeyEvent event) {
-		System.out.println("Global key pressed (TEXT): \t" + event.getText());
-		System.out.println("Global key pressed (CODE): \t" + event.getCode());
-		System.out.println("Global key pressed (CHAR): \t" + event.getCharacter());
+//		System.out.println("Global key pressed (TEXT): \t" + event.getText());
+//		System.out.println("Global key pressed (CODE): \t" + event.getCode());
+//		System.out.println("Global key pressed (CHAR): \t" + event.getCharacter());
+		System.out.println("\n\n\n\n0000000\nKeyPressed\n0000000\n\n\n");
 		if(writingMode) {
 			KeyCode code = event.getCode();
 			if(code == KeyCode.BACK_SPACE){

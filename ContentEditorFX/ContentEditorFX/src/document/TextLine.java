@@ -70,11 +70,21 @@ public class TextLine implements Comparable<TextLine> {
 	}
 	
 	public String toString() {
-		return "TextLine: [" + startIndex + ", " + endIndex + "], parent: " + parent;
+		return "TextLine: [" + startIndex.get() + ", " + endIndex.get() + "], parent: " + parent;
 	}
 
 	public void setParent(Paragraph paragraph) {
 		this.parent = paragraph;
+	}
+
+	public boolean hasText() {
+		if(startIndex.get() < endIndex.get())
+			return true;
+		return false;
+	}
+
+	public Paragraph getParent() {
+		return parent;
 	}
 	
 }

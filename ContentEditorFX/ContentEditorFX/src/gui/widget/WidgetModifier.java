@@ -1,6 +1,7 @@
 package gui.widget;
 
 import geometry.GeometryHelper;
+import geometry.libgdxmath.Polygon;
 import gui.ShapedPane;
 import gui.columnview.ColumnView;
 import javafx.beans.value.ChangeListener;
@@ -42,6 +43,8 @@ public abstract class WidgetModifier extends ShapedPane{
 	public ColumnView parentPane;
 	private WidgetModifyFacade widgetModifyFacade;
 	
+	private Polygon shape;
+	
 	protected WidgetModifier(WidgetModifyFacade widgetModifyFacade, Column parent, ColumnView parentPane){
 		super(parentPane);
 		selfReference = this;
@@ -52,6 +55,15 @@ public abstract class WidgetModifier extends ShapedPane{
 		listener = new LayoutChangeListener();
 		this.parent = parent;
 		this.parentPane = parentPane;
+	}
+	
+	public void setPolygon(Polygon shape) {
+		this.shape = shape;
+		widget.setShape(shape);
+	}
+	
+	public Polygon getPolygon(){
+		return shape;
 	}
 	
 	protected void initializeGui() {

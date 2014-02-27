@@ -1,15 +1,17 @@
 package document;
 
-import geometry.libgdxmath.LineSegment;
-import gui.columnview.ParagraphOnCanvas;
+import gui.helper.LayoutMachine;
 
 import java.util.ArrayList;
+
+import document.Paragraph.TextFillReturnValue;
 
 public class ParagraphSet {
 
 	private ArrayList<Paragraph> paragraphs;
-	private ArrayList<LineSegment> lineSegments;
-	private ParagraphOnCanvas paragraphOnCanvas;
+	private ParagraphSpace paragraphSpace;
+	private Column column;
+	private StringBuffer textBuffer;
 	private DocumentText parent;
 	
 	public ParagraphSet(DocumentText parent) {
@@ -21,21 +23,18 @@ public class ParagraphSet {
 	public String toString() {
 		return "ParagraphSet, paragraphCount: " + paragraphs.size() + ", text: " + getText();
 	}
-	
-	public void setLineSegments(ArrayList<LineSegment> lineSegments) {
-		this.lineSegments = lineSegments;
-	}
-	
-	public ArrayList<LineSegment> getLineSegments() {
-		return lineSegments;
-	}
-	
+
 	public String getText() {
-		return getText(paragraphs.get(0).getStartIndex(), paragraphs.get(paragraphs.size()-1).getEndIndex());
+	//	return getText(paragraphs.get(0).getStartIndex(), paragraphs.get(paragraphs.size()-1).getEndIndex());
+		String retVal = "";
+		for(int i = 0; i < paragraphs.size(); i++) {
+			retVal = retVal + paragraphs.get(i).getText();
+		}
+		return retVal;
 	}
 
 	public String getText(int start, int end) {
-		String cummulativeText = "";	
+		String cummulativeText = "";
 		for(int i = 0; i < paragraphs.size(); i++) {
 			cummulativeText = cummulativeText + paragraphs.get(i).subSequence(start, end);
 		}	
@@ -63,69 +62,53 @@ public class ParagraphSet {
 		return paragraphs.size();
 	}
 
-	public void startTextDivision() {
-		for(int i = 0; i < paragraphs.size(); i++) {
-			paragraphs.get(i).startTextDivision();
-		}
-	}
-	
-	public void updateWithAvailableText(ArrayList<LineSegment> trimmedLines) {
+	public ArrayList<TextLine> fillWithAvailableText() {
+		System.out.println("ParagraphSet::Fill With Available Text Started");
 		ArrayList<TextLine> retList = new ArrayList<TextLine>();
+		LayoutMachine machine = column.getLayoutMachine();
+		
+		int startSegment = 0;
+		float startOffset = 0;
+		
+		//get all the paragraph texts to start in filling.
 		for(int i = 0; i < paragraphs.size(); i++) {
-			retList.addAll(paragraphs.get(i).getTextLines());
+			TextFillReturnValue retValue = paragraphs.get(i).fillWithAvailableText(machine, startSegment, startOffset);
+			System.out.println("\tGot retValue: " + retValue);
+			startSegment = retValue.getFinishLine();
+			startOffset = retValue.getFinishOffset();
+			retList.addAll(retValue.getTextLines());
 		}
 		
-		int paragraphIndex = 0;
-		
-		for(int i = 0; i < trimmedLines.size(); i++) {
-			Paragraph paragraph = this.getParagraph(paragraphIndex);
-			if(paragraph == null) throw new RuntimeException("olmamali");
-			TextLine newTextLine = retList.get(i);
-			
-			paragraph.calculateNextLine(newTextLine, trimmedLines.get(i).getLength());
-			retList.add(newTextLine);
-			
-			if(paragraph.hasElements() == false && paragraphIndex + 1 < paragraphs.size()) {
-				paragraphIndex ++;
-			}
-			else{
-				//do nothing. just call calculate next line again, it will fill the 
-				//new text lines with latest index.
-			}
-		}
-	}
-
-	public ArrayList<TextLine> fillWithAvailableText(ArrayList<LineSegment> trimmedLines) {
-		ArrayList<TextLine> retList = new ArrayList<TextLine>();
-		int paragraphIndex = 0;
-		
-		for(int i = 0; i < trimmedLines.size(); i++) {
-			Paragraph paragraph = this.getParagraph(paragraphIndex);
-			if(paragraph == null) throw new RuntimeException("olmamali");
-			TextLine newTextLine = new TextLine(paragraph, 0, 0);
-			
-			paragraph.calculateNextLine(newTextLine, trimmedLines.get(i).getLength());
-			retList.add(newTextLine);
-			
-			if(paragraph.hasElements() == false && paragraphIndex + 1 < paragraphs.size()) {
-				paragraphIndex ++;
-			}
-			else{
-				//do nothing. just call calculate next line again, it will fill the 
-				//new text lines with latest index.
-			}
-		}
-		
+		System.out.println("ParagraphSet::Fill With Available Text finished");
 		return retList;
 	}
 
-	private Paragraph getParagraphWithIndex(int index) {
-		for(int i = 0; i < paragraphs.size(); i++) {
-			if(paragraphs.get(i).includesIndex(index)) {
-				return paragraphs.get(i);
-			}
+	public Column getColumn() {
+		return column;
+	}
+
+	public void setColumn(Column column) {
+		if(this.column != null) {
+			column.removeParagraphSet(this);
 		}
-		return null;
+		
+		this.column = column;
+		column.addParagraphSet(this);
+	}
+
+	public ParagraphSpace getParagraphSpace() {
+		return paragraphSpace;
 	}
 	
+	public float getAngle() {
+		if(this.paragraphs.size() > 0) {
+			return paragraphs.get(0).getAngle();
+		}
+		return 0;
+	}
+
+	public void setParagraphSpace(ParagraphSpace paragraphSpace) {
+		this.paragraphSpace = paragraphSpace;
+	}
+
 }

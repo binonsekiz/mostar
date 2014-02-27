@@ -1,5 +1,7 @@
 package document;
 
+import gui.helper.DebugHelper;
+
 import java.util.ArrayList;
 
 public class DocumentText {
@@ -15,15 +17,14 @@ public class DocumentText {
 		
 		paragraphSets = new ArrayList<ParagraphSet>();
 		
+		//TODO: debug
 		ParagraphSet set1 = new ParagraphSet(this);
+		set1.setColumn(document.getColumns().get(0));
+		set1.setParagraphSpace(DebugHelper.paragraphSpaces.get(3));
 		
 		Paragraph paragraph = new Paragraph(this, 0);
-		addParagraph(paragraph, set1);
 		paragraph.setText("abcdef7");
-		
-		Paragraph paragraph2 = new Paragraph(this, 1);
-		addParagraph(paragraph2, set1);
-		paragraph2.setText("ghijklm8");
+		addParagraph(paragraph, set1);
 	}
 
 	public void addParagraph(Paragraph paragraph) {
@@ -40,7 +41,8 @@ public class DocumentText {
 		
 		paragraphSet.addParagraph(paragraph);
 		globalText.add(paragraph.getIndexInParent(), paragraph);
-		for(int i = paragraph.getIndexInParent(); i < globalText.size(); i++) {
+		
+		for(int i = 0; i < globalText.size(); i++) {
 			globalText.get(i).setIndexInParent(i);
 		}
 	}

@@ -1,6 +1,7 @@
 package gui;
 
 import event.input.KeyboardManager;
+import gui.docmodify.DocDebugView;
 import gui.docmodify.DocModifyScreen;
 import gui.docmodify.test.TestFacade;
 import gui.docmodify.test.TextLineSpaceUnitTest;
@@ -91,7 +92,7 @@ public class GFrame extends Application {
 		
 		timer.start();	
 	}
-	
+
 	private void initializePanes() {
 		welcomeScreen = new WelcomeScreen();
 		usernameScreen = new UsernameScreen();

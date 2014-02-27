@@ -1,6 +1,7 @@
 package gui.columnview;
 
 import gui.docmodify.DocDebugView;
+import gui.helper.LayoutMachine;
 
 import java.util.ArrayList;
 
@@ -15,7 +16,7 @@ import document.TextLine;
 
 
 /**
- * This is basically a set of LineOnCanvas'es that share the same TextStyle
+ * This is the view counterpart of a ParagraphSet
  * @author sahin
  *
  */
@@ -29,12 +30,19 @@ public class ParagraphOnCanvas {
 	
 	private TextModifyFacade textModifyFacade;
 	
-	public ParagraphOnCanvas(ColumnView parent, ParagraphSpace allowedSpace, TextModifyFacade facade) {
-		System.out.println("ParagraphView initialized");
+	public ParagraphOnCanvas(ColumnView parent, ParagraphSet paragraphSet, TextModifyFacade facade) {
+		System.out.println("ParagraphOnCanvas initialized");
 		this.parent = parent; 
-		this.allowedSpace = allowedSpace;
+		this.paragraphSet = paragraphSet;
+		allowedSpace = paragraphSet.getParagraphSpace();
 		this.textModifyFacade = facade;
 		lines = new ArrayList<LineOnCanvas>();
+		
+		getLayoutMachine().buildLineOnCanvases(parent, this, paragraphSet, facade);
+	}
+
+	public LayoutMachine getLayoutMachine() {
+		return parent.getLayoutMachine();
 	}
 
 	public ParagraphSpace getAllowedSpace() {
@@ -58,6 +66,8 @@ public class ParagraphOnCanvas {
 	}
 	
 	public void refresh() {
+		lines.clear();
+		getLayoutMachine().buildLineOnCanvases(parent, this, paragraphSet, textModifyFacade);
 		for(int i = 0; i < lines.size(); i++){
 			lines.get(i).refresh();
 		}
@@ -121,10 +131,6 @@ public class ParagraphOnCanvas {
 			}
 		}
 	}
-	
-	/*public ArrayList<Float> getCummulativeWordSizes() {
-		return paragraph.getCummulativeWordSizes();
-	}*/
 
 	public Paragraph getParagraph(int index) {
 		return paragraphSet.getParagraph(index);

@@ -20,12 +20,12 @@ public class GeometryHelper {
 		return p;		
 	}
 	
-	public static Polygon getRegularPolygon(float centerX, float centerY, float radius, int vertexCount) {
+	public static Polygon getRegularPolygon(float centerX, float centerY, float radius, int vertexCount, float offsetAngle) {
 		float[] vertices = new float[vertexCount * 2];
 		
 		for(int i = 0; i < vertexCount; i++) {
-			vertices[2 * i] 	= (float) (centerX + radius * Math.cos(2 * Math.PI * i / vertexCount));
-			vertices[2 * i+1] 	= (float) (centerY + radius * Math.sin(2 * Math.PI * i / vertexCount));
+			vertices[2 * i] 	= (float) (centerX + radius * Math.cos(Math.toRadians(offsetAngle) + 2 * Math.PI * i / vertexCount));
+			vertices[2 * i+1] 	= (float) (centerY + radius * Math.sin(Math.toRadians(offsetAngle) + 2 * Math.PI * i / vertexCount));
 		}
 		
 		Polygon p = new Polygon(vertices);

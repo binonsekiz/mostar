@@ -1,5 +1,6 @@
 package geometry.libgdxmath;
 
+import javafx.scene.canvas.GraphicsContext;
 import settings.GlobalAppSettings;
 
 public class LineSegment implements Comparable<LineSegment>{
@@ -87,6 +88,9 @@ public class LineSegment implements Comparable<LineSegment>{
 	}
 
 	public Vector2 getDistanceCoordinate(float distance) {
+		if(this.getLength() < GlobalAppSettings.ignoreValuesBelow) {
+			return this.firstPoint;
+		}
 		float factor = (float) (distance / this.getLength());
 		Vector2 sub = this.secondPoint.cpy();
 		sub = sub.sub(this.firstPoint);
@@ -122,15 +126,47 @@ public class LineSegment implements Comparable<LineSegment>{
 
 	/**
 	 * Returns the angle of the line segment in degrees.
+	 * TODO: there is most likely a faster solution.
 	 * @return
 	 */
 	public float getAngle() {
-		float length =this.getLength();
-		float yDiff = this.getSecondPoint().y - this.getFirstPoint().y;
-		
-		if(Math.abs(length) < GlobalAppSettings.ignoreValuesBelow) 
-			return 0;
-		return (float) Math.toDegrees(Math.asin(yDiff / length));
+		Vector2 diffVector = new Vector2(this.secondPoint.x - this.firstPoint.x, this.secondPoint.y - this.firstPoint.y);
+		return diffVector.angle();
+	}
+
+	public LineSegment divideUsingLength(float usedLength) {
+		Vector2 midPoint = getDistanceCoordinate(usedLength);
+		LineSegment retVal = new LineSegment(midPoint.cpy(), getSecondPoint());
+		this.secondPoint = midPoint;
+		return retVal;
+	}
+
+	/**
+	 * Trims from the start callOffsetAmount.
+	 * @param callOffset
+	 * @return
+	 */
+	public LineSegment trimWithStartOffset(float callOffset) {
+		Vector2 newStart = getDistanceCoordinate(callOffset);
+		this.firstPoint = newStart;
+		return this;
+	}
+
+	/**
+	 * Trims from the end so that the length is roughly equal to desired length
+	 * @param calculatedWidth
+	 */
+	public void adjustLength(float desiredLength) {
+		Vector2 newEnd = getDistanceCoordinate(desiredLength);
+		this.secondPoint = newEnd;
+	}
+
+	public void draw(GraphicsContext context) {
+		context.strokeLine(firstPoint.x, firstPoint.y, secondPoint.x, secondPoint.y);
+	}
+
+	public LineSegment cpy() {
+		return new LineSegment(firstPoint.cpy(), secondPoint.cpy());
 	}
 
 }

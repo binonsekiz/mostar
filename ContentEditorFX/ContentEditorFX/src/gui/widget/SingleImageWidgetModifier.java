@@ -26,6 +26,7 @@ public class SingleImageWidgetModifier extends WidgetModifier{
 		selfReference = this;
 		initGui();
 		widget = new SingleImageWidget(this.getLayoutX(), this.getLayoutY(), this.getWidth(), this.getHeight());
+		widget.setShape(getPaneShape());
 		
 		super.initializeGui();
 		super.initializeEvents();

@@ -2,12 +2,16 @@ package document;
 
 import geometry.libgdxmath.LineSegment;
 import gui.columnview.ParagraphOnCanvas;
+import gui.helper.LayoutMachine;
 import gui.helper.MathHelper;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.stream.IntStream;
 
+import settings.GlobalAppSettings;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
@@ -25,7 +29,9 @@ public class Paragraph implements CharSequence{
 	private TextStyle style;
 	private StringBuffer textBuffer;
 	private SimpleIntegerProperty startIndexInBigText;
+	
 	private ArrayList<TextLine> textLines;
+	private ArrayList<LineSegment> lineSegments;
 	
 	private SimpleFloatProperty angle;
 
@@ -44,7 +50,7 @@ public class Paragraph implements CharSequence{
 	private boolean hasElements;
 	
 	public Paragraph(DocumentText parent, int index){
-		this(TextStyle.defaultStyle, "", parent, index);
+		this(TextStyle.defaultStyle, "Testing text", parent, index);
 	}
 	
 	public Paragraph(TextStyle style, String text, DocumentText parent, int index){
@@ -57,11 +63,11 @@ public class Paragraph implements CharSequence{
 		startIndexInBigText = new SimpleIntegerProperty();
 		angle = new SimpleFloatProperty();
 		textLines = new ArrayList<TextLine>();
+		lineSegments = new ArrayList<LineSegment>();
 		hasElements = false;
 		setText(text);
 		computeStringWidths();
 		initEvents();
-		updateTextLineIndices();
 	}
 	
 	public void setParagraphOnCanvas(ParagraphOnCanvas view) {
@@ -73,47 +79,20 @@ public class Paragraph implements CharSequence{
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number oldValue, Number arg2) {
-				System.out.println("Start index set to: " + arg2); 
-				updateTextLineIndices();
+				
 			}
 		});
 		angle.addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
 	}
 
-	protected void updateTextLineIndices() {
-		System.out.println("\n////Update text line indices");
-		if(textLines.size() > 0) {
-			if(indexInParent > 0) {
-				textLines.get(0).setStartIndex(documentText.getParagraph(indexInParent - 1).getEndIndex());
-				System.out.println("\tSet start to: " + documentText.getParagraph(indexInParent - 1).getEndIndex());
-			}
-			else{
-				textLines.get(0).setStartIndex(0);
-			}
-		}
-		else{
-			System.out.println("Early out...");
-		}
-		
-		for(int i = 1; i < textLines.size(); i++) {
-			TextLine temp = textLines.get(i);
-			temp.setStartIndex(textLines.get(i-1).getEndIndex());
-			System.out.println("\tSetting "+ i + "th value to: " + textLines.get(i-1).getEndIndex());
-		}
-		documentText.updateIndexAfter(indexInParent);
-	}
-
 	private void updateTextLines() {
-		ArrayList<LineSegment> lineSegments = paragraphSet.getLineSegments();
-		paragraphSet.startTextDivision();
-		paragraphSet.updateWithAvailableText(lineSegments);
+		getParagraphSet().getColumn().getLayoutMachine().initialSetup();
 	}
 
 	public void setStartIndexInBigText(int index){
@@ -137,7 +116,7 @@ public class Paragraph implements CharSequence{
 		return textBuffer.toString();
 	}
 	
-	public StringBuffer getTextBuffer(){
+	public StringBuffer getTextBuffer(){ 
 		return textBuffer;
 	}
 	
@@ -146,66 +125,113 @@ public class Paragraph implements CharSequence{
 		cummulativeTextSize = 0;
 		computeStringWidths();
 		hasElements = true;
+		textLines.clear();
+		lineSegments.clear();
+	}
+	
+	public TextFillReturnValue fillWithAvailableText(LayoutMachine machine, int startSegment, float startOffset) {
+		System.out.println("Paragraph [" + getText() + "]::Fill With Available Text Started");
+		System.out.println("\tStartSegment: " + startSegment + ", offset: " + startOffset);
+		int textCounter = 0;
+		int segmentCounter = startSegment;
+		TextFillReturnValue retVal = null;
+		float lastCalculatedWidth = 0;
+		
+		startTextDivision();
+		
+		while(textCounter < length()) {			
+			//find out the available length for the current line segment
+			LineSegment segment = machine.getNextAvailableLineSegment(style);
+			if(segment == null) {
+				//if there isn't a segment returned, notify layout machine so that 
+				//the last segment will not be used for the next call
+				machine.reportLastUsedWidth(0);
+				continue;
+			}
+			float availableLength = segment.getLength();
+			
+			TextLine newTextLine = null;
+			newTextLine = new TextLine(this, 0, 0);
+
+			float calculatedWidth = calculateNextLine(newTextLine, availableLength);
+			textLines.add(newTextLine);
+			
+			textCounter = textCounter + newTextLine.getLength();
+			segmentCounter ++;
+			
+			//we are going to use this line segment. Trim from the end to fit the calculated width.
+			segment.adjustLength(calculatedWidth);
+			lineSegments.add(segment);
+			System.out.println("/***/Trimmed segment again, added to paragraphset: " + segment + ", text line: " + newTextLine);
+			lastCalculatedWidth = calculatedWidth;
+			machine.reportLastUsedWidth(lastCalculatedWidth);
+		}
+		
+		Collections.sort(textLines);
+		retVal = new TextFillReturnValue(textLines, Math.max(0, segmentCounter - 1), lastCalculatedWidth);
+		
+		return retVal;
 	}
 	
 	/**
 	 * Return a string portion that fits into the size 
 	 * @param size
 	 * @param breakWords: if true, words will be broken in letters.
-	 * @return
+	 * @return the pixel width of the calculated line
 	 */
-	public String calculateNextLine(TextLine inputLine, double inputSize){
+	private float calculateNextLine(TextLine inputLine, double inputSize){
 		float lineEndSize = (float) (cummulativeTextSize + inputSize);
+		
+		int indexOffset = 0;
+		if(indexInParent > 0) {
+			indexOffset = documentText.getParagraph(indexInParent - 1).getEndIndex();
+			startIndexInBigText.set(indexOffset);
+		}
 
-System.out.println("1, text: " + this.getText());
 		inputLine.setParent(this);
-		inputLine.setStartIndex(previousIndex);
-		inputLine.setEndIndex(previousIndex);
-System.out.println("2");		
+		inputLine.setStartIndex(previousIndex + indexOffset);
+		inputLine.setEndIndex(previousIndex + indexOffset);
 		
 		//TODO: use binary search instead of linear search
 		int wordIndex = -1;
-		
-		textLines.add(inputLine);
 
+		//see which one of the words can fit in the given place. if none, break.
 		for(int i = cummulativeWordSizes.size() - 1; i >= 0; i--) {
 			if(cummulativeWordSizes.get(i) < lineEndSize) {
 				wordIndex = i;
 				break;
 			}
 		}
-System.out.println("3");		
+	
 		int wordStartIndex = previousIndex;
 		
 		if(wordIndex >= 0 && wordCountToStringIndex.containsKey(wordIndex)){
 			wordStartIndex = wordCountToStringIndex.get(wordIndex);
 		}
 		else {
-			hasElements = false;
 			System.out.println("out 1");
-			return null;
+			return 0;
 		}
-System.out.println("4");
-				
-		if(wordStartIndex < previousIndex) {
+
+		if(wordStartIndex < previousIndex){
 			hasElements = false;
 			System.out.println("out 2");
-			return null;
+			return 0;
 		}
-System.out.println("5");		
+		
 		String retVal = textBuffer.substring(previousIndex, wordStartIndex 	+ 1);
-		startIndexSaveOnly = previousIndex;
-		endIndexSaveOnly = wordStartIndex;
+		startIndexSaveOnly = previousIndex + indexOffset;
+		endIndexSaveOnly = wordStartIndex + indexOffset;
 		previousIndex = wordStartIndex + 1;
-System.out.println("6");		
+		
 		inputLine.setStartIndex(startIndexSaveOnly);
-		inputLine.setEndIndex(previousIndex);
-System.out.println("7");		
+		inputLine.setEndIndex(previousIndex + indexOffset);
+		
 		cummulativeTextSize = cummulativeWordSizes.get(wordIndex);
 		
-		System.out.println("Added " + inputLine + " to " + this);
+		FontMetrics metrics = style.getFontMetrics();
 		
-		return retVal;
+		return metrics.computeStringWidth(retVal);
 	}
 	
 	/**
@@ -214,7 +240,7 @@ System.out.println("7");
 	 * - style changes
 	 * - text changes
 	 */
-	public void computeStringWidths(){
+	private void computeStringWidths(){
 		FontMetrics metrics = style.getFontMetrics();
 		cummulativeWordSizes.clear();
 		int wordCount = 0;
@@ -227,14 +253,6 @@ System.out.println("7");
 				wordCount ++;
 			}
 		}
-	}
-
-	public int getNextLineStartIndex() {
-		return startIndexSaveOnly;
-	}
-	
-	public int getNextLineEndIndex() {
-		return endIndexSaveOnly;
 	}
 
 	public int length(){
@@ -253,8 +271,8 @@ System.out.println("7");
 	@Override
 	public String subSequence(int arg0, int arg1) {
 		return textBuffer.substring(
-				MathHelper.clamp(0 ,arg0 - startIndexInBigText.get(), getEndIndex() - getStartIndex()), 
-				MathHelper.clamp(0 ,arg1 - startIndexInBigText.get(), getEndIndex() - getStartIndex()));
+				MathHelper.clamp(0, arg0 - startIndexInBigText.get(), getEndIndex() - getStartIndex()), 
+				MathHelper.clamp(0, arg1 - startIndexInBigText.get(), getEndIndex() - getStartIndex()));
 	}
 	
 	public ArrayList<Float> getCummulativeWordSizes() {
@@ -263,13 +281,11 @@ System.out.println("7");
 
 	@Override
 	public IntStream chars() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IntStream codePoints() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -282,6 +298,9 @@ System.out.println("7");
 	}
 
 	public int getEndIndex() {
+		if(textLines == null || textLines.size() == 0) {
+			return startIndexSaveOnly + textBuffer.length();
+		}
 		return textLines.get(textLines.size() - 1).getEndIndex();
 	}
 	
@@ -290,6 +309,7 @@ System.out.println("7");
 	}
 
 	public void insertText(String text, int caretIndex) {
+		System.out.println("Start index in big text: " + startIndexInBigText.get());
 		this.textBuffer.insert(caretIndex - startIndexInBigText.get(), text);
 		updateTextLines();	
 	}
@@ -301,7 +321,6 @@ System.out.println("7");
 	
 	public void setText(String text) {
 		this.textBuffer = new StringBuffer(text);
-		updateTextLineIndices();
 		if(paragraphView != null) {
 			updateTextLines();
 		}
@@ -311,6 +330,10 @@ System.out.println("7");
 		return textLines;
 	}	
 
+	public ArrayList<LineSegment> getLineSegments() {
+		return lineSegments;
+	}
+	
 	public int getIndexInParent() {
 		return indexInParent;
 	}
@@ -360,5 +383,55 @@ System.out.println("7");
 	
 	public String toString() {
 		return "Paragraph: " + getText() + ", is being divided: " + hasElements;
+	}
+
+	public void setStartIndexSaveOnly(int value) {
+		this.startIndexSaveOnly = value;
+	}
+
+	public float getTextLineLength(TextLine newTextLine) {
+		String text = subSequence(newTextLine.getStartIndex(), newTextLine.getEndIndex());
+		return style.getFontMetrics().computeStringWidth(text);
+	}
+	
+	protected class TextFillReturnValue{
+		private ArrayList<TextLine> textLines;
+		private float finishOffset;
+		private int finishLine;
+		
+		protected TextFillReturnValue(ArrayList<TextLine> textLines, int finishLine, float finishOffset){
+			this.textLines = textLines;
+			this.finishLine = finishLine;
+			this.finishOffset = finishOffset;
+		}
+
+		protected ArrayList<TextLine> getTextLines() {
+			return textLines;
+		}
+
+		protected void setTextLines(ArrayList<TextLine> textLines) {
+			this.textLines = textLines;
+		}
+
+		protected float getFinishOffset() {
+			return finishOffset;
+		}
+
+		protected void setFinishOffset(float finishOffset) {
+			this.finishOffset = finishOffset;
+		}
+
+		protected int getFinishLine() {
+			return finishLine;
+		}
+
+		protected void setFinishLine(int finishLine) {
+			this.finishLine = finishLine;
+		}
+		
+		public String toString() {
+			return "TextFillReturnValue, size: " + textLines.size() + ", finishLine: " + finishLine + ", finishOffset: " + finishOffset;
+ 		}
+		
 	}
 }

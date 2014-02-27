@@ -60,14 +60,16 @@ public class DebugHelper {
 		rects.add(rect3);
 		rects.add(rect4);
 		
-		debugPolygon1 = GeometryHelper.getRegularPolygon(200, 200, 160, 6);
-		debugPolygon2 = GeometryHelper.getRegularPolygon(200, 200, 200, 3);
-		debugPolygon3 = GeometryHelper.getRegularPolygon(150, 150, 100, 4);
-		debugPolygon4 = GeometryHelper.getRegularPolygon(250, 250, 200, 64);
+		debugPolygon1 = GeometryHelper.getRegularPolygon(200, 200, 160, 6, 30);
+		debugPolygon2 = GeometryHelper.getRegularPolygon(200, 200, 200, 3, 0);
+		debugPolygon3 = GeometryHelper.getRegularPolygon(250, 250, 240, 4, 45);
+		debugPolygon4 = GeometryHelper.getRegularPolygon(250, 250, 200, 64, 0);
 		
 		paragraphSpaces = new ArrayList<ParagraphSpace>();
 		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon4));
 		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon1));
+		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon2));
+		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon3));
 	}
 	
 	public static int mouseClickCount = 0;

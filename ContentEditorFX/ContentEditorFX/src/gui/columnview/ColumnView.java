@@ -50,8 +50,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	
 	private ArrayList<ShapedPane> visuals;
 	private ArrayList<ParagraphOnCanvas> paragraphsOnCanvas;
-	
-	private LayoutMachine layoutMachine;
+
 	private HashMap<ShapedPane, ModificationInstance> modificationHash;
 	
 	public ColumnView(DocumentView parent, TextModifyFacade textModifyFacade){
@@ -66,9 +65,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		context.setStroke(Color.BLACK);
 		visuals = new ArrayList<ShapedPane>();
 		paragraphsOnCanvas = new ArrayList<ParagraphOnCanvas>();
-		
 		this.setId("columnview-selected");
-		layoutMachine = new LayoutMachine();
 		this.text = new SimpleObjectProperty<DocumentText>();
 		modificationHash = new HashMap<ShapedPane, ModificationInstance>();
 		initEvents();
@@ -77,8 +74,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	
 	private void populateParagraphViews() {
 		for(int i = 0; i < text.get().getParagraphSets().size(); i++) {
-			System.out.println("Number of paragraph sets: " + text.get().getParagraphSets().size());
-			paragraphsOnCanvas.add(layoutMachine.getParagraphSpace(selfReference, DebugHelper.paragraphSpaces.get(i), text.get().getParagraphSet(i), textModifyFacade));
+			paragraphsOnCanvas.add(new ParagraphOnCanvas(this, text.get().getParagraphSet(i), textModifyFacade));
 		}
 	}
 
@@ -163,7 +159,6 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		this.setPrefSize(column.getWidth(), column.getHeight());
 		canvas.setWidth(column.getWidth());
 		canvas.setHeight(column.getHeight());
-		layoutMachine.setPageInsets(column.getInsets());
 		parent.refresh();
 	}
 	
@@ -259,7 +254,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	public void addWidgetModifier(WidgetModifier widgetModifier) {
 		this.getChildren().add(widgetModifier);
 		visuals.add(widgetModifier);
-		layoutMachine.addSingleElement(widgetModifier);
+		column.addWidget(widgetModifier.getWidget());
 	}
 
 	/**
@@ -350,6 +345,10 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	
 	public DocumentView getDocumentView() {
 		return parent;
+	}
+
+	public LayoutMachine getLayoutMachine() {
+		return column.getLayoutMachine();
 	}
 	
 }

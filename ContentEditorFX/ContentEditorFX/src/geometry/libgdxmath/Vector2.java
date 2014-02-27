@@ -376,4 +376,17 @@ public class Vector2 implements Serializable, Vector<Vector2> {
 	public boolean isEqual(Vector2 firstPoint) {
 		return epsilonEquals(firstPoint, GlobalAppSettings.ignoreValuesBelow);
 	}
+
+	/**
+	 * 
+	 * @param angle
+	 * @param height
+	 */
+	public Vector2 moveWithGivenAngle(float angle, float offset) {
+		float xDiff = (float) (offset * Math.cos(Math.toRadians(angle)));
+		float yDiff = (float) (offset * Math.sin(Math.toRadians(angle)));
+		this.x = this.x + xDiff;
+		this.y = this.y - yDiff;
+		return this;
+	}
 }
