@@ -1,14 +1,15 @@
-package gui.helper;
+package zzzzdeprecated;
 
-import document.TextStyle;
+import document.style.TextStyle;
 
+@Deprecated
 public class StyleRepository {
 	public static StyleRepository instance;
 	private static TextStyle defaultStyle;
 	
 	public StyleRepository(){
 		instance = this;
-		defaultStyle = new TextStyle();
+	//	defaultStyle = new TextStyle();
 	}
 
 	public TextStyle getDefaultStyle() {

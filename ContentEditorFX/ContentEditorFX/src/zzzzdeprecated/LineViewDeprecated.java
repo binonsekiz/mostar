@@ -18,7 +18,7 @@ import javafx.scene.text.TextAlignment;
 
 import com.sun.javafx.tk.FontMetrics;
 
-import document.TextStyle;
+import document.style.TextStyle;
 
 /**
  * This class can only have one associated style.

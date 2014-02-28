@@ -5,7 +5,6 @@ import javafx.scene.text.Font;
 import com.sun.javafx.tk.FontMetrics;
 
 import document.Column;
-import document.TextStyle;
 
 /**
  * Deprecated
@@ -19,7 +18,7 @@ public class StringDivisionManager {
 	private FontMetrics fontMetrics;
 	private Column page;
 	
-	private static TextStyle defaultTextStyle = new TextStyle();
+//	private static TextStyle defaultTextStyle = new TextStyle();
 	
 	public StringDivisionManager(Column page){
 		this(page, Font.getDefault());

@@ -73,8 +73,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="document.TextLineSpace.Slot" project="ContentEditorFX" 
-    file="/ContentEditorFX/src/document/TextLineSpace.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="9" language="java" name="zzzzdeprecated.TextLineSpace.Slot" project="ContentEditorFX" 
+    file="/ContentEditorFX/src/zzzzdeprecated/TextLineSpace.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="503" y="1320"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -82,8 +82,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="document.TextLineSpace" project="ContentEditorFX" 
-    file="/ContentEditorFX/src/document/TextLineSpace.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="10" language="java" name="zzzzdeprecated.TextLineSpace" project="ContentEditorFX" 
+    file="/ContentEditorFX/src/zzzzdeprecated/TextLineSpace.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="497" y="983"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -91,8 +91,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="document.TextStyle" project="ContentEditorFX" 
-    file="/ContentEditorFX/src/document/TextStyle.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="11" language="java" name="document.style.TextStyle" project="ContentEditorFX" 
+    file="/ContentEditorFX/src/document/style/TextStyle.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="245" y="1121"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      

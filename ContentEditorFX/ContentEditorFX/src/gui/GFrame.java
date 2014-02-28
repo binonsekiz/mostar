@@ -1,10 +1,8 @@
 package gui;
 
 import event.input.KeyboardManager;
-import gui.docmodify.DocDebugView;
 import gui.docmodify.DocModifyScreen;
 import gui.docmodify.test.TestFacade;
-import gui.docmodify.test.TextLineSpaceUnitTest;
 import gui.login.SignupScreen;
 import gui.login.TemplateScreen;
 import gui.login.UsernameScreen;
@@ -64,7 +62,7 @@ public class GFrame extends Application {
 	}
 	
 	private void testPath(){
-		TextLineSpaceUnitTest ut = new TextLineSpaceUnitTest();
+	
 	}
 	
 	private void mainPath(){

@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import javafx.scene.paint.Color;
 import document.Column;
 import document.ParagraphSpace;
-import document.TextStyle;
+import document.style.TextStyle;
+import document.style.TextStyleRepository;
 
 public class DebugHelper {
 
@@ -20,8 +21,6 @@ public class DebugHelper {
 	public static Rectangle rect4 = new Rectangle(30,30, 420, 600);
 	public static TextStyle debugStyle1;
 	public static TextStyle debugStyle2;
-	public static TextStyle debugStyle3;
-	public static TextStyle debugStyle4;
 	public static TextStyle helperStyle1;
 	public static Polygon debugPolygon1;
 	public static Polygon debugPolygon2;
@@ -29,30 +28,9 @@ public class DebugHelper {
 	public static Polygon debugPolygon4;
 	
 	public DebugHelper() {
-		debugStyle1 = new TextStyle();
-		debugStyle1.setFontName("cafe");
-		debugStyle1.setFontColor(Color.BROWN);
-		debugStyle1.setFontSize(14);
-		
-		debugStyle2 = new TextStyle();
-		debugStyle2.setFontName("coolvetica");
-		debugStyle2.setFontColor(Color.DARKSLATEGREY);
-		debugStyle2.setFontSize(18);
-		
-		debugStyle3 = new TextStyle();
-		debugStyle3.setFontName("vera");
-		debugStyle3.setFontColor(Color.CRIMSON);
-		debugStyle3.setFontSize(9.5);
-		
-		debugStyle4 = new TextStyle();
-		debugStyle4.setFontName("coolvetica");
-		debugStyle4.setFontColor(Color.BLACK);
-		debugStyle4.setFontSize(18);
-		
-		helperStyle1 = new TextStyle();
-		helperStyle1.setFontName("vera");
-		helperStyle1.setFontColor(Color.MAGENTA);
-		helperStyle1.setFontSize(12);
+		debugStyle1 = TextStyleRepository.getTextStyle("cafe", 14, Color.BROWN, Color.AQUA, 3);
+		debugStyle2 = TextStyleRepository.getTextStyle("coolvetica", 18, Color.DARKSLATEGRAY, Color.ANTIQUEWHITE, 5);
+		helperStyle1 = TextStyleRepository.getTextStyle("vera", 12, Color.MAGENTA, Color.WHITE, 3);
 		
 		rects = new ArrayList<Rectangle>();
 		rects.add(rect1);

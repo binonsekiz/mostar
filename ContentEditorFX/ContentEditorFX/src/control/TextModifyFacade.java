@@ -9,7 +9,7 @@ import javafx.scene.Cursor;
 import document.Document;
 import document.DocumentText;
 import document.Paragraph;
-import document.TextStyle;
+import document.style.TextStyle;
 
 /**
  * This is a facade class that all the gui events happening on text (including cut/copy/undo etc.) has to go through.

@@ -18,7 +18,7 @@ import settings.GlobalAppSettings;
 import document.Column;
 import document.DocumentText;
 import document.Paragraph;
-import document.TextStyle;
+import document.style.TextStyle;
 
 public class Caret{
 	//reference to the text

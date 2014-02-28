@@ -4,6 +4,8 @@ import gui.helper.DebugHelper;
 
 import java.util.ArrayList;
 
+import document.style.TextStyle;
+
 public class DocumentText {
 
 	private ArrayList<Paragraph> globalText;

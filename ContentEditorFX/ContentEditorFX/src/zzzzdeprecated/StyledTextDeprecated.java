@@ -1,13 +1,11 @@
 package zzzzdeprecated;
 
-import gui.helper.StyleRepository;
-
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 import com.sun.javafx.tk.FontMetrics;
 
-import document.TextStyle;
+import document.style.TextStyle;
 
 /**
  * Represents list of StyleTextPairs. Can be used to import or export string.
@@ -20,12 +18,12 @@ public class StyledTextDeprecated implements CharSequence{
 	private StringBuffer string;
 	private ArrayList<TextStyle> styles;
 	
-	private StyleRepository styleRepository;
+	//private StyleRepository styleRepository;
 	
 	public StyledTextDeprecated(){
 		string = new StringBuffer();
 		styles = new ArrayList<TextStyle>();
-		styleRepository = StyleRepository.instance;
+	//	styleRepository = StyleRepository.instance;
 	}
 
 	/**
@@ -65,7 +63,7 @@ public class StyledTextDeprecated implements CharSequence{
 	 * @param text
 	 */
 	public void importString(String text){
-		TextStyle tempStyle = styleRepository.getDefaultStyle();		
+	//	TextStyle tempStyle = styleRepository.getDefaultStyle();		
 		string = new StringBuffer();
 		
 		//iterate over formatted text
@@ -81,7 +79,7 @@ public class StyledTextDeprecated implements CharSequence{
 			}
 			else{
 				string.append(text.charAt(i));
-				styles.add(tempStyle);
+	//			styles.add(tempStyle);
 			}
 		}
 	}

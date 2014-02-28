@@ -6,18 +6,18 @@ import gui.helper.LayoutMachine;
 import gui.helper.MathHelper;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.stream.IntStream;
 
-import settings.GlobalAppSettings;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 import com.sun.javafx.tk.FontMetrics;
+
+import document.style.TextStyle;
 
 /**
  * This class resresents exactly one style and its associated text.

@@ -1,12 +1,15 @@
-package document;
+package zzzzdeprecated;
 
 
 import java.util.ArrayList;
 import java.util.Collections;
 
+import document.PageInsets;
+import document.style.TextStyle;
+
 public class TextLineSpace {
 
-	private PageInsets pageInsets;
+/*	private PageInsets pageInsets;
 	private ArrayList<Slot> disallowedSlots;
 	private ArrayList<Slot> allowedSlots;
 	
@@ -195,6 +198,6 @@ public class TextLineSpace {
 	public Slot getSlot(int slotIndex) {
 		return allowedSlots.get(slotIndex);
 	}
-
+*/
 	
 }

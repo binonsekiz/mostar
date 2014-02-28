@@ -1,4 +1,4 @@
-package document;
+package document.style;
 
 import gui.helper.FontHelper;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,7 +10,7 @@ import settings.GlobalAppSettings;
 import com.sun.javafx.tk.FontMetrics;
 import com.sun.javafx.tk.Toolkit;
 
-public class TextStyle {
+public class TextStyle implements Comparable<TextStyle>{
 	
 	public static String defaultFontName = "Vera";
 	public static double defaultFontSize = 24;
@@ -27,34 +27,12 @@ public class TextStyle {
 	private Color strokeColor;
 	private Color fillColor;
 	
-	/**
-	 * Initializes textstyle from 
-	 * @param definition: <font/size/RGBA>
-	 */
-	public TextStyle(String definition){
-		if(definition.startsWith("<") && definition.endsWith(">")){
-			definition = definition.substring(1, definition.length() - 1 );
-			
-			String[] tokens = definition.split("/");
-			
-			if(tokens.length > 0 && tokens[0].length() > 0){
-				fontName = tokens[0];
-			}
-			if(tokens.length > 1 && tokens[1].length() > 0){
-				fontSize = Double.parseDouble(tokens[1]);
-			}
-			if(tokens.length > 2 && tokens[2].length() > 0){
-				strokeColor = FontHelper.getColorByName(tokens[2]);
-			}
-		}
-	}
-	
-	public TextStyle(String fontName, double fontSize, Color strokeColor){
+	protected TextStyle(String fontName, double fontSize, Color strokeColor, Color fillColor, float lineSpacingHeight){
 		this.fontName = fontName;
 		this.fontSize = fontSize;
 		this.strokeColor = strokeColor;
-		this.lineSpacingHeight = defaultLineSpacingHeight;
-		this.fillColor = defaultFillColor;
+		this.lineSpacingHeight = lineSpacingHeight;
+		this.fillColor = fillColor;
 	}
 	
 	public boolean isEqual(TextStyle other) {
@@ -68,8 +46,8 @@ public class TextStyle {
 		else return false;
 	}
 	
-	public TextStyle() {
-		this(defaultFontName, defaultFontSize, defaultStrokeColor);
+	protected TextStyle() {
+		this(defaultFontName, defaultFontSize, defaultStrokeColor, defaultFillColor, defaultLineSpacingHeight);
 	}
 
 	public String getFontName(){
@@ -90,30 +68,6 @@ public class TextStyle {
 
 	public FontMetrics getFontMetrics() {
 		return Toolkit.getToolkit().getFontLoader().getFontMetrics(FontHelper.getFont(fontName, fontSize));
-	}
-
-	public void setFontName(String string) {
-		this.fontName = string;
-	}
-
-	public void setFontSize(double parseInt) {
-		this.fontSize = parseInt;
-	}
-
-	public void setFontColor(String string) {
-		this.strokeColor = Color.web(string);
-	}
-	
-	public void setFillColor(String string) {
-		this.fillColor = Color.web(string);
-	}
-	
-	public void setFillColor(Color color) {
-		this.fillColor = color;
-	}
-	
-	public void setFontColor(Color color) {
-		this.strokeColor = color;
 	}
 
 	public Font getFont() {
@@ -137,6 +91,13 @@ public class TextStyle {
 		context.setFont(getFont());
 		context.setStroke(strokeColor);
 		context.setFill(fillColor);
+	}
+
+	@Override
+	public int compareTo(TextStyle o) {
+		String hash = TextStyleRepository.buildHash(this);
+		String otherHash = TextStyleRepository.buildHash(o);
+		return hash.compareTo(otherHash);
 	}
 
 }

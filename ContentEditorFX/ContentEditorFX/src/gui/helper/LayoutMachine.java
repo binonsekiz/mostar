@@ -3,7 +3,6 @@ package gui.helper;
 import geometry.libgdxmath.LineSegment;
 import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Polygon.LineSegmentIntersection;
-import geometry.libgdxmath.Rectangle;
 import geometry.libgdxmath.Vector2;
 import gui.columnview.ColumnView;
 import gui.columnview.DocumentView;
@@ -19,13 +18,11 @@ import settings.GlobalAppSettings;
 import settings.GlobalAppSettings.LineFitOption;
 import control.TextModifyFacade;
 import document.Column;
-import document.DocumentText;
 import document.PageInsets;
 import document.Paragraph;
 import document.ParagraphSet;
-import document.ParagraphSpace;
 import document.TextLine;
-import document.TextStyle;
+import document.style.TextStyle;
 
 public class LayoutMachine {
 

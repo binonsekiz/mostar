@@ -3,7 +3,7 @@ package control;
 import gui.columnview.DocumentView;
 import document.Document;
 import document.DocumentText;
-import document.TextStyle;
+import document.style.TextStyle;
 
 public class StyleModifyFacade {
 	

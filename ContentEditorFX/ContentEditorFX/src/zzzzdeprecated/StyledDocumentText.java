@@ -4,7 +4,7 @@ package zzzzdeprecated;
 import java.util.ArrayList;
 
 import document.Document;
-import document.TextStyle;
+import document.style.TextStyle;
 
 
 /**

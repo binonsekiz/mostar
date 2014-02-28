@@ -4,7 +4,6 @@ import event.DocModifyScreenGuiFacade;
 import gui.GFrame.WindowType;
 import gui.ScreenType;
 import gui.columnview.DocumentView;
-import gui.helper.StyleRepository;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
@@ -18,7 +17,6 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 	private DocDebugView docDebugView;
 	
 	private DocModifyScreenGuiFacade guiFacade;
-	private StyleRepository styleRepository;
 	private WindowType referrer;
 	
 	public DocModifyScreen(){
@@ -35,7 +33,6 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 		docVersatilePane = new DocVersatilePane();
 		docDebugView = new DocDebugView();
 		guiFacade = new DocModifyScreenGuiFacade(documentView, docWidgetToolbar, docOverview, docBottomToolbar, docVersatilePane, docDebugView);
-		styleRepository = new StyleRepository();
 		
 		//TODO: for demo use only
 		VBox toolbarBox = new VBox();

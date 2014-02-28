@@ -127,11 +127,13 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		context.setLineWidth(0.3);
 		LineSegment line = lineSegmentProperty.get();
 
+		//draw the debug line around the text
 		if(this.getColumnView().getDocumentView().getLinePolygonsVisible()) {
 			context.setStroke(polygonColor);
 			context.strokePolygon(shape.getTransformedXVertices(), shape.getTransformedYVertices(), shape.getEdgeCount());
 		}
 		
+		//draw the small debug numbers around the text 
 		if(GlobalAppSettings.areLineViewCountsVisible) {
 			DebugHelper.helperStyle1.prepareContext(context);
 			context.setFill(Color.MAGENTA);
@@ -155,7 +157,9 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 				startY = line.getLeftPoint().y;
 			}
 			
-			if((selectedEndIndex == 0 && selectedStartIndex == 0) || selectedEndIndex == selectedStartIndex) {
+			//if no selection is present, draw the text directly
+			if(selectedEndIndex == selectedStartIndex) {
+				context.setFill(textLine.getStyle().getStrokeColor());
 				context.fillText(text, startX, startY + this.height);
 			}
 			else{
@@ -168,15 +172,23 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 				
 				startIndexAdjusted = Math.max(0, Math.min(textLine.getLength(), startIndexAdjusted));
 				endIndexAdjusted = Math.max(0, Math.min(textLine.getLength(), endIndexAdjusted));
-					
+				
+				//draw the text before selection
+				context.setFill(textLine.getStyle().getStrokeColor());
 				context.fillText(text.substring(0, startIndexAdjusted), startX, startY + this.height);
 				context.save();
-				context.setFill(textLine.getStyle().getSelectionColor());
 				
+				//draw the filled text
+				//1. fill the background
+				context.setFill(textLine.getStyle().getSelectionColor());
+				context.setLineWidth(0);
 				context.fillRect(startX + caretPositions.get(startIndexAdjusted), startY, caretPositions.get(endIndexAdjusted) - caretPositions.get(startIndexAdjusted), this.height);
+				
+				//2. draw the text
 				context.setFill(textLine.getStyle().getInvertedStrokeColor());
 				context.fillText(text.substring(startIndexAdjusted, endIndexAdjusted), startX + caretPositions.get(startIndexAdjusted), startY + this.height);
 				
+				//draw the text after selection
 				context.restore();
 				context.fillText(text.substring(endIndexAdjusted), startX + caretPositions.get(endIndexAdjusted), startY + this.height);
 			}

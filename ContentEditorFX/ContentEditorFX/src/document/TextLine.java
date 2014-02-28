@@ -3,6 +3,7 @@ package document;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import document.style.TextStyle;
 
 public class TextLine implements Comparable<TextLine> {
 

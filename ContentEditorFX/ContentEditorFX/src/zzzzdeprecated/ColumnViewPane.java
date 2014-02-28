@@ -19,7 +19,6 @@ import javafx.util.Duration;
 import settings.GlobalAppSettings;
 import control.TextModifyFacade;
 import document.Column;
-import document.TextLineSpace;
 
 @Deprecated
 public class ColumnViewPane extends Pane {
@@ -29,7 +28,7 @@ public class ColumnViewPane extends Pane {
 	private ColumnViewPane selfReference;
 	
 	private Column page;
-	private ArrayList<TextSlotVisual> visualText;
+	//private ArrayList<TextSlotVisual> visualText;
 	
 	//this is for lines etc. that has to be updated with every refresh.
 	private ArrayList<Node> tempVisualElements;
@@ -43,7 +42,7 @@ public class ColumnViewPane extends Pane {
 	private boolean isRenderInProcess = false;
 	private boolean isRefreshCalled = false;
 
-	private TextLineSpace currentSpace;
+	//private TextLineSpace currentSpace;
 	private int currentSpaceSlotIndex;
 	private float offsetFromTop;
 	
@@ -62,7 +61,7 @@ public class ColumnViewPane extends Pane {
 	//	textFacade = DocModifyScreenGuiFacade.instance.getTextModifyFacade();
 //		textFacade.addPage(page, this);
 //		textFacade.addColumnViewPane(this);
-		visualText = new ArrayList<TextSlotVisual>();
+//		visualText = new ArrayList<TextSlotVisual>();
 	//	this.getChildren().add(glassPane);
 		
 		refreshTextShape();
@@ -157,8 +156,8 @@ public class ColumnViewPane extends Pane {
 	    }
 	}
 	
-	public TextSlotVisual requestTextSlot(){
-		requestCount ++;
+	//public TextSlotVisual requestTextSlot(){
+/*		requestCount ++;
 		//currentSpace = page.getFittingSpaces(offsetFromTop);
 		TextLineSpace.Slot slot = null;
 		if(currentSpace == null){
@@ -185,8 +184,8 @@ public class ColumnViewPane extends Pane {
 		this.getChildren().add(slotVisual);
 		this.visualText.add(slotVisual);
 		
-		return slotVisual;
-	}
+		return slotVisual;*/
+//	}
 	
 	private void refreshCaret(){
 		
@@ -340,10 +339,10 @@ public class ColumnViewPane extends Pane {
 		refreshTextShape();
 	}
 
-	public void clearText() {
+/*	public void clearText() {
 		this.getChildren().removeAll(visualText);
 		visualText.clear();
 		offsetFromTop = page.getInsets().getMinY();
-	}
+	}*/
 	
 }
