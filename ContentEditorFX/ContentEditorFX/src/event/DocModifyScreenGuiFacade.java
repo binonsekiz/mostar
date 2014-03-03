@@ -66,6 +66,7 @@ public class DocModifyScreenGuiFacade {
 		widgetModifyFacade.setCaret(caret);
 		styleModifyFacade.setCaret(caret);
 		styleModifyFacade.setTextModifyFacade(textModifyFacade);
+		docWidgetToolbar.setStyleFacade(styleModifyFacade);
 	}
 	
 	public void createNewDocument(){
@@ -172,62 +173,8 @@ public class DocModifyScreenGuiFacade {
 		docDebugView.refreshCountProperty().set(docDebugView.refreshCountProperty().get() + 1);
 	}
 
-	/*public void addLinePressed() {
-		// TODO temp solution
-		documentView.getActivePageView().addLine();
-	}
-
-	public void newBookPressed() {
-		createNewDocument();
-	}*/
-
-/*	public void demoVideo1() {
-		// TODO Auto-generated method stub
-		File file = new File("res\\media\\turbo.mp4");
-		try {
-			docModifyPane.getActivePageView().addDemoMediaView(file.toURI().toURL().toString());
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void demoVideo2() {
-		// TODO Auto-generated method stub
-		File file = new File("res\\media\\dna.mp4");
-		try {
-			docModifyPane.getActivePageView().addDemoMediaView(file.toURI().toURL().toString());
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public void demoInteractive1() {
-		// TODO Auto-generated method stub
-		File f = new File("res\\interactive\\index - Copy.html");
-		try {
-			docModifyPane.getActivePageView().addDemoWebView(f.toURI().toURL().toString());
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public void demoInteractive2() {
-		// TODO Auto-generated method stub
-		docModifyPane.getActivePageView().addDemoWebView("http://www.google.com");
-	}
-*/
-
 	public void clearVersatilePane() {
 		docVersatilePane.hideAll();
-	}
-
-	public Image takeSnapshot(int columnCounter) {
-		// TODO Auto-generated method stub
-//		return docModifyPane.takeColumnSnapshot(columnCounter);
-		return null;
 	}
 
 	public void updateOverview() {
@@ -272,17 +219,19 @@ public class DocModifyScreenGuiFacade {
 	}
 
 	public void changeFontName(String arg2) {
-		System.out.println("Font name change");
 		styleModifyFacade.changeFontName(arg2);
 	}
 
 	public void changeFontSize(String arg2) {
-		// TODO Auto-generated method stub
 		styleModifyFacade.changeFontSize(Double.parseDouble(arg2));
 	}
 
 	public void debugResetTextIndices() {
 		document.getDocumentText().debugValidateAllTextLines();
+	}
+
+	public void updateVisualStyleControls() {
+		docWidgetToolbar.updateVisualStyleControls();
 	}
 
 }

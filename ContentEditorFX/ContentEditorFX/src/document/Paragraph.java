@@ -2,7 +2,6 @@ package document;
 
 import geometry.libgdxmath.LineSegment;
 import gui.columnview.ParagraphOnCanvas;
-import gui.helper.LayoutMachine;
 import gui.helper.MathHelper;
 
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ import javafx.beans.value.ObservableValue;
 
 import com.sun.javafx.tk.FontMetrics;
 
+import document.layout.LayoutMachine;
 import document.style.TextStyle;
 
 /**
@@ -24,7 +24,7 @@ import document.style.TextStyle;
  * @author sahin
  *
  */
-public class Paragraph implements CharSequence{
+public class Paragraph implements CharSequence, Comparable<Paragraph>{
 
 	private TextStyle style;
 	private StringBuffer textBuffer;
@@ -33,8 +33,6 @@ public class Paragraph implements CharSequence{
 	private ArrayList<TextLine> textLines;
 	private ArrayList<LineSegment> lineSegments;
 	
-	private SimpleFloatProperty angle;
-
 	private int previousIndex = 0;
 	private float cummulativeTextSize = 0;
 	
@@ -61,13 +59,12 @@ public class Paragraph implements CharSequence{
 		cummulativeWordSizes = new ArrayList<Float>();
 		wordCountToStringIndex = new HashMap<Integer, Integer>();
 		startIndexInBigText = new SimpleIntegerProperty();
-		angle = new SimpleFloatProperty();
 		textLines = new ArrayList<TextLine>();
 		lineSegments = new ArrayList<LineSegment>();
 		hasElements = false;
 		setText(text);
-		computeStringWidths();
-		initEvents();
+	//	computeStringWidths();
+	//	initEvents();
 	}
 	
 	public void setParagraphOnCanvas(ParagraphOnCanvas view) {
@@ -79,13 +76,6 @@ public class Paragraph implements CharSequence{
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number oldValue, Number arg2) {
-				
-			}
-		});
-		angle.addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> arg0,
-					Number arg1, Number arg2) {
 				
 			}
 		});
@@ -105,7 +95,7 @@ public class Paragraph implements CharSequence{
 	
 	public void setStyle(TextStyle style){
 		this.style = style;
-		computeStringWidths();
+		updateTextLines();
 	}
 	
 	public TextStyle getStyle(){
@@ -288,14 +278,6 @@ public class Paragraph implements CharSequence{
 	public IntStream codePoints() {
 		return null;
 	}
-	
-	public float getAngle() {
-		return angle.get();
-	}
-	
-	public void setAngle(float angle) {
-		this.angle.set(angle);
-	}
 
 	public int getEndIndex() {
 		if(textLines == null || textLines.size() == 0) {
@@ -309,7 +291,6 @@ public class Paragraph implements CharSequence{
 	}
 
 	public void insertText(String text, int caretIndex) {
-		System.out.println("Start index in big text: " + startIndexInBigText.get());
 		this.textBuffer.insert(caretIndex - startIndexInBigText.get(), text);
 		updateTextLines();	
 	}
@@ -338,21 +319,28 @@ public class Paragraph implements CharSequence{
 		return indexInParent;
 	}
 
-	public Paragraph divideAtIndex(int caretIndex) {
-		Paragraph newParagraph = new Paragraph(style, textBuffer.substring(caretIndex), documentText, this.indexInParent);
-		this.textBuffer = textBuffer.delete(caretIndex, textBuffer.length());
-		documentText.addParagraph(newParagraph);
+	public Paragraph divideAtIndex(int divideIndex) {
+		System.out.println("Paragraph::Divide at Index: " + divideIndex);
+		divideIndex = divideIndex - startIndexInBigText.get();
+		Paragraph newParagraph = new Paragraph(style, textBuffer.substring(divideIndex), documentText, this.indexInParent+1);
+		this.textBuffer = textBuffer.delete(divideIndex, textBuffer.length());
 		
+		documentText.addParagraph(newParagraph, paragraphSet);
+		
+		updateTextLines();
+		newParagraph.updateTextLines();
 		return newParagraph;
 	}
-
-	protected void tryLowestStartValue(int value) {
-		if(this.startIndexInBigText.get() > value) {
-			startIndexInBigText.set(value);
-			if(textLines.size() > 0) {
-				textLines.get(0).setStartIndex(startIndexInBigText.get());
-			}
-		}
+	
+	/**
+	 * This function assumes that this paragraph is just before p2.
+	 * @param p2
+	 */
+	public void mergeWith(Paragraph p2) {
+		this.textBuffer.append(p2.getTextBuffer());
+		documentText.removeParagraph(p2.getIndexInParent());
+		paragraphSet.removeParagraph(p2);
+		updateTextLines();
 	}
 
 	/**
@@ -434,4 +422,17 @@ public class Paragraph implements CharSequence{
  		}
 		
 	}
+
+	@Override
+	public int compareTo(Paragraph o) {
+		if(this.indexInParent < o.indexInParent){
+			return -1;
+		}
+		else if(this.indexInParent > o.indexInParent){
+			return 1;
+		}
+		return 0;
+	}
+
+	
 }

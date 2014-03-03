@@ -1,4 +1,4 @@
-package gui.helper;
+package document.layout;
 
 import geometry.libgdxmath.LineSegment;
 import geometry.libgdxmath.Polygon;
@@ -144,7 +144,7 @@ public class LayoutMachine {
 		float angle = paragraphSet.getAngle();
 		angle = (angle + 270) % 360;
 		
-		lineSegmentOffset.moveWithGivenAngle(angle, backupStyle.getLineSpacingHeight());
+		lineSegmentOffset.moveWithGivenAngle(angle, backupStyle.getLineSpacingHeight());		
 	}
 
 	/**

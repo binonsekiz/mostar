@@ -13,14 +13,13 @@ import com.sun.javafx.tk.Toolkit;
 public class TextStyle implements Comparable<TextStyle>{
 	
 	public static String defaultFontName = "Vera";
-	public static double defaultFontSize = 24;
+	public static double defaultFontSize = 12;
 	public static Color defaultStrokeColor = Color.DARKSLATEGRAY;
 	public static Color defaultFillColor = Color.ALICEBLUE;
-	public static final TextStyle defaultStyle = new TextStyle();
-	public static float defaultLineSpacingHeight = 3; 
-	
+	public static float defaultLineSpacingHeight = 20;
 	private static Color defaultSelectionColor = new Color(Color.DARKBLUE.getRed(), Color.DARKBLUE.getGreen(), Color.DARKBLUE.getBlue(), 1f);
 	
+	public static final TextStyle defaultStyle = new TextStyle();
 	private String fontName;
 	private double fontSize;
 	private float lineSpacingHeight;
@@ -75,8 +74,7 @@ public class TextStyle implements Comparable<TextStyle>{
 	}
 
 	public float getLineSpacingHeight() {
-		FontMetrics metrics = getFontMetrics();
-		return metrics.getLineHeight() + lineSpacingHeight;
+		return lineSpacingHeight;
 	}
 
 	public Paint getSelectionColor() {

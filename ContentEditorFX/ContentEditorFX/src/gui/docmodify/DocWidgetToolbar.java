@@ -1,5 +1,9 @@
 package gui.docmodify;
 
+import java.util.Collections;
+
+import control.StyleModifyFacade;
+import document.style.TextStyle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -16,6 +20,7 @@ import javafx.scene.shape.Rectangle;
 import settings.Translator;
 import event.DocModifyScreenGuiFacade;
 import gui.helper.ColorGrid;
+import gui.helper.MathHelper;
 
 public class DocWidgetToolbar extends FlowPane{
 
@@ -60,6 +65,13 @@ public class DocWidgetToolbar extends FlowPane{
 	
 	private Button lineButton;
 	private DocModifyScreenGuiFacade guiFacade;
+	private StyleModifyFacade styleFacade;
+	
+	ObservableList<String> fontOptions;
+	ObservableList<String> fontSizeOptions;
+	ObservableList<String> styleOptions;
+
+	private boolean styleChangeEventsDisabled;
 	
 	public DocWidgetToolbar(){
 		initGui();
@@ -184,30 +196,31 @@ public class DocWidgetToolbar extends FlowPane{
 	private void initComboBoxes() {
 		fontPane = new HBox();
 		
-		ObservableList<String> fontOptions = 
+		fontOptions = 
 			    FXCollections.observableArrayList(
-			        "Cafe",
+			    	"",
+			        "cafe",
 			        "Coolvetica",
 			        "Vera"
 			    );
-		fontBox = new ComboBox<>(fontOptions);
+		fontBox = new ComboBox<String>(fontOptions);
 		fontBox.setPromptText(Translator.get("Font"));
 		fontBox.setEditable(false);
 		
-		ObservableList<String> fontSizeOptions = 
+		fontSizeOptions = 
 				FXCollections.observableArrayList(
-					"8", "10", "12", "14", "16", "18");
-		fontSizeBox = new ComboBox<>(fontSizeOptions);
+					"","8", "10", "12", "14", "16", "18");
+		fontSizeBox = new ComboBox<String>(fontSizeOptions);
 		fontSizeBox.setPromptText(Translator.get("Font Size"));
 		fontSizeBox.setEditable(true);
 		fontSizeBox.getStyleClass().add("last");
 		
-		ObservableList<String> styleOptions = 
+		styleOptions = 
 				FXCollections.observableArrayList(
 					Translator.get("Style") + " 1",
 					Translator.get("Style") + " 2",
 					Translator.get("Style") + " 3");
-		styleBox = new ComboBox<>(styleOptions);
+		styleBox = new ComboBox<String>(styleOptions);
 		styleBox.setPromptText(Translator.get("Style"));
 		styleBox.setEditable(false);
 		styleBox.getStyleClass().add("first");
@@ -291,6 +304,7 @@ public class DocWidgetToolbar extends FlowPane{
 			@Override
 			public void changed(ObservableValue<? extends String> arg0,
 					String arg1, String arg2) {
+				if(styleChangeEventsDisabled) return;
 				guiFacade.changeFontName(arg2);
 			}
 		});
@@ -299,6 +313,7 @@ public class DocWidgetToolbar extends FlowPane{
 			@Override
 			public void changed(ObservableValue<? extends String> arg0,
 					String arg1, String arg2) {
+				if(styleChangeEventsDisabled) return;
 				guiFacade.changeFontSize(arg2);
 			}
 		});
@@ -308,5 +323,65 @@ public class DocWidgetToolbar extends FlowPane{
 		this.guiFacade = guiFacade;
 	}
 	
+	public void setStyleFacade(StyleModifyFacade styleFacade) {
+		this.styleFacade = styleFacade;
+	}
+
+	public void updateVisualStyleControls() {
+		TextStyle style = styleFacade.getSelectionStyle();
+		styleChangeEventsDisabled = true;
+		updateFontName(style);
+		updateFontSize(style);
+		styleChangeEventsDisabled = false;
+	}
+	
+	/**
+	 * Used for updating the font name combo box
+	 * @param style
+	 */
+	private void updateFontName(TextStyle style) {
+		if(style != null) {
+			//update font name
+			int i;
+			for(i = 0; i < fontOptions.size(); i++) {
+				if(fontOptions.get(i).equals(style.getFontName())) 
+					break;
+			}
+			if(i >= fontOptions.size()) {
+				//this means the list don't have this option. add it.
+				fontOptions.add(style.getFontName());
+				Collections.sort(fontOptions);
+			}
+			fontBox.valueProperty().set(fontOptions.get(i));
+		}
+		else {
+			//stlye == null means that the selected text has more than one style in it.
+			fontBox.valueProperty().set(fontOptions.get(0));
+		}
+	}
+	
+	/**
+	 * Used for updating the combo box for font sizes;
+	 * @param style
+	 */
+	private void updateFontSize(TextStyle style) {
+		if(style != null) {
+			int i;
+			for(i = 0; i < fontSizeOptions.size(); i++) {
+				if(fontSizeOptions.get(i).equals(style.getFontSize() + ""))
+					break;
+			}
+			if(i >= fontSizeOptions.size()) {
+				//this means the list don't have this option. add it.
+				fontSizeOptions.add(style.getFontSize() + "");
+				Collections.sort(fontSizeOptions);
+			}
+			fontSizeBox.valueProperty().set(fontSizeOptions.get(i));
+		}
+		else {
+			//stlye == null means that the selected text has more than one style in it.
+			fontSizeBox.valueProperty().set(fontSizeOptions.get(0));
+		}
+	}
 	
 }

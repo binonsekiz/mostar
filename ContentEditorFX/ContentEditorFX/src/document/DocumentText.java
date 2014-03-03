@@ -22,28 +22,44 @@ public class DocumentText {
 		//TODO: debug
 		ParagraphSet set1 = new ParagraphSet(this);
 		set1.setColumn(document.getColumns().get(0));
-		set1.setParagraphSpace(DebugHelper.paragraphSpaces.get(3));
+		set1.setParagraphSpace(DebugHelper.paragraphSpaces.get(4));
 		
 		Paragraph paragraph = new Paragraph(this, 0);
-		paragraph.setText("abcdef7");
+		paragraph.setText("aaaaa bbbbb ccccc ddddd eeeee fffff ggggg hhhhh iiiii jjjjj kkkkk lllll mmmmm nnnnn ooooo ppppp rrrrr sssss ttttt uuuuu vvvv yyyyy zzzzz");
 		addParagraph(paragraph, set1);
+		paragraph.setStyle(DebugHelper.debugStyle1);
+		
+	/*	Paragraph paragraph2 = new Paragraph(this, 1);
+		paragraph2.setText("11111 22222 33333 44444 55555 66666 77777 88888 99999 00000");
+		addParagraph(paragraph2, set1);
+		paragraph2.setStyle(DebugHelper.debugStyle2);*/
+	/*	
+		Paragraph paragraph3 = new Paragraph(this, 2);
+		paragraph3.setText("nopqrstu9");
+		addParagraph(paragraph3, set1);*/
 	}
 
-	public void addParagraph(Paragraph paragraph) {
+	/*public void addParagraph(Paragraph paragraph) {
 		//add a new paragraph set as a default
 		ParagraphSet newSet = new ParagraphSet(this);
 		addParagraphSet(newSet);
 		addParagraph(paragraph, newSet);
-	}
+	}*/
 	
 	public void addParagraph(Paragraph paragraph, ParagraphSet paragraphSet) {
 		if(!paragraphSets.contains(paragraphSet)){
 			paragraphSets.add(paragraphSet);
 		}
 		
-		paragraphSet.addParagraph(paragraph);
 		globalText.add(paragraph.getIndexInParent(), paragraph);
-		
+		for(int i = 0; i < globalText.size(); i++) {
+			globalText.get(i).setIndexInParent(i);
+		}
+		paragraphSet.addParagraph(paragraph);
+	}
+	
+	public void removeParagraph(int indexInParent) {
+		globalText.remove(indexInParent);
 		for(int i = 0; i < globalText.size(); i++) {
 			globalText.get(i).setIndexInParent(i);
 		}
@@ -150,5 +166,7 @@ public class DocumentText {
 		}
 		return null;
 	}
+
+	
 	
 }

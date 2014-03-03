@@ -137,7 +137,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		if(GlobalAppSettings.areLineViewCountsVisible) {
 			DebugHelper.helperStyle1.prepareContext(context);
 			context.setFill(Color.MAGENTA);
-			context.fillText(textLine.getStartIndex() + "", line.getLeftPoint().x - 20, line.getLeftPoint().y + 15);
+			context.fillText(textLine.getStartIndex() +"" /*+ ", h:" + textLine.getStyle().getLineSpacingHeight()*/, line.getLeftPoint().x - 30, line.getLeftPoint().y + 15);
 			context.fillText(textLine.getEndIndex() + "", line.getRightPoint().x + 5, line.getRightPoint().y + 15);
 		}
 		

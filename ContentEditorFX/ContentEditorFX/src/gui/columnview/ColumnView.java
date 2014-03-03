@@ -2,7 +2,6 @@ package gui.columnview;
 
 import gui.ShapedPane;
 import gui.helper.DebugHelper;
-import gui.helper.LayoutMachine;
 import gui.widget.WidgetModifier;
 
 import java.util.ArrayList;
@@ -26,6 +25,7 @@ import settings.GlobalAppSettings;
 import control.TextModifyFacade;
 import document.Column;
 import document.DocumentText;
+import document.layout.LayoutMachine;
 import document.widget.Widget;
 import event.modification.ModificationInstance;
 import event.modification.ModificationType;

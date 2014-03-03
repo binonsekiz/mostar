@@ -11,6 +11,7 @@ public class TextStyleRepository {
 	
 	private static HashMap<String, TextStyle> styles = new HashMap<String, TextStyle>();
 	private static ArrayList<TextStyle> stylesList = new ArrayList<TextStyle>();;
+	private static TextStyle selectedStyle;
 	
 	public static TextStyle getDefaultStyle(){
 		return TextStyle.defaultStyle;
@@ -48,6 +49,29 @@ public class TextStyleRepository {
 	
 	protected static String buildStyleName(String fontName, double fontSize){
 		return fontName + ", " + fontSize + Translator.get("pt");
+	}
+	
+	public static void setSelectedStyle(TextStyle style) {
+		selectedStyle = style;
+	}
+	
+	public static TextStyle getSelectedStyle() {
+		return selectedStyle;
+	}
+
+	public static TextStyle deriveStyleWithFontName(TextStyle styleToDeriveFrom, String newFontName) {
+		if(styleToDeriveFrom == null){
+			return null;
+		}
+		
+		return getTextStyle(newFontName, styleToDeriveFrom.getFontSize(), styleToDeriveFrom.getStrokeColor(), styleToDeriveFrom.getFillColor(), styleToDeriveFrom.getLineSpacingHeight());
+	}
+
+	public static TextStyle deriveStyleWithFontSize(TextStyle styleToDeriveFrom, double newFontSize) {
+		if(styleToDeriveFrom == null){
+			return null;
+		}
+		return getTextStyle(styleToDeriveFrom.getFontName(), newFontSize, styleToDeriveFrom.getStrokeColor(), styleToDeriveFrom.getFillColor(), styleToDeriveFrom.getLineSpacingHeight());
 	}
 	
 }

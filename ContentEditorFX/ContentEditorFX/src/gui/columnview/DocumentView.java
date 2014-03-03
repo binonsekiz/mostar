@@ -191,6 +191,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 	public void textSelectionSet(int lowerIndex, int higherIndex) {
 		LineOnCanvas.selectedStartIndex = lowerIndex;
 		LineOnCanvas.selectedEndIndex = higherIndex;
+		guiFacade.updateVisualStyleControls();
 	}
 	
 	public void associateWithDocument(Document document) {

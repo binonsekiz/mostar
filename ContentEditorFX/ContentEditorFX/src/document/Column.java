@@ -2,7 +2,6 @@ package document;
 
 import geometry.GeometryHelper;
 import geometry.libgdxmath.Polygon;
-import gui.helper.LayoutMachine;
 
 import java.util.ArrayList;
 
@@ -11,6 +10,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import document.PageSpecs.Measurement;
+import document.layout.LayoutMachine;
 import document.widget.Widget;
 
 public class Column {

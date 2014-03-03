@@ -1,16 +1,17 @@
 package document;
 
-import gui.helper.LayoutMachine;
-
 import java.util.ArrayList;
+import java.util.Collections;
 
 import document.Paragraph.TextFillReturnValue;
+import document.layout.LayoutMachine;
 
 public class ParagraphSet {
 
 	private ArrayList<Paragraph> paragraphs;
 	private ParagraphSpace paragraphSpace;
 	private Column column;
+	private float angle;
 	private StringBuffer textBuffer;
 	private DocumentText parent;
 	
@@ -47,7 +48,9 @@ public class ParagraphSet {
 
 	public void addParagraph(Paragraph paragraph) {
 		this.paragraphs.add(paragraph);
+		Collections.sort(paragraphs);
 		paragraph.setParagraphSet(this);
+	//	mergeWithSimilarStyles();
 	}
 	
 	public int getStartIndex() {
@@ -100,15 +103,34 @@ public class ParagraphSet {
 		return paragraphSpace;
 	}
 	
+	public void setAngle(float angle) {
+		this.angle = angle;
+	}
+	
 	public float getAngle() {
-		if(this.paragraphs.size() > 0) {
-			return paragraphs.get(0).getAngle();
-		}
-		return 0;
+		return angle;
 	}
 
 	public void setParagraphSpace(ParagraphSpace paragraphSpace) {
 		this.paragraphSpace = paragraphSpace;
+		paragraphSpace.setParagraphSet(this);
 	}
+
+	public void removeParagraph(Paragraph p2) {
+		this.paragraphs.remove(p2);
+	//	mergeWithSimilarStyles();
+	}
+
+/*	private void mergeWithSimilarStyles() {
+		for(int i = 0; i < paragraphs.size() - 1; i++) {
+			Paragraph p1 = paragraphs.get(i);
+			Paragraph p2 = paragraphs.get(i+1);
+			
+			if(p1.getStyle().isEqual(p2.getStyle())) {
+				p1.mergeWith(p2);
+				i--;
+			}
+		}
+	}*/
 
 }

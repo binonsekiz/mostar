@@ -1,7 +1,6 @@
 package gui.columnview;
 
 import gui.docmodify.DocDebugView;
-import gui.helper.LayoutMachine;
 
 import java.util.ArrayList;
 
@@ -13,6 +12,7 @@ import document.Paragraph;
 import document.ParagraphSet;
 import document.ParagraphSpace;
 import document.TextLine;
+import document.layout.LayoutMachine;
 
 
 /**

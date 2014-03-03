@@ -19,12 +19,17 @@ public class ParagraphSpace {
 
 	private ArrayList<Paragraph> paragraphs;
 	private Polygon allowedShape;
+	private ParagraphSet paragraphSet;
 	private Column parent;
 	
 	public ParagraphSpace(Column parent, Polygon shape) {
 		this.parent = parent;
 		paragraphs = new ArrayList<Paragraph>();
 		this.allowedShape = shape;
+	}
+	
+	public void setParagraphSet(ParagraphSet paragraphSet) {
+		this.paragraphSet = paragraphSet;
 	}
 
 	public Polygon getShape() {
@@ -47,10 +52,7 @@ public class ParagraphSpace {
 	 * @return
 	 */
 	public Vector2 getTextDivisionStartPoint() {
-		float angle = 0;
-		if(paragraphs.size() > 0) {
-			angle = paragraphs.get(0).getAngle();
-		}
+		float angle = paragraphSet.getAngle();
 		
 		Rectangle boundingRectangle = allowedShape.getBoundingRectangle();
 		

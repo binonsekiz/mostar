@@ -165,7 +165,7 @@ public class Caret{
 			context.setStroke(Color.BLACK);
 			context.setLineWidth(1);
 			if(caretParagraph != null ) {
-				float lineAngle = caretParagraph.getAngle();
+				float lineAngle = caretParagraph.getParagraphSet().getAngle();
 				TextStyle style = caretParagraph.getStyle();
 				context.strokeLine(screenX, screenY, screenX + style.getLineSpacingHeight() * Math.sin(Math.toRadians(lineAngle)), screenY + style.getLineSpacingHeight() * Math.cos(Math.toRadians(lineAngle)));
 			}
@@ -265,5 +265,13 @@ public class Caret{
 	
 	public void setCaretIndexRelative(int i) {
 		setCaretIndex(MathHelper.clamp(0, caretIndex + i, documentText.getEndIndex()));
+	}
+
+	public int getSelectionStart() {
+		return Math.min(caretIndex, anchor);
+	}
+
+	public int getSelectionEnd() {
+		return Math.max(caretIndex, anchor);
 	}
 }

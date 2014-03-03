@@ -10,6 +10,7 @@ import document.Document;
 import document.DocumentText;
 import document.Paragraph;
 import document.style.TextStyle;
+import document.style.TextStyleRepository;
 
 /**
  * This is a facade class that all the gui events happening on text (including cut/copy/undo etc.) has to go through.
@@ -79,7 +80,7 @@ public class TextModifyFacade {
 		System.out.println("\n\n~~Dividing at index: " + caretIndex + ", style: " + style);
 		Paragraph paragraph = getParagraphWithIndex(caretIndex);
 		paragraph.divideAtIndex(caretIndex);
-		documentText.addParagraph(new Paragraph(style, "", documentText, paragraph.getIndexInParent() + 1));
+		documentText.addParagraph(new Paragraph(style, "", documentText, paragraph.getIndexInParent() + 1), paragraph.getParagraphSet());
 	}
 	
 	/**
@@ -90,11 +91,66 @@ public class TextModifyFacade {
 	 */
 	public void setStyleAtInterval(TextStyle style, int caretIndex, int anchor) {
 		System.out.println("\n\n~~Setting style in interval: " + caretIndex + "-" + anchor + " style: " + style);
-		Paragraph paragraph1 = getParagraphWithIndex(caretIndex);
-		Paragraph paragraph2 = paragraph1.divideAtIndex(caretIndex);
-		Paragraph paragraph3 = paragraph2.divideAtIndex(anchor);
-		
-		paragraph2.setStyle(style);
+		int lowerIndex = Math.min(caretIndex, anchor);
+		int higherIndex = Math.max(caretIndex, anchor);
+		TextStyle initialStyle = null;
+
+		//get the paragraph to be divided.
+		Paragraph paragraph1 = getParagraphWithIndex(lowerIndex);
+		Paragraph endParagraph = getParagraphWithIndex(higherIndex);
+		if(paragraph1 == endParagraph) {
+			initialStyle = paragraph1.getStyle();
+
+			//paragraph2 is the higher index result of the division. Will be divided later.
+			Paragraph paragraph2;
+			if(lowerIndex == paragraph1.getStartIndex()) {
+				paragraph2 = paragraph1;
+			}
+			else {
+				paragraph2 = paragraph1.divideAtIndex(lowerIndex);
+			}
+			paragraph2.setStyle(style);
+
+			//divide paragraph2 
+			Paragraph paragraph3;
+			if(higherIndex == paragraph2.getEndIndex()) {
+				paragraph3 = paragraph2;
+			}
+			else{
+				paragraph3 = paragraph2.divideAtIndex(higherIndex);
+				paragraph3.setStyle(initialStyle);
+			}
+
+			System.out.println("\n\n\nDOCTEXT AFTER REFRESH:\n" + documentText.exportString());
+		}
+		else {
+			Paragraph mergeStart = null;
+			Paragraph mergeEnd = null;
+
+			if(lowerIndex > paragraph1.getStartIndex() && paragraph1.getStyle() != style) {
+				mergeStart = paragraph1.divideAtIndex(lowerIndex);
+			}
+			else{
+				mergeStart = paragraph1;
+			}
+			if(higherIndex < endParagraph.getEndIndex() && endParagraph.getStyle() != style) {
+				endParagraph.divideAtIndex(higherIndex);
+			}
+			mergeEnd = endParagraph;
+			
+			mergeParagraphsWithStyle(style, mergeStart, mergeEnd);
+		}
+		caret.getActiveColumnView().refresh();
+	}
+
+	private void mergeParagraphsWithStyle(TextStyle style, Paragraph mergeStart, Paragraph mergeEnd) {
+		for(int i = mergeStart.getIndexInParent(); i < mergeEnd.getIndexInParent() - 1;/* i++*/) {
+			System.out.println("Looping for merge paragraph, i: " + i + ", mergeStart: " + mergeStart.getIndexInParent() + ", mergeEnd: " + mergeEnd.getIndexInParent());
+			Paragraph p1 = documentText.getParagraph(i);
+			Paragraph p2 = documentText.getParagraph(i+1);
+			p1.mergeWith(p2);
+		}
+		mergeStart.setStyle(style);
 	}
 
 	public void backspace() {

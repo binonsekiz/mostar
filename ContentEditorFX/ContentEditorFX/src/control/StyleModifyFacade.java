@@ -4,6 +4,7 @@ import gui.columnview.DocumentView;
 import document.Document;
 import document.DocumentText;
 import document.style.TextStyle;
+import document.style.TextStyleRepository;
 
 public class StyleModifyFacade {
 	
@@ -12,9 +13,36 @@ public class StyleModifyFacade {
 	private Document document;
 	private DocumentView documentView;
 	private TextModifyFacade textModifyFacade;
+	private TextStyle backupStyle;
 	
 	public StyleModifyFacade() {
 		
+	}
+	
+	/**
+	 * If the selected text is a single style, returns that. Else returns null.
+	 * @return
+	 */
+	public TextStyle getSelectionStyle(){
+		int caretStart = caret.getSelectionStart();
+		int caretEnd = caret.getSelectionEnd();
+		TextStyle initStyle = documentText.getStyleAt(caretStart);
+		
+		if(caretStart == caretEnd) {
+			TextStyleRepository.setSelectedStyle(initStyle);
+			return initStyle;
+		}
+		
+		for(int i = caretStart + 1; i <= caretEnd; i++) {
+			// We should have just one instance of every style, so "==" should work fine.
+			if(!(documentText.getStyleAt(i) == initStyle)) {
+				TextStyleRepository.setSelectedStyle(null);
+				backupStyle = documentText.getStyleAt(caretStart);
+				return null;
+			}
+		}
+		TextStyleRepository.setSelectedStyle(initStyle);
+		return initStyle;
 	}
 	
 	public void setDocumentAndView(Document document, DocumentView documentView) {
@@ -38,7 +66,7 @@ public class StyleModifyFacade {
 			}
 			else if(caret.getCaretIndex() == caret.getAnchor()) {
 				//divide the paragraph in two, add a third in between.
-				textModifyFacade.divideAtIndex(style, caret.getCaretIndex());
+		//		textModifyFacade.divideAtIndex(style, caret.getCaretIndex());
 			}
 			else{
 				textModifyFacade.setStyleAtInterval(style, caret.getCaretIndex(), caret.getAnchor());
@@ -47,10 +75,27 @@ public class StyleModifyFacade {
 	}
 
 	public void changeFontName(String value) {
+		TextStyle initStyle = getInitialStyle();
+		TextStyle newStyle = TextStyleRepository.deriveStyleWithFontName(initStyle, value);	
+		textModifyFacade.setStyleAtInterval(newStyle, caret.getCaretIndex(), caret.getAnchor());
 		System.out.println("Font name change: " + value);
 	}
 
 	public void changeFontSize(double value) {
+		TextStyle initStyle = getInitialStyle();
+		TextStyle newStyle = TextStyleRepository.deriveStyleWithFontSize(initStyle, value);
+		textModifyFacade.setStyleAtInterval(newStyle, caret.getCaretIndex(), caret.getAnchor());
 		System.out.println("Font size change: " + value);
+	}
+	
+	private TextStyle getInitialStyle() {
+		TextStyle initStyle;
+		if(TextStyleRepository.getSelectedStyle() == null) {
+			initStyle = backupStyle;
+		}
+		else{
+			initStyle = TextStyleRepository.getSelectedStyle();
+		}
+		return initStyle;
 	}
 }
