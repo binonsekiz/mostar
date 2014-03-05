@@ -96,18 +96,18 @@ public class TextModifyFacade {
 		TextStyle initialStyle = null;
 
 		//get the paragraph to be divided.
-		Paragraph paragraph1 = getParagraphWithIndex(lowerIndex);
+		Paragraph startParagraph = getParagraphWithIndex(lowerIndex);
 		Paragraph endParagraph = getParagraphWithIndex(higherIndex);
-		if(paragraph1 == endParagraph) {
-			initialStyle = paragraph1.getStyle();
+		if(startParagraph == endParagraph && style != startParagraph.getStyle()) {
+			initialStyle = startParagraph.getStyle();
 
 			//paragraph2 is the higher index result of the division. Will be divided later.
 			Paragraph paragraph2;
-			if(lowerIndex == paragraph1.getStartIndex()) {
-				paragraph2 = paragraph1;
+			if(lowerIndex == startParagraph.getStartIndex()) {
+				paragraph2 = startParagraph;
 			}
 			else {
-				paragraph2 = paragraph1.divideAtIndex(lowerIndex);
+				paragraph2 = startParagraph.divideAtIndex(lowerIndex);
 			}
 			paragraph2.setStyle(style);
 
@@ -116,22 +116,20 @@ public class TextModifyFacade {
 			if(higherIndex == paragraph2.getEndIndex()) {
 				paragraph3 = paragraph2;
 			}
-			else{
+			else {
 				paragraph3 = paragraph2.divideAtIndex(higherIndex);
 				paragraph3.setStyle(initialStyle);
 			}
-
-			System.out.println("\n\n\nDOCTEXT AFTER REFRESH:\n" + documentText.exportString());
 		}
-		else {
+		else if(startParagraph != endParagraph) {
 			Paragraph mergeStart = null;
 			Paragraph mergeEnd = null;
 
-			if(lowerIndex > paragraph1.getStartIndex() && paragraph1.getStyle() != style) {
-				mergeStart = paragraph1.divideAtIndex(lowerIndex);
+			if(lowerIndex > startParagraph.getStartIndex() && startParagraph.getStyle() != style) {
+				mergeStart = startParagraph.divideAtIndex(lowerIndex);
 			}
-			else{
-				mergeStart = paragraph1;
+			else {
+				mergeStart = startParagraph;
 			}
 			if(higherIndex < endParagraph.getEndIndex() && endParagraph.getStyle() != style) {
 				endParagraph.divideAtIndex(higherIndex);
@@ -144,13 +142,22 @@ public class TextModifyFacade {
 	}
 
 	private void mergeParagraphsWithStyle(TextStyle style, Paragraph mergeStart, Paragraph mergeEnd) {
-		for(int i = mergeStart.getIndexInParent(); i < mergeEnd.getIndexInParent() - 1;/* i++*/) {
-			System.out.println("Looping for merge paragraph, i: " + i + ", mergeStart: " + mergeStart.getIndexInParent() + ", mergeEnd: " + mergeEnd.getIndexInParent());
-			Paragraph p1 = documentText.getParagraph(i);
-			Paragraph p2 = documentText.getParagraph(i+1);
+		int mergeIndex = mergeStart.getIndexInParent();
+		int loopCount = mergeEnd.getIndexInParent() - mergeIndex;
+		for(int i = 0; i < loopCount; i++) {
+			Paragraph p1 = documentText.getParagraph(mergeIndex);
+			Paragraph p2 = documentText.getParagraph(mergeIndex + 1);
+			System.out.println("merging " + p1.getText() + " with " + p2.getText());
 			p1.mergeWith(p2);
 		}
 		mergeStart.setStyle(style);
+		
+		if(mergeIndex > 0) {
+			Paragraph pre = documentText.getParagraph(mergeIndex - 1);
+			if(pre.getStyle() == mergeStart.getStyle()) {
+				pre.mergeWith(mergeStart);
+			}
+		}
 	}
 
 	public void backspace() {
