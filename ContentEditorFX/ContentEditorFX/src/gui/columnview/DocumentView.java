@@ -22,6 +22,7 @@ import settings.GlobalAppSettings;
 import document.Column;
 import document.Document;
 import event.DocModifyScreenGuiFacade;
+import event.ShapeDrawFacade;
 import event.input.OverlayCanvas;
 import event.modification.ModificationType;
 import gui.ShapedPane;
@@ -202,7 +203,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 	private void initialPopulate() {
 		for(int i = 0; i < document.getColumns().size(); i++){
 			Column tempColumn = document.getColumns().get(i);
-			ColumnView tempColumnView = new ColumnView(this, guiFacade.getTextModifyFacade());
+			ColumnView tempColumnView = new ColumnView(this, guiFacade.getTextModifyFacade(), guiFacade.getShapeDrawFacade());
 			tempColumnView.associateWithColumn(tempColumn);
 			tempColumnView.setDocumentText(document.getDocumentText());
 			columnViews.add(tempColumnView);
@@ -371,4 +372,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 		return columnViews;
 	}
 
+	public ShapeDrawFacade getShapeDrawFacade() {
+		return guiFacade.getShapeDrawFacade();
+	}
 }

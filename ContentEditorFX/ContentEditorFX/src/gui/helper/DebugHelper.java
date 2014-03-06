@@ -40,7 +40,7 @@ public class DebugHelper {
 		rects.add(rect4);
 		
 		debugPolygon1 = GeometryHelper.getRegularPolygon(200, 200, 160, 6, 30);
-		debugPolygon2 = GeometryHelper.getRegularPolygon(200, 200, 200, 3, 0);
+		debugPolygon2 = GeometryHelper.getRegularPolygon(200, 600, 200, 3, 0);
 		debugPolygon3 = GeometryHelper.getRegularPolygon(250, 250, 240, 4, 45);
 		debugPolygon4 = GeometryHelper.getRegularPolygon(250, 250, 200, 64, 0);
 		debugPolygon5 = GeometryHelper.getRegularPolygon(350, 400, 350, 4, 45);

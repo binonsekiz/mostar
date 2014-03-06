@@ -125,7 +125,7 @@ public class DocWidgetToolbar extends FlowPane{
 		drawGraphicButton.getStyleClass().add("last");
 		
 		shapePane.getStyleClass().add("segmented-button-bar-class");
-//		shapePane.getChildren().addAll(drawShapeButton, drawTableButton, drawSignButton, drawGraphicButton);
+		shapePane.getChildren().addAll(drawShapeButton, drawTableButton, drawSignButton, drawGraphicButton);
 	}
 
 	private void initWidgetControls() {
@@ -315,6 +315,13 @@ public class DocWidgetToolbar extends FlowPane{
 					String arg1, String arg2) {
 				if(styleChangeEventsDisabled) return;
 				guiFacade.changeFontSize(arg2);
+			}
+		});
+		
+		drawShapeButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				guiFacade.drawShapeButtonPressed();
 			}
 		});
 	}

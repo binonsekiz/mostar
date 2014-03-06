@@ -136,7 +136,10 @@ public class LayoutMachine {
 		}
 
 		System.out.println("\n***Line Segment will return: " + retVal + "\n");
-		lastUsedSegment = retVal.cpy();	
+		if(retVal != null) {
+			lastUsedSegment = retVal.cpy();	
+		}
+
 		return retVal;
 	}
 

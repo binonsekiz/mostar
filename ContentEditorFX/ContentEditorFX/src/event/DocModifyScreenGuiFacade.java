@@ -21,6 +21,7 @@ import control.StyleModifyFacade;
 import control.TextModifyFacade;
 import control.WidgetModifyFacade;
 import document.Document;
+import event.ShapeDrawFacade.ShapeDrawingMode;
 import event.input.KeyboardManager;
 
 public class DocModifyScreenGuiFacade {
@@ -36,6 +37,7 @@ public class DocModifyScreenGuiFacade {
 	private TextModifyFacade textModifyFacade;
 	private WidgetModifyFacade widgetModifyFacade;
 	private StyleModifyFacade styleModifyFacade;
+	private ShapeDrawFacade shapeDrawFacade;
 	
 	private Caret caret;
 	
@@ -53,6 +55,7 @@ public class DocModifyScreenGuiFacade {
 		textModifyFacade = new TextModifyFacade();
 		widgetModifyFacade = new WidgetModifyFacade(this);
 		styleModifyFacade = new StyleModifyFacade();
+		shapeDrawFacade = new ShapeDrawFacade();
 		caret = new Caret(textModifyFacade);
 		textModifyFacade.setCaret(caret);
 		KeyboardManager.instance.setTextFacade(textModifyFacade);
@@ -232,6 +235,14 @@ public class DocModifyScreenGuiFacade {
 
 	public void updateVisualStyleControls() {
 		docWidgetToolbar.updateVisualStyleControls();
+	}
+
+	public void drawShapeButtonPressed() {
+		shapeDrawFacade.changeShapeDrawingMode(ShapeDrawingMode.PolygonDrawing);
+	}
+
+	public ShapeDrawFacade getShapeDrawFacade() {
+		return shapeDrawFacade;
 	}
 
 }

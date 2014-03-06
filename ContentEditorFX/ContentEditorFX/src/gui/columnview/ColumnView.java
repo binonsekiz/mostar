@@ -27,6 +27,8 @@ import document.Column;
 import document.DocumentText;
 import document.layout.LayoutMachine;
 import document.widget.Widget;
+import event.ShapeDrawFacade;
+import event.ShapeDrawFacade.ShapeDrawingMode;
 import event.modification.ModificationInstance;
 import event.modification.ModificationType;
 import event.modification.ResizeModification;
@@ -44,6 +46,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	
 	private DocumentView parent;
 	private SimpleObjectProperty<DocumentText> text;
+	private ShapeDrawFacade shapeDrawFacade;
 	private TextModifyFacade textModifyFacade;
 		
 	private boolean isRefreshInProgress;
@@ -52,11 +55,12 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	private ArrayList<ParagraphOnCanvas> paragraphsOnCanvas;
 
 	private HashMap<ShapedPane, ModificationInstance> modificationHash;
-	
-	public ColumnView(DocumentView parent, TextModifyFacade textModifyFacade){
+
+	public ColumnView(DocumentView parent, TextModifyFacade textModifyFacade, ShapeDrawFacade shapeDrawFacade){
 		System.out.println("ColumnView initialized");
 		this.parent = parent;
 		this.textModifyFacade = textModifyFacade;
+		this.shapeDrawFacade = shapeDrawFacade;
 		selfReference = this;
 		isRefreshInProgress = false;
 		canvas = new Canvas();
@@ -73,7 +77,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	}
 	
 	private void populateParagraphViews() {
-		for(int i = 0; i < text.get().getParagraphSets().size(); i++) {
+		for(int i = 0; i < text.get().getParagraphSetsInColumn(this.column).size(); i++) {
 			paragraphsOnCanvas.add(new ParagraphOnCanvas(this, text.get().getParagraphSet(i), textModifyFacade));
 		}
 	}
@@ -128,26 +132,47 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	}
 	
 	protected void onMouseMoved(MouseEvent event) {
-		for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
-			if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
-				paragraphsOnCanvas.get(i).mouseMoved(event);
+		ShapeDrawFacade facade = parent.getShapeDrawFacade();
+		if(facade.getDrawingMode() == ShapeDrawingMode.Off) {
+			for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
+				if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
+					paragraphsOnCanvas.get(i).mouseMoved(event);
+				}
 			}
+		}
+		else{
+			facade.onMouseMoved(event, selfReference);
+			refreshOverlayCanvas();
 		}
 	}
 
 	protected void onMouseClick(MouseEvent event) {
-		for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
-			if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
-				paragraphsOnCanvas.get(i).mouseClick(event);
+		ShapeDrawFacade facade = parent.getShapeDrawFacade();
+		if(facade.getDrawingMode() == ShapeDrawingMode.Off) {
+			for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
+				if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
+					paragraphsOnCanvas.get(i).mouseClick(event);
+				}
 			}
+		}
+		else {
+			facade.onMouseClick(event, selfReference);
+			refreshOverlayCanvas();
 		}
 	}
 
 	protected void onMouseDragged(MouseEvent event) {
-		for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
-			if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
-				paragraphsOnCanvas.get(i).mouseDrag(event);
+		ShapeDrawFacade facade = parent.getShapeDrawFacade();
+		if(facade.getDrawingMode() == ShapeDrawingMode.Off) {
+			for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
+				if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
+					paragraphsOnCanvas.get(i).mouseDrag(event);
+				}
 			}
+		}
+		else {
+			facade.onMouseDragged(event, selfReference);
+			refreshOverlayCanvas();
 		}
 	}
 
@@ -208,6 +233,10 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		
 		if(GlobalAppSettings.areGuiDebugGuidelinesVisible()){
 			drawWidgetGuidelines();
+		}
+		
+		if(parent.getShapeDrawFacade().getDrawingMode() != ShapeDrawingMode.Off) {
+			parent.getShapeDrawFacade().paintCurrentShape(overlayContext);
 		}
 		
 		overlayContext.restore();
