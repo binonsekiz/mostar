@@ -2,6 +2,7 @@ package document;
 
 import geometry.GeometryHelper;
 import geometry.libgdxmath.Polygon;
+import gui.ShapedPane;
 
 import java.util.ArrayList;
 
@@ -20,8 +21,9 @@ public class Column {
 	private SimpleObjectProperty<PageInsets> insets;
 	private ArrayList<Widget> widgets;	
 	private Image background;
-	private Polygon shape;
+	private Polygon columnShape;
 	private ArrayList<ParagraphSet> paragraphSets;
+	private ArrayList<Polygon> shapes;
 	
 	private LayoutMachine layoutMachine;
 		
@@ -39,13 +41,14 @@ public class Column {
 		this.pageSize = measurement;
 		widgets = new ArrayList<Widget>();
 		paragraphSets = new ArrayList<ParagraphSet>();
+		shapes = new ArrayList<Polygon>();
 		
 		this.insets = new SimpleObjectProperty<PageInsets>();
 		this.insets.addListener(new ChangeListener<PageInsets>() {
 			@Override
 			public void changed(ObservableValue<? extends PageInsets> arg0,
 					PageInsets arg1, PageInsets arg2) {
-				shape = GeometryHelper.getRectanglePolygon(arg2.getActualWidth(), arg2.getActualHeight());
+				columnShape = GeometryHelper.getRectanglePolygon(arg2.getActualWidth(), arg2.getActualHeight());
 			}
 		});
 		this.insets.set(newInsets);
@@ -102,7 +105,7 @@ public class Column {
 	}
 
 	public Polygon getPaneShape() {
-		return shape;
+		return columnShape;
 	}
 
 	public LayoutMachine getLayoutMachine() {
@@ -115,5 +118,13 @@ public class Column {
 
 	public void removeParagraphSet(ParagraphSet paragraphSet) {
 		paragraphSets.remove(paragraphSet);
+	}
+
+	public void addShape(Polygon finalPolygon) {
+		shapes.add(finalPolygon);
+	}
+
+	public ArrayList<Polygon> getShapes() {
+		return shapes;
 	}
 }

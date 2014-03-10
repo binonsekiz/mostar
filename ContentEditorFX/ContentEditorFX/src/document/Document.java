@@ -17,12 +17,11 @@ public class Document {
 	public Document(){
 		System.out.println("Document initialized");
 		instance = this;
-		this.measurement = PageSpecs.P640x768;
+		this.measurement = PageSpecs.MiniTest;
 		this.pageInsets = new PageInsets(measurement);
 		
 		columns = new ArrayList<Column>();
 		columns.add(new Column(measurement, pageInsets));
-	//	columns.add(new Column(PageSpecs.P1280x768, pageInsets));
 		
 		globalText = new DocumentText(this);
 		

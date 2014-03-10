@@ -9,6 +9,7 @@ public class PageSpecs {
 	public static final Measurement LetterH = new Measurement(215.9f, 279.4f);
 	public static final Measurement P1280x768 = new Measurement(1280, 768);
 	public static final Measurement P640x768 = new Measurement(640, 768);
+	public static final Measurement MiniTest = new Measurement(480, 640);
 	
 	public static final Measurement DefaultMeasurement = P640x768;
 	

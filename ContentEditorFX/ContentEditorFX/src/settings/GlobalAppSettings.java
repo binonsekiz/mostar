@@ -26,6 +26,7 @@ public class GlobalAppSettings {
 	public static final float ignoreValuesBelowLarge = 5f;
 	public static final double caretBlinkRate = 1000;
 	public static final float caretMovementTime = 100f;
+	public static final float pointerJumpSize = 10;
 	public static double frameWidth = 1080;
 	public static double frameHeight = 960;
 	private static boolean guiDebugGuidelines;

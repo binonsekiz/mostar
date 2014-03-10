@@ -1,6 +1,8 @@
 package gui.columnview;
 
+import geometry.libgdxmath.Polygon;
 import gui.ShapedPane;
+import gui.docmodify.DocDebugView;
 import gui.helper.DebugHelper;
 import gui.widget.WidgetModifier;
 
@@ -50,6 +52,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	private TextModifyFacade textModifyFacade;
 		
 	private boolean isRefreshInProgress;
+	private int selectedShapeIndex;
 	
 	private ArrayList<ShapedPane> visuals;
 	private ArrayList<ParagraphOnCanvas> paragraphsOnCanvas;
@@ -59,17 +62,19 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	public ColumnView(DocumentView parent, TextModifyFacade textModifyFacade, ShapeDrawFacade shapeDrawFacade){
 		System.out.println("ColumnView initialized");
 		this.parent = parent;
+		this.shapeDrawFacade = shapeDrawFacade;
 		this.textModifyFacade = textModifyFacade;
 		this.shapeDrawFacade = shapeDrawFacade;
 		selfReference = this;
 		isRefreshInProgress = false;
+		selectedShapeIndex = -1;
 		canvas = new Canvas();
 		canvas.toBack();
 		context = canvas.getGraphicsContext2D();
 		context.setStroke(Color.BLACK);
 		visuals = new ArrayList<ShapedPane>();
 		paragraphsOnCanvas = new ArrayList<ParagraphOnCanvas>();
-		this.setId("columnview-selected");
+		//this.setId("columnview-selected");
 		this.text = new SimpleObjectProperty<DocumentText>();
 		modificationHash = new HashMap<ShapedPane, ModificationInstance>();
 		initEvents();
@@ -95,7 +100,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		this.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
 		    @Override
 		    public void handle(MouseEvent event) {
-		        selfReference.onMouseClick(event);
+		        selfReference.onMouseEvent(event);
 		        parent.refocusTextField();
 		        DebugHelper.mouseClickEvent();
 		    }
@@ -104,14 +109,14 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		this.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent> () {
 			@Override
 			public void handle(MouseEvent arg0) {
-				selfReference.onMouseMoved(arg0);
+				selfReference.onMouseEvent(arg0);
 			}
 		});
 		
 		this.addEventFilter(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent arg0) {
-				selfReference.onMouseDragged(arg0);
+				selfReference.onMouseEvent(arg0);
 				DebugHelper.mouseDragEvent();
 			}
 		});
@@ -131,51 +136,57 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		});
 	}
 	
-	protected void onMouseMoved(MouseEvent event) {
-		ShapeDrawFacade facade = parent.getShapeDrawFacade();
-		if(facade.getDrawingMode() == ShapeDrawingMode.Off) {
-			for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
-				if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
-					paragraphsOnCanvas.get(i).mouseMoved(event);
-				}
-			}
+	protected void onMouseEvent(MouseEvent event) {
+		if(shapeDrawFacade.getDrawingMode() == ShapeDrawingMode.Off) {
+			checkParagraphs(event);
+			checkShapes(event);
 		}
 		else{
-			facade.onMouseMoved(event, selfReference);
+			shapeDrawFacade.onMouseEvent(event, selfReference);
 			refreshOverlayCanvas();
 		}
 	}
 
-	protected void onMouseClick(MouseEvent event) {
-		ShapeDrawFacade facade = parent.getShapeDrawFacade();
-		if(facade.getDrawingMode() == ShapeDrawingMode.Off) {
-			for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
-				if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
-					paragraphsOnCanvas.get(i).mouseClick(event);
+	private void checkShapes(MouseEvent event) {
+		float mx = (float) event.getX();
+		float my = (float) event.getY();
+		float smallestAreaSize = Float.MAX_VALUE;
+		int smallestAreaIndex = -1;
+		for(int i = 0; i < column.getShapes().size(); i++) {
+			Polygon p = column.getShapes().get(i);
+			if(p.contains(mx, my)) {
+				float area = p.area();
+				if(area < smallestAreaSize) {
+					smallestAreaSize = area;
+					smallestAreaIndex = i;
 				}
 			}
 		}
-		else {
-			facade.onMouseClick(event, selfReference);
+		
+		if(selectedShapeIndex != smallestAreaIndex) {
+			this.selectedShapeIndex = smallestAreaIndex;
 			refreshOverlayCanvas();
+			DocDebugView.instance.setDebugText(smallestAreaSize + "", 3);
 		}
 	}
 
-	protected void onMouseDragged(MouseEvent event) {
-		ShapeDrawFacade facade = parent.getShapeDrawFacade();
-		if(facade.getDrawingMode() == ShapeDrawingMode.Off) {
-			for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
-				if(paragraphsOnCanvas.get(i).containsCoordinate((float)event.getX(), (float)event.getY())) {
+	private void checkParagraphs(MouseEvent event) {
+		float mx = (float) event.getX();
+		float my = (float) event.getY();
+		for(int i = 0; i < paragraphsOnCanvas.size(); i++) {
+			if(paragraphsOnCanvas.get(i).containsCoordinate(mx, my)) {
+				if(event.getEventType() == MouseEvent.MOUSE_MOVED) {
+					paragraphsOnCanvas.get(i).mouseMoved(event);
+				}
+				else if(event.getEventType() == MouseEvent.MOUSE_PRESSED) {
+					paragraphsOnCanvas.get(i).mouseClick(event);
+				}
+				else if(event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
 					paragraphsOnCanvas.get(i).mouseDrag(event);
 				}
 			}
 		}
-		else {
-			facade.onMouseDragged(event, selfReference);
-			refreshOverlayCanvas();
-		}
 	}
-
 	
 	public void associateWithColumn(Column column){
 		this.column = column;
@@ -239,14 +250,16 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 			parent.getShapeDrawFacade().paintCurrentShape(overlayContext);
 		}
 		
+		if(selectedShapeIndex >= 0) {
+			overlayContext.setStroke(Color.GREEN);
+			overlayContext.setLineWidth(1.5f);
+			column.getShapes().get(selectedShapeIndex).draw(overlayContext);
+		}
+		
 		overlayContext.restore();
 	}
 	
 	private void refreshTextValuesOnly() {
-		clearTextCanvas();
-		if(parent.isInsetVisible()) {
-			drawInsets();
-		}
 		for(ParagraphOnCanvas paragraph: paragraphsOnCanvas) {
 			paragraph.refresh();
 		}
@@ -256,9 +269,17 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		clearTextCanvas();
 		canvas.toBack();
 		drawInsets();
+		drawShapes();
 		refreshTextValuesOnly();
 	}
 	
+	private void drawShapes() {
+		context.setStroke(Color.DARKRED);
+		for(int i = 0; i < column.getShapes().size(); i++) {
+			column.getShapes().get(i).draw(context);
+		}
+	}
+
 	/**
 	 * should only be called while drawing
 	 */

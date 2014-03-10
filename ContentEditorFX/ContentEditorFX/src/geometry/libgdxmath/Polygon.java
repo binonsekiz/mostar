@@ -324,7 +324,7 @@ public class Polygon {
 			area -= vertices[x2] * vertices[y1];
 		}
 		area *= 0.5f;
-		return area;
+		return Math.abs(area);
 	}
 
 	/** Returns an axis-aligned bounding box of this polygon.

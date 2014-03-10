@@ -204,11 +204,6 @@ public class DocModifyScreenGuiFacade {
 		documentView.refresh();
 	}
 
-/*	public void debugAssignText(String value) {
-		documentView.setDebugText(value);
-		documentView.refresh();
-	}
-*/
 	public void refocusTextField() {
 		docBottomToolbar.refocusOnTextField();
 	}
