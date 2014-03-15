@@ -47,6 +47,7 @@ public class DocBottomToolbar extends ToolBar{
 	
 	public DocBottomToolbar(){
 		isDebugLabelVisible = true;
+		this.setId("docwidget-toolbar");
 		initializeGui();
 		initializeEvents();
 		activePage = 1;

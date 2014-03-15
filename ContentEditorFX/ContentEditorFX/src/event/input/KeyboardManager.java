@@ -18,9 +18,6 @@ public class KeyboardManager implements EventHandler<KeyEvent>{
 	}
 
 	public void keyPressed(KeyEvent event) {
-//		System.out.println("Global key pressed (TEXT): \t" + event.getText());
-//		System.out.println("Global key pressed (CODE): \t" + event.getCode());
-//		System.out.println("Global key pressed (CHAR): \t" + event.getCharacter());
 		System.out.println("\n\n\n\n0000000\nKeyPressed\n0000000\n\n\n");
 		if(writingMode) {
 			KeyCode code = event.getCode();
@@ -36,13 +33,17 @@ public class KeyboardManager implements EventHandler<KeyEvent>{
 			else if(code == KeyCode.RIGHT){
 				caret.rightKey(false, false);
 			}
-		//	else if(code.isLetterKey()){
+			else if(event.getCode() == KeyCode.SPACE) {
+				textFacade.insertString(" ");
+			}
+			else if(code.isLetterKey()) {
 				textFacade.insertString(event.getText());
-	//		}
-	//		else{
-		//		System.out.println("UNDEFINED KEY PRESSED");
-		//	}
+			}
+			else{
+				System.out.println("UNDEFINED KEY PRESSED");
+			}
 		}
+		event.consume();
 	}
 
 	public void keyReleased(KeyEvent event) {
@@ -50,12 +51,13 @@ public class KeyboardManager implements EventHandler<KeyEvent>{
 //		System.out.println("Global key released (CODE): " + event.getCode());
 //		System.out.println("Global key released (CHAR): \t" + event.getCharacter());
 		
-		if(event.getCode() == KeyCode.SPACE) {
-			textFacade.insertString(" ");
-		}
-		else if(event.getCode() == KeyCode.TAB) {
+	//	if(event.getCode() == KeyCode.SPACE) {
+		//	textFacade.insertString(" ");
+		//}
+		//else 
+		/*if(event.getCode() == KeyCode.TAB) {
 			textFacade.insertString("\t");
-		}
+		}*/
 	}
 
 	public void keyTyped(KeyEvent event) {

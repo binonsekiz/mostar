@@ -1,10 +1,16 @@
 package document.widget;
 
+import geometry.GeometryHelper;
+import geometry.libgdxmath.Polygon;
+
 
 public class SingleImageWidget extends Widget{
 	
-	public SingleImageWidget(double x, double y, double d, double e){
-		setBorders(x, y, d, e);
+	public SingleImageWidget(double x, double y, double width, double height){
+		Polygon shape = GeometryHelper.getRectanglePolygon(width, height); 
+		shape.setPositionX((float) x);
+		shape.setPositionY((float) y);
+		setShape(shape);
 	}
 
 	@Override

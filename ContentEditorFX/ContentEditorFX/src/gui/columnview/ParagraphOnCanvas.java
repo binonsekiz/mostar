@@ -79,7 +79,7 @@ public class ParagraphOnCanvas {
 	
 	public void refreshOverlay() {
 		GraphicsContext context = parent.getOverlayContext();
-		textModifyFacade.getCaret().drawCaret(context);
+		textModifyFacade.getCaret().drawCaret(parent.getBoundsInParent().getMinX(), parent.getBoundsInParent().getMinY(), context);
 	}
 
 	public String getText() {

@@ -64,7 +64,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		debugObjectCount = debugObjectCounter;
 		debugObjectCounter++;
 		
-		System.out.println("Line on Canvas initialized: " + debugObjectCount);
+	//	System.out.println("Line on Canvas initialized: " + debugObjectCount);
 		this.parent = parent;
 		this.parentParagraph = parentParagraph;
 		this.textModifyFacade = textModifyFacade;
@@ -90,8 +90,8 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	}
 	
 	public void setLineSegment(LineSegment line) {
-		layoutX = line.getFirstPoint().x;
-		layoutY = line.getFirstPoint().y;
+	//	layoutX = line.getFirstPoint().x;
+	//	layoutY = line.getFirstPoint().y;
 		this.angle = line.getAngle();
 		this.preferredWidthProperty.set(line.getLength());
 		width = (float) line.getLength();
@@ -227,9 +227,9 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 					layoutY = arg0.getValue().getLeftPoint().y;
 					setPreferredWidth(arg0.getValue().getLength());
 					shape = GeometryHelper.getRectanglePolygon(lineSegmentProperty.get(), height, angle);
-					lowerLineSegment = arg0.getValue().buildLowerLineSegment(height, angle);
+					lowerLineSegment = arg0.getValue().buildLowerLineSegment(height);
 					
-					System.out.println("LineOnCanvas " + debugObjectCount + " segment change: " + arg2 + ", text line: " + textLine + ", text: " + parentParagraph.getText(textLine));
+	//				System.out.println("LineOnCanvas " + debugObjectCount + " segment change: " + arg2 + ", text line: " + textLine + ", text: " + parentParagraph.getText(textLine));
 				}
 			}
 		});

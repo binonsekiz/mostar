@@ -26,7 +26,7 @@ public class DocumentText {
 		set1.setParagraphSpace(DebugHelper.paragraphSpaces.get(1));
 		
 		Paragraph paragraph = new Paragraph(this, 0);
-		paragraph.setText("aaaaa bbbbb ccccc ddddd eeeee fffff ggggg");
+		paragraph.setText("aaaaa bbbbb");
 		addParagraph(paragraph, set1);
 		paragraph.setStyle(DebugHelper.debugStyle1);
 		

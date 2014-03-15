@@ -1,13 +1,18 @@
 package document.widget;
 
+import geometry.GeometryHelper;
+import geometry.libgdxmath.Polygon;
 import javafx.scene.image.Image;
 
 public class ImageGalleryWidget extends Widget{
 	
 	private Image[] images;
 	
-	public ImageGalleryWidget(double x, double y, double d, double e){
-		setBorders(x, y, d, e);
+	public ImageGalleryWidget(double x, double y, double width, double height){
+		Polygon shape = GeometryHelper.getRectanglePolygon(width, height); 
+		shape.setPositionX((float) x);
+		shape.setPositionY((float) y);
+		setShape(shape);
 		images = new Image[9];
 	}
 	

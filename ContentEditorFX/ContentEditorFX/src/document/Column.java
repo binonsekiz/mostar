@@ -26,16 +26,8 @@ public class Column {
 	private ArrayList<Polygon> shapes;
 	
 	private LayoutMachine layoutMachine;
-		
-	protected Column(){
-		this(PageSpecs.DefaultMeasurement);
-	}
 	
-	protected Column(Measurement measurement){
-		this(measurement, PageInsets.Default);
-	}
-	
-	protected Column(Measurement measurement, PageInsets newInsets){
+	public Column(Measurement measurement, PageInsets newInsets){
 		System.out.println("Column initialized");
 		debugInstance = this;
 		this.pageSize = measurement;
@@ -77,7 +69,6 @@ public class Column {
 	
 	public void addWidget(Widget widget){
 		this.widgets.add(widget);
-		layoutMachine.addSingleElement(widget.getShape());
 	}
 	
 	public void removeWidget(Widget widget){
@@ -126,5 +117,14 @@ public class Column {
 
 	public ArrayList<Polygon> getShapes() {
 		return shapes;
+	}
+
+	public ArrayList<Polygon> getShapesAndWidgetPolygons() {
+		ArrayList<Polygon> shapesAndWidgets = new ArrayList<Polygon>();
+		for(int i = 0; i < widgets.size(); i++) {
+			shapesAndWidgets.add(widgets.get(i).getShape());
+		}
+		shapesAndWidgets.addAll(shapes);
+		return shapesAndWidgets;
 	}
 }

@@ -38,6 +38,10 @@ public class ShapeDrawFacade {
 		}
 	}
 	
+	public boolean isCallerColumnView(ColumnView caller2) {
+		return caller == caller2;
+	}
+	
 	public enum ShapeDrawingMode{
 		Off, PolygonDrawing, PolylineDrawing
 	}
@@ -47,7 +51,6 @@ public class ShapeDrawFacade {
 	}
 
 	private void mouseClicked(MouseEvent event, ColumnView source) {
-		System.out.println("Mouse click: " + source);
 		if(isWaitingForCaller) {
 			caller = source;
 			isWaitingForCaller = false;
@@ -71,8 +74,8 @@ public class ShapeDrawFacade {
 			vertices[2 * i + 1] = currentShapePoints.get(i).y;
 		}
 		Polygon finalPolygon = new Polygon(vertices);
-		System.out.println("finalizing polygon");
 		caller.getColumn().addShape(finalPolygon);
+		System.out.println("\n\n00000000000\nADDING SHAPE\n000000000\n\n " + finalPolygon + "\n\n00000000000\n\n");
 		mode = ShapeDrawingMode.Off;
 		caller.refresh();
 		caller = null;
@@ -80,7 +83,6 @@ public class ShapeDrawFacade {
 	}
 
 	private void mouseMovedOrDragged(MouseEvent event, ColumnView source) {
-		System.out.println("Mouse move: " + source);
 		if(isWaitingForCaller) {
 			caller = source;
 			isWaitingForCaller = false;

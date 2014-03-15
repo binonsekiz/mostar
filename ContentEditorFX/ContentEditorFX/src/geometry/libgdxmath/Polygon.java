@@ -1,5 +1,6 @@
 package geometry.libgdxmath;
 
+import geometry.libgdxmath.Polygon.LineSegmentIntersection;
 import javafx.scene.canvas.GraphicsContext;
 import settings.GlobalAppSettings;
 
@@ -538,6 +539,33 @@ public class Polygon {
 		public String toString() {
 			return "line segment 1: " + segment1 + ", segment 2: " + segment2;
 		}
+
+		public LineSegmentIntersection getProjection(LineSegmentIntersection lowerIntersection) {
+			if(this.segment1 == null || lowerIntersection.segment1 == null)
+				return null;
+			LineSegmentIntersection retVal = new LineSegmentIntersection();
+			
+			LineSegment[] segments = new LineSegment[4];
+			segments[0] = Intersector.projectOnLineSegment(segment1, lowerIntersection.segment1);
+			segments[1] = Intersector.projectOnLineSegment(segment2, lowerIntersection.segment1);
+			segments[2] = Intersector.projectOnLineSegment(segment1, lowerIntersection.segment2);
+			segments[3] = Intersector.projectOnLineSegment(segment2, lowerIntersection.segment2);
+			
+			boolean isFirstUsed = false;
+			for(int i = 0; i < 4; i++) {
+				if(segments[i] != null && segments[i].getLength() > GlobalAppSettings.ignoreValuesBelow) {
+					if(isFirstUsed == false) {
+						retVal.segment1 = segments[i];
+						isFirstUsed = true;
+					}
+					else {
+						retVal.segment2 = segments[i];
+					}
+				}
+			}
+			
+			return retVal;
+		}
 	}
 
 	public void setPositionX(float floatValue) {
@@ -712,5 +740,21 @@ public class Polygon {
 
 	public void draw(GraphicsContext context) {
 		context.strokePolygon(getTransformedXVertices(), getTransformedYVertices(), getVertices().length / 2);
+	}
+
+	/**
+	 * Just like intersect with line segment, however this intersects a rectangular area with this polygon
+	 * @param segment
+	 * @param height
+	 * @return
+	 */
+	public LineSegmentIntersection intersectWithHeight(LineSegment segment, float height) {
+		LineSegment lowerSegment = segment.buildLowerLineSegment(height);
+		LineSegmentIntersection intersection = intersect(segment);
+		LineSegmentIntersection lowerIntersection = intersect(lowerSegment);
+		
+		LineSegmentIntersection retVal = intersection.getProjection(lowerIntersection);
+				
+		return retVal;
 	}
 }

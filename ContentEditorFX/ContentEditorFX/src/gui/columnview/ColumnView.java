@@ -37,8 +37,9 @@ import event.modification.ResizeModification;
 import event.modification.TranslateModification;
 
 public class ColumnView extends Pane implements VisualView, CanvasOwner{
-	
+	private static int totalCount = 0;
 	private ColumnView selfReference;
+	private int debugId;
 	
 	protected Column column;
 	
@@ -60,7 +61,9 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	private HashMap<ShapedPane, ModificationInstance> modificationHash;
 
 	public ColumnView(DocumentView parent, TextModifyFacade textModifyFacade, ShapeDrawFacade shapeDrawFacade){
-		System.out.println("ColumnView initialized");
+		totalCount ++;
+		debugId = totalCount;
+		System.out.println("ColumnView initialized " + debugId);
 		this.parent = parent;
 		this.shapeDrawFacade = shapeDrawFacade;
 		this.textModifyFacade = textModifyFacade;
@@ -102,6 +105,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		    public void handle(MouseEvent event) {
 		        selfReference.onMouseEvent(event);
 		        parent.refocusTextField();
+		        selfReference.requestFocus();
 		        DebugHelper.mouseClickEvent();
 		    }
 		});
@@ -205,10 +209,10 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 				@Override
 			    public void handle(ActionEvent event) {
 			        refreshAll();
+			        isRefreshInProgress = false;
 			    }
 			}));
 			timer.play();
-			isRefreshInProgress = false;
 		}
 	}
 
@@ -226,10 +230,15 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 
 	public void refreshOverlayCanvas(){
 		overlayContext = parent.getGraphicsContext();
-		overlayContext.clearRect(0, 0, overlayContext.getCanvas().getWidth(), overlayContext.getCanvas().getHeight());
 		
 		overlayContext.save();
-		overlayContext.translate(canvas.getBoundsInParent().getMinX(), canvas.getBoundsInParent().getMinY());
+		overlayContext.clearRect(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY(), column.getWidth(), column.getHeight());
+		
+		overlayContext.setStroke(Color.FIREBRICK);
+		overlayContext.setLineWidth(2);
+		overlayContext.strokeRect(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY(), column.getWidth(), column.getHeight());
+		
+		overlayContext.translate(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY());
 		
 		for(int i = 0; i < visuals.size(); i++){
 			VisualView view = visuals.get(i);
@@ -246,7 +255,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 			drawWidgetGuidelines();
 		}
 		
-		if(parent.getShapeDrawFacade().getDrawingMode() != ShapeDrawingMode.Off) {
+		if(parent.getShapeDrawFacade().getDrawingMode() != ShapeDrawingMode.Off && parent.getShapeDrawFacade().isCallerColumnView(this)) {
 			parent.getShapeDrawFacade().paintCurrentShape(overlayContext);
 		}
 		
@@ -386,10 +395,18 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	}
 
 	public int getStartIndex() {
+		if(paragraphsOnCanvas.size() == 0) {
+			//TODO: return previous columns end index
+			return 0;
+		}
 		return paragraphsOnCanvas.get(0).getStartIndex();
 	}
 
 	public int getEndIndex() {
+		if(paragraphsOnCanvas.size() == 0){
+			//TODO: return previous columns end index
+			return 0;
+		}
 		return paragraphsOnCanvas.get(paragraphsOnCanvas.size() - 1).getEndIndex();
 	}
 	

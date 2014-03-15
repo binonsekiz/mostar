@@ -123,36 +123,14 @@ public class GFrame extends Application {
 
 	private void initializeMainScene() {
 		mainStage.setTitle("Mostar - Sürüm 0.0.2 Demo - 15.08.2013");
-		mainStage.setMinHeight(GlobalAppSettings.frameHeight);
-		mainStage.setMinWidth(GlobalAppSettings.frameWidth);
+		mainStage.setMinHeight(GlobalAppSettings.minFrameHeight);
+		mainStage.setMinWidth(GlobalAppSettings.minFrameWidth);
 		mainStage.setOpacity(0);
 		sceneChangePane = new StackPane();
-//		sceneChangePane.setId("scenechange-pane");
-		sceneChangePane.setMinSize(GlobalAppSettings.frameWidth, GlobalAppSettings.frameHeight);
+		sceneChangePane.setMinSize(GlobalAppSettings.minFrameWidth, GlobalAppSettings.minFrameHeight);
 		mainScene = new Scene(sceneChangePane, GlobalAppSettings.frameWidth, GlobalAppSettings.frameHeight, Color.WHITE);
 		mainScene.getStylesheets().add("gui/styles/skin1.css");
 		mainStage.setScene(mainScene);
-		
-	/*	mainScene.setOnKeyPressed(new EventHandler<KeyEvent>(){
-			@Override
-			public void handle(KeyEvent event) {
-				keyboardManager.keyPressed(event);
-			}
-		});
-		
-		mainScene.setOnKeyReleased(new EventHandler<KeyEvent>(){
-			@Override
-			public void handle(KeyEvent event) {
-				keyboardManager.keyReleased(event);
-			}
-		});
-		
-		mainScene.setOnKeyTyped(new EventHandler<KeyEvent>(){
-			@Override
-			public void handle(KeyEvent event) {
-				keyboardManager.keyTyped(event);
-			}
-		});*/
 		
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardManager);
 		mainScene.addEventHandler(KeyEvent.KEY_RELEASED, keyboardManager);

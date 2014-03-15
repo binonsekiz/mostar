@@ -12,10 +12,17 @@ import gui.columnview.ParagraphOnCanvas;
 import java.util.ArrayList;
 import java.util.Collections;
 
+
+
+
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+//import javafx.scene.canvas.GraphicsContext;
+//import javafx.scene.paint.Color;
 import settings.GlobalAppSettings;
 import settings.GlobalAppSettings.LineFitOption;
+import sun.swing.BakedArrayList;
 import control.TextModifyFacade;
 import document.Column;
 import document.PageInsets;
@@ -26,7 +33,6 @@ import document.style.TextStyle;
 
 public class LayoutMachine {
 
-	private ArrayList<Polygon> shapes;
 	private PageInsets insets;
 	private boolean textDivisionMode;
 	private ParagraphSet paragraphSet;
@@ -39,7 +45,6 @@ public class LayoutMachine {
 	
 	public LayoutMachine(Column parent){
 		this.parent = parent;
-		shapes = new ArrayList<Polygon>();
 		backupSegments = new ArrayList<LineSegment>();
 		insets = parent.getInsets();
 	}
@@ -104,17 +109,23 @@ public class LayoutMachine {
 		
 		LineSegment retVal = null;
 		
+		System.out.println("\t%%%Options:");
+		System.out.println("\tLastUsedSegment: " + lastUsedSegment);
+		for(int i = 0; i < backupSegments.size(); i++) {
+			System.out.println("\tBackupSegment: " + backupSegments.get(i));
+		}
+		
 		if(lastUsedSegment != null) {
-			System.out.println("\tOption 1");
+			System.out.println("\tOption A1");
 			retVal = lastUsedSegment;
 		}
 		else if(backupSegments.size() > 0){
-			System.out.println("\tOption 2");
+			System.out.println("\tOption A2");
 			retVal  = backupSegments.get(0);
 			backupSegments.remove(0);
 		}
 		else {
-			System.out.println("\tOption 3");
+			System.out.println("\tOption A3");
 			float angle = paragraphSet.getAngle();
 			Vector2 endPoint = new Vector2(
 					(float) (lineSegmentOffset.x + insets.getPageWidth() * Math.cos(Math.toRadians(angle))), 
@@ -124,7 +135,6 @@ public class LayoutMachine {
 					lineSegmentOffset, endPoint);
 			
 			ArrayList<LineSegment> intersection = buildLineSegments(inputSegment, style.getLineSpacingHeight());
-			
 			if(intersection.size() > 0) {
 				retVal = intersection.get(0);
 				intersection.remove(0);
@@ -165,18 +175,16 @@ public class LayoutMachine {
 		
 		LineSegment initialSegment = inputSegment;
 		LineSegment trimmedSegment = initialSegment.trimToFitInPolygon(paragraphSet.getParagraphSpace().getShape());
-		debugPaintLineSegment(trimmedSegment, Color.ORANGE);
 		
 		System.out.println("\t\ttrimmed: " + trimmedSegment);
 		if(trimmedSegment == null) {
 			return segments;
 		}
 		
-		LineSegment trimmedSegmentLower = initialSegment.buildLowerLineSegment(height, inputSegment.getAngle());
+		LineSegment trimmedSegmentLower = initialSegment.buildLowerLineSegment(height);
 		LineSegment segmentToUse = null;
 		
 		trimmedSegmentLower = trimmedSegmentLower.trimToFitInPolygon(paragraphSet.getParagraphSpace().getShape());
-		debugPaintLineSegment(trimmedSegmentLower, Color.RED);
 		
 		if(trimmedSegmentLower == null) {
 			return segments;
@@ -188,7 +196,7 @@ public class LayoutMachine {
 		
 		if(GlobalAppSettings.selectedFitLineOption == LineFitOption.strictFit) {
 			if(trimmedSegment.getLength() > trimmedSegmentLower.getLength()) {
-				segmentToUse = trimmedSegmentLower.buildLowerLineSegment(-1 * height, inputSegment.getAngle());
+				segmentToUse = trimmedSegmentLower.buildLowerLineSegment(-1 * height);
 			}
 			else{
 				segmentToUse = trimmedSegment;
@@ -196,7 +204,7 @@ public class LayoutMachine {
 		}
 		else if(GlobalAppSettings.selectedFitLineOption == LineFitOption.averageFit) {
 			LineSegment averageSegment = trimmedSegment.averageLineSegment(trimmedSegmentLower);
-			averageSegment = averageSegment.buildLowerLineSegment(-0.5f * height, inputSegment.getAngle());
+			averageSegment = averageSegment.buildLowerLineSegment(-0.5f * height);
 			segmentToUse = averageSegment;
 		}
 		else {
@@ -205,63 +213,21 @@ public class LayoutMachine {
 				segmentToUse = trimmedSegment;
 			}
 			else{
-				segmentToUse = trimmedSegmentLower.buildLowerLineSegment(-1 * height, inputSegment.getAngle());
+				segmentToUse = trimmedSegmentLower.buildLowerLineSegment(-1 * height);
 			}
 		}
 		
 		segments.add(segmentToUse); 
-		LineSegment lowerLineSegment = null;
+		ArrayList<Polygon> shapes = parent.getShapesAndWidgetPolygons();
 		
-		for(int i = 0; i < shapes.size(); i++) {
-			Polygon shape = shapes.get(i);
-			for(int j = 0; j < segments.size(); j++) {
-				lowerLineSegment = segments.get(j).buildLowerLineSegment(height, inputSegment.getAngle());
-				LineSegmentIntersection intersection = shape.intersect(segments.get(j));
-				LineSegmentIntersection intersection2 = shape.intersect(lowerLineSegment);
-				
-				segments.remove(j);
-				if(intersection.getLineSegment1() != null && intersection.getLineSegment2() == null){
-					if(intersection2.getLineSegment1() != null && intersection2.getLineSegment2() == null){
-						if(intersection.getLineSegment1().getLength() < intersection2.getLineSegment1().getLength())
-							segments.add(0,intersection.getLineSegment1());
-						else{
-							segments.add(0, intersection2.getLineSegment1().buildLowerLineSegment(-1 * height, inputSegment.getAngle()));
-						}
-					}
-					else if(intersection2.getLineSegment1() == null && intersection2.getLineSegment2() == null){
-						
-					}
-					else if(intersection2.getLineSegment1().getLength() + intersection2.getLineSegment2().getLength() < intersection.getLineSegment1().getLength()){
-						segments.add(0,intersection2.getLineSegment1().buildLowerLineSegment(-1 * height, inputSegment.getAngle()));
-						segments.add(0,intersection2.getLineSegment2().buildLowerLineSegment(-1 * height, inputSegment.getAngle()));
-					}
-				}
-				else if(intersection.getLineSegment1() != null && intersection.getLineSegment2() != null){
-					if(intersection2.getLineSegment1() != null && intersection2.getLineSegment1().getLength() > intersection.getLineSegment1().getLength() + intersection.getLineSegment2().getLength()){
-						segments.add(0, intersection.getLineSegment1());
-						segments.add(0, intersection.getLineSegment2());
-					}
-					else if(intersection2.getLineSegment1() != null) {
-						if(Math.abs(intersection.getLineSegment1().getLength() - intersection2.getLineSegment1().getLength()) < GlobalAppSettings.ignoreValuesBelowLarge )
-							segments.add(0, intersection.getLineSegment1());
-					}
-					if(intersection2.getLineSegment2() != null) {
-						if(Math.abs(intersection.getLineSegment2().getLength() - intersection2.getLineSegment2().getLength()) < GlobalAppSettings.ignoreValuesBelowLarge )
-							segments.add(0, intersection.getLineSegment2());
-					}
-				}
-				else if(intersection.getLineSegment1() == null && intersection.getLineSegment2() == null){
-					j--;
-				}
-			}
-		}
+		modifySegmentsWRTShapes(segments, shapes, height);
 		
-		Collections.sort(segments);
 		System.out.println("\t\tBuilt those line segments: ");
 		
 		for(int i = 0; i < segments.size(); i++) {
 			System.out.print("\t\t\t");
 			System.out.println(i + ": " + segments.get(i));
+			debugPaintLineSegment(segments.get(i), Color.ORANGE);
 		}
 		
 		System.out.println("\t\t******************\n");
@@ -269,15 +235,49 @@ public class LayoutMachine {
 		return segments;
 	}
 	
-	public void addSingleElement(Polygon shape){
-		shapes.add(shape);
+	private void modifySegmentsWRTShapes(ArrayList<LineSegment> segments, ArrayList<Polygon> shapes, float height) {
+		if(segments.size() != 1) throw new RuntimeException("Expecting only one segment");
+		
+		for(int j = 0; j < shapes.size(); j++) {
+			Polygon shape = shapes.get(j);
+			for(int k = 0; k < segments.size(); k++) {
+				LineSegment segment = segments.get(k);
+				LineSegmentIntersection intersection = shape.intersectWithHeight(segment, height);
+				
+				segments.remove(k);
+				if(intersection == null) {
+					k--;
+				}
+				else if(intersection.getLineSegment1() != null && intersection.getLineSegment2() == null) {
+					segments.add(intersection.getLineSegment1());
+				}
+				else if(intersection.getLineSegment1() != null && intersection.getLineSegment2() != null) {
+					segments.add(intersection.getLineSegment1());
+					segments.add(intersection.getLineSegment2());
+				}
+				else if(intersection.getLineSegment1() == null && intersection.getLineSegment2() == null) {
+					k--;
+				}
+			}
+		}
+		Collections.sort(segments);
 	}
-	
+
+	private void debugPaintPolygon(Polygon polygon) {
+		GraphicsContext context = DocumentView.getDebugContext();
+		context.save();
+		context.setStroke(Color.BLUE);
+		context.setLineWidth(2);
+		polygon.draw(context);
+		context.restore();
+	}
+
 	private void disregardLastSegmentForFutureUse() {
 		lastUsedSegment = null;
 		System.out.println("LAST SEGMENT SET TO NULL");
-		backupSegments.clear();
-		moveToNextLine();
+		if(backupSegments.size() == 0) {
+			moveToNextLine();
+		}
 	}
 
 	private void reuseSegmentFromOffset(float trimAmount) {

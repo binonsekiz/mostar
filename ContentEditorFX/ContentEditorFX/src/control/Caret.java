@@ -159,7 +159,7 @@ public class Caret{
 		return caretParagraph == paragraph;
 	}
 	
-	public void drawCaret(GraphicsContext context) {
+	public void drawCaret(double xOffset, double yOffset, GraphicsContext context) {
 		if(!isCaretVisible) return;
 		if(anchor == caretIndex) {
 			context.setStroke(Color.BLACK);
@@ -167,12 +167,11 @@ public class Caret{
 			if(caretParagraph != null ) {
 				float lineAngle = caretParagraph.getParagraphSet().getAngle();
 				TextStyle style = caretParagraph.getStyle();
-				context.strokeLine(screenX, screenY, screenX + style.getLineSpacingHeight() * Math.sin(Math.toRadians(lineAngle)), screenY + style.getLineSpacingHeight() * Math.cos(Math.toRadians(lineAngle)));
+				context.strokeLine(screenX + xOffset, screenY + yOffset, screenX + xOffset + style.getLineSpacingHeight() * Math.sin(Math.toRadians(lineAngle)), screenY + yOffset + style.getLineSpacingHeight() * Math.cos(Math.toRadians(lineAngle)));
 			}
 		}
 		else{
-			//iterate over lines to draw selection
-		//	textModifyFacade.textSelectionSet(caretIndex, anchor);
+			//don't draw the blinking caret as there is a selection
 		}
 	}
 

@@ -189,6 +189,14 @@ public final class Intersector {
 		return tmp2.set(point.x, point.y, 0).dst(tmp);
 	}
 	
+	public static LineSegment projectOnLineSegment(LineSegment base, LineSegment other) {
+		if(base == null) return null;
+		if(other == null) return null;
+		Vector2 start = closestPointOnLineSegment(base, other.getFirstPoint());
+		Vector2 end = closestPointOnLineSegment(base, other.getSecondPoint());
+		return new LineSegment(start, end);
+	}
+	
 	/** Returns the distance between the given line segment and point.
 	 * 
 	 * @param start The line start point

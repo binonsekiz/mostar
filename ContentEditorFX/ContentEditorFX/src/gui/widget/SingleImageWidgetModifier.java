@@ -19,11 +19,9 @@ import document.widget.Widget;
 public class SingleImageWidgetModifier extends WidgetModifier{
 
 	private ImageView imageView;
-	private SingleImageWidgetModifier selfReference;
 	
 	public SingleImageWidgetModifier(WidgetModifyFacade widgetFacade, Column column, ColumnView colViewPane){
 		super(widgetFacade, column, colViewPane);
-		selfReference = this;
 		initGui();
 		widget = new SingleImageWidget(this.getLayoutX(), this.getLayoutY(), this.getWidth(), this.getHeight());
 		widget.setShape(getPaneShape());

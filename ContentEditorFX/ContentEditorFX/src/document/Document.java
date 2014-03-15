@@ -30,6 +30,10 @@ public class Document {
 		}
 	}
 	
+	public void addColumn(Column c, int index) {
+		columns.add(index, c);
+	}
+	
 	public ArrayList<Column> getColumns(){
 		return columns;
 	}

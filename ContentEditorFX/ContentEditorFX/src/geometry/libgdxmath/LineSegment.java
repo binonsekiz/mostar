@@ -98,7 +98,8 @@ public class LineSegment implements Comparable<LineSegment>{
 		return sub.add(this.firstPoint);
 	}
 	
-	public LineSegment buildLowerLineSegment(float height, float angle){
+	public LineSegment buildLowerLineSegment(float height){
+		float angle = getAngle();
 		LineSegment lowerLineSegment = new LineSegment(
 				new Vector2(
 						(float)(getFirstPoint().x + height * Math.sin(Math.toRadians(angle))), 

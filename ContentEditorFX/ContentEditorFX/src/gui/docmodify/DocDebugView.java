@@ -117,7 +117,7 @@ public class DocDebugView extends VBox {
 		memoryCounter = new Timeline(new KeyFrame(Duration.millis(GlobalAppSettings.memoryStatUpdateRate), new EventHandler<ActionEvent>(){
 			@Override
 		    public void handle(ActionEvent event) {
-				 memoryStats.setText(
+				memoryStats.setText(
 						 "Memory summary: \nUsed in VM: " + ((rt.totalMemory() - rt.freeMemory())/1000000) +
 						 " MB\nFree in VM: " + (rt.freeMemory()/1000000) + 
 						 " MB\nTotal in VM: " + (rt.totalMemory()/1000000) + 

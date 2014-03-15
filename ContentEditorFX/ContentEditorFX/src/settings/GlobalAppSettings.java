@@ -21,12 +21,16 @@ import org.w3c.dom.NodeList;
 public class GlobalAppSettings {
 	
 	public static final double fastDeviceFrameMillis = 16;
+	public static final double mediumDeviceFrameMillis = 32;
+	public static final double slowDeviceFrameMillis = 64;
 	public static final float ignoreValuesBelow = 0.001f;
 	public static final float ignoreValuesBelowMedium = 0.1f;
 	public static final float ignoreValuesBelowLarge = 5f;
 	public static final double caretBlinkRate = 1000;
 	public static final float caretMovementTime = 100f;
 	public static final float pointerJumpSize = 10;
+	public static double minFrameWidth = 240;
+	public static double minFrameHeight = 320;
 	public static double frameWidth = 1080;
 	public static double frameHeight = 960;
 	private static boolean guiDebugGuidelines;

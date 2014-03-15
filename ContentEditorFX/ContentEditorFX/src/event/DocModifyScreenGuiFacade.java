@@ -20,6 +20,7 @@ import control.Caret;
 import control.StyleModifyFacade;
 import control.TextModifyFacade;
 import control.WidgetModifyFacade;
+import document.Column;
 import document.Document;
 import event.ShapeDrawFacade.ShapeDrawingMode;
 import event.input.KeyboardManager;
@@ -95,7 +96,10 @@ public class DocModifyScreenGuiFacade {
 	}
 	
 	public void addColumnPressed(){
-
+		int activeColumnIndex = documentView.getActiveColumnIndex();
+		Column newColumn = new Column(document.getMeasurement(), document.getPageInsets());
+		document.addColumn(newColumn, activeColumnIndex);
+		documentView.addColumn(newColumn, activeColumnIndex);
 	}
 
 	public void addImageWidgetPressed() {

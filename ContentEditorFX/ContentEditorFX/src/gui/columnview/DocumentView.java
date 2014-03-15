@@ -8,9 +8,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -37,8 +39,9 @@ public class DocumentView extends Pane implements CanvasOwner{
 	
 	private DocModifyScreenGuiFacade guiFacade;
 	
-	private ScrollPane scrollPane;
-	private Group scrollContent;
+	private Pane customScrollPane;
+	private ScrollBar horizontalScrollBar;
+	private ScrollBar verticalScrollBar;
 	private GridPane gridPane;
 	
 	private ArrayList<ColumnView> columnViews;
@@ -74,19 +77,19 @@ public class DocumentView extends Pane implements CanvasOwner{
 		this.setClip(new Rectangle(0,0,this.getWidth(), this.getHeight()));
 		this.setId("docmodify-pane");
 		
-		scrollPane = new ScrollPane();
-		scrollContent = new Group();
-		scrollPane.setContent(scrollContent);
-		
-		Pane pane = new Pane();
+		customScrollPane = new Pane();
 		gridPane = new GridPane();
 		gridPane.setVgap(20);
 		gridPane.setHgap(20);
-
+		horizontalScrollBar = new ScrollBar();
+		verticalScrollBar = new ScrollBar();
+		horizontalScrollBar.setOrientation(Orientation.HORIZONTAL);
+		verticalScrollBar.setOrientation(Orientation.VERTICAL);
+		
 		overlayCanvas = new OverlayCanvas(this);
 		overlayContext = overlayCanvas.getGraphicsContext2D();
-		pane.setLayoutX(0);
-		pane.setLayoutY(0);
+		customScrollPane.setLayoutX(0);
+		customScrollPane.setLayoutY(0);
 		overlayCanvas.setLayoutX(0);
 		overlayCanvas.setLayoutY(0);
 		
@@ -102,10 +105,8 @@ public class DocumentView extends Pane implements CanvasOwner{
 		areLinePolygonsVisible = true;
 		zoomFactor = 1;	
 		
-		pane.getChildren().addAll(gridPane, overlayCanvas, debugCanvas);
-		scrollContent.getChildren().add(pane);
-		this.getChildren().addAll(scrollPane/*, overlayCanvas*/);
-		scrollPane.toFront();
+		customScrollPane.getChildren().addAll(gridPane, overlayCanvas, debugCanvas, verticalScrollBar, horizontalScrollBar);
+		this.getChildren().addAll(customScrollPane);
 		overlayCanvas.toFront();
 		debugCanvas.toFront();
 	}
@@ -116,7 +117,6 @@ public class DocumentView extends Pane implements CanvasOwner{
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
 				setClip(new Rectangle(0,0,getWidth(), getHeight()));
-				scrollPane.setPrefSize(getWidth(), getHeight());
 				fixCanvasSize();
 			}
 		});
@@ -126,66 +126,38 @@ public class DocumentView extends Pane implements CanvasOwner{
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
 				setClip(new Rectangle(0,0,getWidth(), getHeight()));
-				scrollPane.setPrefSize(getWidth(), getHeight());
 				fixCanvasSize();
 			}
 		});		
-		
-		scrollPane.widthProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> arg0,
-					Number arg1, Number arg2) {
-				refresh();
-			}
-		});
-		
-		scrollPane.heightProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> arg0,
-					Number arg1, Number arg2) {
-				refresh();
-			}
-		});
 	}
 
 	public LineOnCanvas getLineThatIncludesIndex(int index) {
 		int columnIndex = 0;
 		int paragraphIndex = 0;
-		int lineIndex = 0;
-		
-//		System.out.println("\n\n################\nQuerying with " + index);
-		
+		int lineIndex = 0;		
 		for(int i = 0; i < columnViews.size(); i++) {
-
-//			System.out.println("Looking at column " + i + ", has start index: " + columnViews.get(i).getStartIndex() + ", end index: " + columnViews.get(i).getEndIndex());
 			if(index >= columnViews.get(i).getStartIndex() && index <= columnViews.get(i).getEndIndex()) {
 				columnIndex = i;
-//				System.out.println("Found in column " + i);
 				break;
 			}
 		}
 		
 		ArrayList<ParagraphOnCanvas> paragraphs = columnViews.get(columnIndex).getParagraphsOnCanvas();
 		for(int i = 0; i < paragraphs.size(); i++) {
-//			System.out.println("Looking at paragraph " + i + ", has start index: " + paragraphs.get(i).getStartIndex() + ", end index: " + paragraphs.get(i).getEndIndex());
 			if(index >= paragraphs.get(i).getStartIndex() && index <= paragraphs.get(i).getEndIndex()) {
 				paragraphIndex = i;
-//				System.out.println("Found in paragraph " + i);
 				break;
 			}
 		}
 		
 		ArrayList<LineOnCanvas> lines = paragraphs.get(paragraphIndex).getLinesOnCanvas();
 		for(int i = 0; i < lines.size(); i++) {
-//			System.out.println("Looking at line " + i + ", has start index: " + lines.get(i).getStartIndex() + ", end index: " + lines.get(i).getEndIndex());
 			if(index >= lines.get(i).getStartIndex() && index <= lines.get(i).getEndIndex()) {
 				lineIndex = i;
-//				System.out.println("Found in lines " + i);
 				return lines.get(lineIndex);
 			}
 		}
 		
-		//if not returned so far, find the last modified place
 		return null;	
 	}
 	
@@ -200,6 +172,19 @@ public class DocumentView extends Pane implements CanvasOwner{
 		initialPopulate();
 	}
 
+	public void addColumn(Column c, int index) {
+		ColumnView newView = new ColumnView(this, guiFacade.getTextModifyFacade(), guiFacade.getShapeDrawFacade());
+		newView.associateWithColumn(c);
+		newView.setDocumentText(document.getDocumentText());
+		columnViews.add(index, newView);
+		
+		gridPane.getChildren().clear();
+		
+		for(int i = 0; i < columnViews.size(); i++) {
+			gridPane.add(columnViews.get(i), i, 0);
+		}
+	}
+	
 	private void initialPopulate() {
 		for(int i = 0; i < document.getColumns().size(); i++){
 			Column tempColumn = document.getColumns().get(i);
@@ -219,10 +204,11 @@ public class DocumentView extends Pane implements CanvasOwner{
 				@Override
 			    public void handle(ActionEvent event) {
 			        refreshAll();
+			        isRefreshInProgress = false;
 			    }
 			}));
+			timer.setCycleCount(1);
 			timer.play();
-			isRefreshInProgress = false;
 		}
 	}
 
@@ -250,10 +236,12 @@ public class DocumentView extends Pane implements CanvasOwner{
 				@Override
 			    public void handle(ActionEvent event) {
 			        refreshAllOverlay();
+			        isRefreshInProgress = false;
 			    }
 			}));
+			timer.setCycleCount(1);
+			timer.setAutoReverse(false);
 			timer.play();
-			isRefreshInProgress = false;
 		}
 	}
 
@@ -264,20 +252,30 @@ public class DocumentView extends Pane implements CanvasOwner{
 		
 		guiFacade.notifyRefreshHappened();
 		fixCanvasSize();
+		customScrollPane.toBack();
 		overlayCanvas.toFront();
 		debugCanvas.toFront();
 	}
 
 	private void fixCanvasSize() {
-		if(overlayCanvas.getWidth() != scrollPane.getViewportBounds().getWidth())
-			overlayCanvas.setWidth(scrollPane.getViewportBounds().getWidth());
-		if(overlayCanvas.getHeight() != scrollPane.getViewportBounds().getHeight())
-			overlayCanvas.setHeight(scrollPane.getViewportBounds().getHeight());
+		if(overlayCanvas.getWidth() != getWidth())
+			overlayCanvas.setWidth(getWidth());
+		if(overlayCanvas.getHeight() != getHeight())
+			overlayCanvas.setHeight(getHeight());
+		if(debugCanvas.getWidth() != getWidth())
+			debugCanvas.setWidth(getWidth());
+		if(debugCanvas.getHeight() != getHeight())
+			debugCanvas.setHeight(getHeight());
+	
+		horizontalScrollBar.setPrefHeight(10);
+		verticalScrollBar.setPrefWidth(10);
 		
-		if(debugCanvas.getWidth() != scrollPane.getViewportBounds().getWidth())
-			debugCanvas.setWidth(scrollPane.getViewportBounds().getWidth());
-		if(debugCanvas.getHeight() != scrollPane.getViewportBounds().getHeight())
-			debugCanvas.setHeight(scrollPane.getViewportBounds().getHeight());
+		horizontalScrollBar.setLayoutY(getHeight() - 15);
+		verticalScrollBar.setLayoutX(getWidth() - 15);
+		
+		horizontalScrollBar.setPrefWidth(getWidth() - verticalScrollBar.getWidth());
+		verticalScrollBar.setPrefHeight(getHeight() - horizontalScrollBar.getHeight());
+		//refreshOverlay();
 	}
 
 	public ColumnView getActiveColumnView() {
@@ -344,10 +342,6 @@ public class DocumentView extends Pane implements CanvasOwner{
 		return this.isTextCanvasVisible;
 	}
 
-	public Affine getOverlayContextTransformForChild(ColumnView columnView) {
-		return null;
-	}
-
 	public void refocusTextField() {
 		guiFacade.refocusTextField();
 	}
@@ -374,5 +368,10 @@ public class DocumentView extends Pane implements CanvasOwner{
 
 	public ShapeDrawFacade getShapeDrawFacade() {
 		return guiFacade.getShapeDrawFacade();
+	}
+
+	public int getActiveColumnIndex() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

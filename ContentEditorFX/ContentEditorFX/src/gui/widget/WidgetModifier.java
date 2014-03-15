@@ -42,9 +42,7 @@ public abstract class WidgetModifier extends ShapedPane{
 	private Column parent;
 	public ColumnView parentPane;
 	private WidgetModifyFacade widgetModifyFacade;
-	
-	private Polygon shape;
-	
+		
 	protected WidgetModifier(WidgetModifyFacade widgetModifyFacade, Column parent, ColumnView parentPane){
 		super(parentPane);
 		selfReference = this;
@@ -58,12 +56,12 @@ public abstract class WidgetModifier extends ShapedPane{
 	}
 	
 	public void setPolygon(Polygon shape) {
-		this.shape = shape;
+		super.setShape(shape);
 		widget.setShape(shape);
 	}
 	
 	public Polygon getPolygon(){
-		return shape;
+		return widget.getShape();
 	}
 	
 	protected void initializeGui() {
@@ -133,7 +131,7 @@ public abstract class WidgetModifier extends ShapedPane{
 		@Override
 		public void changed(ObservableValue<? extends Number> arg0,
 				Number arg1, Number arg2) {
-			widget.setBorders(getLayoutX(), getLayoutY(), getWidth(), getHeight());
+			widget.setShape(selfReference.getPaneShape());
 		}
 	}
 	
