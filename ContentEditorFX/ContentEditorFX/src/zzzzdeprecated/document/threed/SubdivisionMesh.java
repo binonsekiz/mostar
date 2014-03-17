@@ -30,15 +30,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package document.threed;
+package zzzzdeprecated.document.threed;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import zzzzdeprecated.document.threed.symbolic.SymbolicPolygonMesh;
+import zzzzdeprecated.document.threed.symbolic.SymbolicSubdivisionBuilder;
 import javafx.collections.ArrayChangeListener;
 import javafx.collections.ObservableFloatArray;
-import document.threed.symbolic.SymbolicPolygonMesh;
-import document.threed.symbolic.SymbolicSubdivisionBuilder;
 
 /**
  * Catmull Clark subdivision surface polygon mesh

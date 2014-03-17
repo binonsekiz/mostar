@@ -23,30 +23,33 @@ public class DocumentText {
 		//TODO: debug
 		ParagraphSet set1 = new ParagraphSet(this);
 		set1.setColumn(document.getColumns().get(0));
-		set1.setParagraphSpace(DebugHelper.paragraphSpaces.get(1));
+		set1.setParagraphSpace(DebugHelper.paragraphSpaces.get(3));
+		set1.setAngle(0);
 		
 		Paragraph paragraph = new Paragraph(this, 0);
 		paragraph.setText("aaaaa bbbbb");
 		addParagraph(paragraph, set1);
 		paragraph.setStyle(DebugHelper.debugStyle1);
 		
-/*		ParagraphSet set2 = new ParagraphSet(this);
-		set2.setColumn(document.getColumns().get(1));
-		set2.setParagraphSpace(DebugHelper.paragraphSpaces.get(2));
-		
-		Paragraph paragraph2 = new Paragraph(this, 0);
-		paragraph2.setText("hhhhh iiiii jjjjj kkkkk lllll mmmmm nnnnn ");
-		addParagraph(paragraph2, set2);
-		paragraph2.setStyle(DebugHelper.debugStyle2);
-	*/
-	/*	Paragraph paragraph2 = new Paragraph(this, 1);
-		paragraph2.setText("11111 22222 33333 44444 55555 66666 77777 88888 99999 00000");
-		addParagraph(paragraph2, set1);
-		paragraph2.setStyle(DebugHelper.debugStyle2);*/
-	/*	
-		Paragraph paragraph3 = new Paragraph(this, 2);
-		paragraph3.setText("nopqrstu9");
-		addParagraph(paragraph3, set1);*/
+//		ParagraphSet set2 = new ParagraphSet(this);
+//		set2.setColumn(document.getColumns().get(0));
+//		set2.setParagraphSpace(DebugHelper.paragraphSpaces.get(5));
+//		set2.setAngle(0);
+//
+//		Paragraph paragraph2 = new Paragraph(this, 1);
+//		paragraph2.setText("ccccc ddddd");
+//		addParagraph(paragraph2, set2);
+//		paragraph2.setStyle(DebugHelper.debugStyle1);
+//
+//		ParagraphSet set3 = new ParagraphSet(this);
+//		set3.setColumn(document.getColumns().get(0));
+//		set3.setParagraphSpace(DebugHelper.paragraphSpaces.get(0));
+//		set3.setAngle(0);
+//
+//		Paragraph paragraph3 = new Paragraph(this, 2);
+//		paragraph3.setText("ccccc ddddd");
+//		addParagraph(paragraph3, set3);
+//		paragraph3.setStyle(DebugHelper.debugStyle1);
 	}
 
 	/*public void addParagraph(Paragraph paragraph) {

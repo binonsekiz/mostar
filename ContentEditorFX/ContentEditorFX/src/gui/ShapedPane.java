@@ -186,6 +186,8 @@ public abstract class ShapedPane extends Pane implements VisualView {
 			resizeRectangles[i].setPositionX((float) (shape.getEdgeMidpoint(i).x-7));
 			resizeRectangles[i].setPositionY((float) (shape.getEdgeMidpoint(i).y-7));
 		}
+		
+		canvasOwner.notifyRepaintNeeded();
 	}
 
 	private void initMouseEvents(){

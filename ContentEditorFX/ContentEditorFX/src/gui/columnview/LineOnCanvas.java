@@ -18,7 +18,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.transform.Rotate;
 import settings.GlobalAppSettings;
 
 import com.sun.javafx.tk.FontMetrics;
@@ -54,6 +56,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	private float height;
 	private float width;
 	private float angle;
+	private Rotate rotateTransform;
 	
 	private TextModifyFacade textModifyFacade;
 	private TextLine textLine;
@@ -75,7 +78,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		lineSegmentProperty = new SimpleObjectProperty<LineSegment>();
 		lineSegmentProperty.set(new LineSegment(new Vector2(), new Vector2()));
 		polygonColor = Color.DARKRED;
-		
+		rotateTransform = new Rotate();
 		initEvents();
 	}
 	
@@ -86,6 +89,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		this.height = height;
 		this.width = width;
 		this.angle = angle;
+		rotateTransform.setAngle(angle);
 		revalidateLineSegment();
 	}
 	
@@ -93,6 +97,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	//	layoutX = line.getFirstPoint().x;
 	//	layoutY = line.getFirstPoint().y;
 		this.angle = line.getAngle();
+		rotateTransform.setAngle(angle);
 		this.preferredWidthProperty.set(line.getLength());
 		width = (float) line.getLength();
 		
@@ -137,8 +142,9 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		if(GlobalAppSettings.areLineViewCountsVisible) {
 			DebugHelper.helperStyle1.prepareContext(context);
 			context.setFill(Color.MAGENTA);
-			context.fillText(textLine.getStartIndex() +"" /*+ ", h:" + textLine.getStyle().getLineSpacingHeight()*/, line.getLeftPoint().x - 30, line.getLeftPoint().y + 15);
-			context.fillText(textLine.getEndIndex() + "", line.getRightPoint().x + 5, line.getRightPoint().y + 15);
+			
+			printRotatedText(textLine.getStartIndex() +"", context, line.getLeftPoint().x, line.getLeftPoint().y, line.getLeftPoint().x, line.getLeftPoint().y);
+			printRotatedText(textLine.getEndIndex() + "", context, line.getRightPoint().x, line.getRightPoint().y, line.getRightPoint().x, line.getRightPoint().y);
 		}
 		
 		context.setFill(textLine.getStyle().getStrokeColor());
@@ -160,7 +166,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 			//if no selection is present, draw the text directly
 			if(selectedEndIndex == selectedStartIndex) {
 				context.setFill(textLine.getStyle().getStrokeColor());
-				context.fillText(text, startX, startY + this.height);
+				printRotatedText(text, context, startX, startY + this.height, startX, startY + this.height);
 			}
 			else{
 				if(caretPositions == null) {
@@ -175,26 +181,45 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 				
 				//draw the text before selection
 				context.setFill(textLine.getStyle().getStrokeColor());
-				context.fillText(text.substring(0, startIndexAdjusted), startX, startY + this.height);
+				printRotatedText(text.substring(0, startIndexAdjusted), context, startX, startY + this.height, startX, startY + this.height);
 				context.save();
 				
 				//draw the filled text
 				//1. fill the background
 				context.setFill(textLine.getStyle().getSelectionColor());
-				context.setLineWidth(0);
-				context.fillRect(startX + caretPositions.get(startIndexAdjusted), startY, caretPositions.get(endIndexAdjusted) - caretPositions.get(startIndexAdjusted), this.height);
+				drawSelectionBox(context, startX + caretPositions.get(startIndexAdjusted), startY, caretPositions.get(endIndexAdjusted) - caretPositions.get(startIndexAdjusted), this.height, startX, startY);
 				
 				//2. draw the text
 				context.setFill(textLine.getStyle().getInvertedStrokeColor());
-				context.fillText(text.substring(startIndexAdjusted, endIndexAdjusted), startX + caretPositions.get(startIndexAdjusted), startY + this.height);
+				printRotatedText(text.substring(startIndexAdjusted, endIndexAdjusted), context, startX + caretPositions.get(startIndexAdjusted), startY + this.height, startX, startY + this.height);
 				
 				//draw the text after selection
 				context.restore();
-				context.fillText(text.substring(endIndexAdjusted), startX + caretPositions.get(endIndexAdjusted), startY + this.height);
+				printRotatedText(text.substring(endIndexAdjusted), context, startX + caretPositions.get(endIndexAdjusted), startY + this.height, startX, startY + this.height);
 			}
 		}
 	}
 	
+	private void drawSelectionBox(GraphicsContext context, float x, float y, float width, float height, float rotateX, float rotateY) {
+		context.save();
+		rotateTransform.setAngle(angle);
+		rotateTransform.setPivotX(rotateX);
+		rotateTransform.setPivotY(rotateY);
+		context.setTransform(rotateTransform.getMxx(), rotateTransform.getMyx(), rotateTransform.getMxy(), rotateTransform.getMyy(), rotateTransform.getTx(), rotateTransform.getTy());
+		context.fillRect(x, y, width, height);
+		context.restore();
+	}
+
+	private void printRotatedText(String text, GraphicsContext context, float x, float y, float rotateX, float rotateY) {
+		context.save();
+		rotateTransform.setAngle(angle);
+		rotateTransform.setPivotX(rotateX);
+		rotateTransform.setPivotY(rotateY);
+		context.setTransform(rotateTransform.getMxx(), rotateTransform.getMyx(), rotateTransform.getMxy(), rotateTransform.getMyy(), rotateTransform.getTx(), rotateTransform.getTy());
+		context.fillText(text, x, y);
+		context.restore();
+	}
+
 	private boolean isTextUpsideDown() {
 		float angleTemp = ((angle % 360) + 360) % 360;
 		if(angleTemp > 90 && angleTemp < 270){
@@ -228,7 +253,6 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 					setPreferredWidth(arg0.getValue().getLength());
 					shape = GeometryHelper.getRectanglePolygon(lineSegmentProperty.get(), height, angle);
 					lowerLineSegment = arg0.getValue().buildLowerLineSegment(height);
-					
 	//				System.out.println("LineOnCanvas " + debugObjectCount + " segment change: " + arg2 + ", text line: " + textLine + ", text: " + parentParagraph.getText(textLine));
 				}
 			}

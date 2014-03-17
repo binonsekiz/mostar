@@ -29,7 +29,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package document.threed.symbolic;
+package zzzzdeprecated.document.threed.symbolic;
 
 /**
  * A 3D geometric point array that has the x, y, z coordinates of every point

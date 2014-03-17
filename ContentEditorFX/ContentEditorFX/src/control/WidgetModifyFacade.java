@@ -3,6 +3,7 @@ package control;
 import java.util.ArrayList;
 
 import document.Document;
+import document.widget.ThreeDViewerWidget;
 import document.widget.Widget.TextWrapType;
 import event.DocModifyScreenGuiFacade;
 import gui.columnview.ColumnView;
@@ -10,6 +11,7 @@ import gui.columnview.DocumentView;
 import gui.widget.ImageGalleryWidgetModifier;
 import gui.widget.MediaWidgetModifier;
 import gui.widget.SingleImageWidgetModifier;
+import gui.widget.ThreeDViewerWidgetModifier;
 import gui.widget.WebViewWidgetModifier;
 import gui.widget.WidgetModifier;
 
@@ -72,6 +74,13 @@ public class WidgetModifyFacade {
 	public void addImageGalleryWidget() {
 		ColumnView activeColumnView = documentView.getActiveColumnView();
 		ImageGalleryWidgetModifier widgetModifier = new ImageGalleryWidgetModifier(this, caret.getActiveColumn(), activeColumnView);
+		activeColumnView.addWidgetModifier(widgetModifier);
+		widgetFocusHandler.addWidgetModifier(widgetModifier);
+	}
+	
+	public void addThreeDWidgetPressed() {
+		ColumnView activeColumnView = documentView.getActiveColumnView();
+		ThreeDViewerWidgetModifier widgetModifier = new ThreeDViewerWidgetModifier(this, caret.getActiveColumn(), activeColumnView);
 		activeColumnView.addWidgetModifier(widgetModifier);
 		widgetFocusHandler.addWidgetModifier(widgetModifier);
 	}

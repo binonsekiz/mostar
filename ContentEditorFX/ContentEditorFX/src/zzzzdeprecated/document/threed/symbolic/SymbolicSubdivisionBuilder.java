@@ -29,7 +29,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package document.threed.symbolic;
+package zzzzdeprecated.document.threed.symbolic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,9 +38,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import zzzzdeprecated.document.threed.SubdivisionMesh.BoundaryMode;
+import zzzzdeprecated.document.threed.SubdivisionMesh.MapBorderMode;
 import javafx.geometry.Point2D;
-import document.threed.SubdivisionMesh.BoundaryMode;
-import document.threed.SubdivisionMesh.MapBorderMode;
 
 /**
  * 

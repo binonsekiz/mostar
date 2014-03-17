@@ -29,11 +29,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package document.threed.symbolic;
+package zzzzdeprecated.document.threed.symbolic;
 
 import java.util.Arrays;
 
-import document.threed.SubdivisionMesh;
+import zzzzdeprecated.document.threed.SubdivisionMesh;
 
 public class SubdividedPointArray extends SymbolicPointArray {
     private final float[] controlPoints; // points of the previous subdivision level

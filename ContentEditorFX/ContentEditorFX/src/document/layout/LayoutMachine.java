@@ -155,7 +155,7 @@ public class LayoutMachine {
 
 	private void moveToNextLine() {
 		float angle = paragraphSet.getAngle();
-		angle = (angle + 270) % 360;
+		angle = (angle + 90) % 360;
 		
 		lineSegmentOffset.moveWithGivenAngle(angle, backupStyle.getLineSpacingHeight());		
 	}
@@ -185,6 +185,9 @@ public class LayoutMachine {
 		LineSegment segmentToUse = null;
 		
 		trimmedSegmentLower = trimmedSegmentLower.trimToFitInPolygon(paragraphSet.getParagraphSpace().getShape());
+		
+		debugPaintLineSegment(trimmedSegment, Color.GREEN);
+		debugPaintLineSegment(trimmedSegmentLower, Color.BLUE);
 		
 		if(trimmedSegmentLower == null) {
 			return segments;
@@ -227,7 +230,7 @@ public class LayoutMachine {
 		for(int i = 0; i < segments.size(); i++) {
 			System.out.print("\t\t\t");
 			System.out.println(i + ": " + segments.get(i));
-			debugPaintLineSegment(segments.get(i), Color.ORANGE);
+			//debugPaintLineSegment(segments.get(i), Color.ORCHID);
 		}
 		
 		System.out.println("\t\t******************\n");

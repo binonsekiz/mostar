@@ -132,6 +132,7 @@ public abstract class WidgetModifier extends ShapedPane{
 		public void changed(ObservableValue<? extends Number> arg0,
 				Number arg1, Number arg2) {
 			widget.setShape(selfReference.getPaneShape());
+			parent.getLayoutMachine().initialSetup();
 		}
 	}
 	
@@ -192,7 +193,8 @@ public abstract class WidgetModifier extends ShapedPane{
 		SingleImageWidgetModifier,
 		WebViewWidgetModifier, 
 		MediaWidgetModifier, 
-		ImageGalleryWidgetModifier
+		ImageGalleryWidgetModifier, 
+		ThreeDViewerWidgetModifier
 	}
 
 	public void setFooterPresent(boolean selected) {

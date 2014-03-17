@@ -167,7 +167,7 @@ public class Caret{
 			if(caretParagraph != null ) {
 				float lineAngle = caretParagraph.getParagraphSet().getAngle();
 				TextStyle style = caretParagraph.getStyle();
-				context.strokeLine(screenX + xOffset, screenY + yOffset, screenX + xOffset + style.getLineSpacingHeight() * Math.sin(Math.toRadians(lineAngle)), screenY + yOffset + style.getLineSpacingHeight() * Math.cos(Math.toRadians(lineAngle)));
+				context.strokeLine(screenX + xOffset, screenY + yOffset, screenX + xOffset - style.getLineSpacingHeight() * Math.sin(Math.toRadians(lineAngle)), screenY + yOffset + style.getLineSpacingHeight() * Math.cos(Math.toRadians(lineAngle)));
 			}
 		}
 		else{
@@ -216,11 +216,11 @@ public class Caret{
 		if(controlDown) {
 	//		indexCountToMove = documentText.getRelativeWordStartIndexBefore(caretIndex);
 		}
-
-		if(!shiftDown) {
-			setCaretIndexRelative(indexCountToMove);
+		
+		setCaretIndexRelative(indexCountToMove);
+		if(shiftDown) {
+			setAnchorIndexRelative(-1 * indexCountToMove);
 		}
-		setAnchorIndexRelative(indexCountToMove);
 	}
 
 	public void rightKey(boolean shiftDown, boolean controlDown) {
@@ -229,10 +229,10 @@ public class Caret{
 	//		indexCountToMove = documentText.getRelativeWordStartIndexBefore(caretIndex);
 		}
 
-		if(!shiftDown) {
-			setCaretIndexRelative(indexCountToMove);
+		setCaretIndexRelative(indexCountToMove);
+		if(shiftDown) {
+			setAnchorIndexRelative(-1 * indexCountToMove);
 		}
-		setAnchorIndexRelative(indexCountToMove);
 	}
 
 	public void changeMousePointer(Cursor cursorType) {

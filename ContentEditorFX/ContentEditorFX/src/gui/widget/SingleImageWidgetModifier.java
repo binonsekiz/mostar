@@ -1,6 +1,5 @@
 package gui.widget;
 
-
 import gui.columnview.ColumnView;
 
 import java.io.File;
@@ -32,7 +31,6 @@ public class SingleImageWidgetModifier extends WidgetModifier{
 	}
 	
 	private void initEvents() {
-		
 		super.widgetStack.widthProperty().addListener(new ChangeListener<Number>(){
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
@@ -81,9 +79,5 @@ public class SingleImageWidgetModifier extends WidgetModifier{
 		return WidgetModifierType.SingleImageWidgetModifier;
 	}
 
-	@Override
-	public Widget getWidget() {
-		return widget;
-	}
 
 }

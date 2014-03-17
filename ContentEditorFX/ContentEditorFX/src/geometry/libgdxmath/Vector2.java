@@ -386,7 +386,7 @@ public class Vector2 implements Serializable, Vector<Vector2> {
 		float xDiff = (float) (offset * Math.cos(Math.toRadians(angle)));
 		float yDiff = (float) (offset * Math.sin(Math.toRadians(angle)));
 		this.x = this.x + xDiff;
-		this.y = this.y - yDiff;
+		this.y = this.y + yDiff;
 		return this;
 	}
 }

@@ -29,35 +29,44 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package document.threed.symbolic;
+package zzzzdeprecated.document.threed;
 
-import document.threed.PolygonMesh;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableFloatArray;
+import javafx.collections.ObservableIntegerArray;
 
 /**
- * Polygon mesh where the points are symbolic. That is, the values of the 
- * points depend on other variables and they can be updated appropriately.
+ * A Mesh where each face can be a Polygon
+ *
+ * can convert to using ObservableIntegerArray
  */
-public class SymbolicPolygonMesh {
-    public SymbolicPointArray points;
-    public float[] texCoords;
-    public int[][] faces;
-    public int[] faceSmoothingGroups;
-    private int numEdgesInFaces = -1;
+public class PolygonMesh {
+    private final ObservableFloatArray points = FXCollections.observableFloatArray();
+    private final ObservableFloatArray texCoords = FXCollections.observableFloatArray();
+    public int[][] faces = new int[0][0];
+    private final ObservableIntegerArray faceSmoothingGroups = FXCollections.observableIntegerArray();
+    protected int numEdgesInFaces = -1; // TODO invalidate automatically by listening to faces (whenever it is an observable)
 
-    public SymbolicPolygonMesh(SymbolicPointArray points, float[] texCoords, int[][] faces, int[] faceSmoothingGroups) {
-        this.points = points;
-        this.texCoords = texCoords;
+    public PolygonMesh() {}
+
+    public PolygonMesh(float[] points, float[] texCoords, int[][] faces) {
+        this.points.addAll(points);
+        this.texCoords.addAll(texCoords);
         this.faces = faces;
-        this.faceSmoothingGroups = faceSmoothingGroups;
+    }
+
+    public ObservableFloatArray getPoints() {
+        return points;
     }
     
-    public SymbolicPolygonMesh(PolygonMesh mesh) {
-        this.points = new OriginalPointArray(mesh);
-        this.texCoords = mesh.getTexCoords().toArray(this.texCoords);
-        this.faces = mesh.faces;
-        this.faceSmoothingGroups = mesh.getFaceSmoothingGroups().toArray(null);
+    public ObservableFloatArray getTexCoords() {
+        return texCoords;
     }
     
+    public ObservableIntegerArray getFaceSmoothingGroups() {
+        return faceSmoothingGroups;
+    }
+     
     public int getNumEdgesInFaces() {
         if (numEdgesInFaces == -1) {
             numEdgesInFaces = 0;
@@ -67,5 +76,22 @@ public class SymbolicPolygonMesh {
            numEdgesInFaces /= 2;
         }
         return numEdgesInFaces;
+    }
+    
+    // TODO: Hardcode to constants for FX 8 (only one vertex format)
+    private static final int NUM_COMPONENTS_PER_POINT = 3;
+    private static final int NUM_COMPONENTS_PER_TEXCOORD = 2;
+    private static final int NUM_COMPONENTS_PER_FACE = 6;
+
+    public int getPointElementSize() {
+        return NUM_COMPONENTS_PER_POINT;
+    }
+
+    public int getTexCoordElementSize() {
+        return NUM_COMPONENTS_PER_TEXCOORD;
+    }
+
+    public int getFaceElementSize() {
+        return NUM_COMPONENTS_PER_FACE;
     }
 }

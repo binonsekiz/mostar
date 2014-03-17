@@ -27,6 +27,7 @@ public class DebugHelper {
 	public static Polygon debugPolygon3;
 	public static Polygon debugPolygon4;
 	public static Polygon debugPolygon5;
+	public static Polygon debugPolygon6;
 	
 	public DebugHelper() {
 		debugStyle1 = TextStyleRepository.getTextStyle("cafe", 24, Color.BROWN, Color.AQUA, 50);
@@ -39,18 +40,20 @@ public class DebugHelper {
 		rects.add(rect3);
 		rects.add(rect4);
 		
-		debugPolygon1 = GeometryHelper.getRegularPolygon(200, 200, 160, 6, 30);
+		debugPolygon1 = GeometryHelper.getRegularPolygon(340, 300, 120, 6, 0);
 		debugPolygon2 = GeometryHelper.getRegularPolygon(200, 600, 200, 3, 0);
 		debugPolygon3 = GeometryHelper.getRegularPolygon(250, 250, 240, 4, 45);
-		debugPolygon4 = GeometryHelper.getRegularPolygon(250, 250, 200, 64, 0);
+		debugPolygon4 = GeometryHelper.getRegularPolygon(240, 240, 200, 64, 0);
 		debugPolygon5 = GeometryHelper.getRegularPolygon(350, 400, 350, 4, 45);
+		debugPolygon6 = GeometryHelper.getRegularPolygon(120, 350, 100, 64, 0);
 		
 		paragraphSpaces = new ArrayList<ParagraphSpace>();
-		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon4));
 		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon1));
 		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon2));
 		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon3));
+		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon4));
 		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon5));
+		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon6));
 	}
 	
 	public static int mouseClickCount = 0;

@@ -132,6 +132,12 @@ public class DocModifyScreenGuiFacade {
 		documentView.refresh();
 	}
 	
+	public void addThreeDWidgetPressed() {
+		// TODO Auto-generated method stub
+		widgetModifyFacade.addThreeDWidgetPressed();
+		documentView.refresh();
+	}
+	
 	public void addTextBoxPressed() {
 		// TODO Auto-generated method stub
 		
@@ -243,5 +249,7 @@ public class DocModifyScreenGuiFacade {
 	public ShapeDrawFacade getShapeDrawFacade() {
 		return shapeDrawFacade;
 	}
+
+	
 
 }

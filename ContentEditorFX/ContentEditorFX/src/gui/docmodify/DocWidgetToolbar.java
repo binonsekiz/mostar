@@ -32,6 +32,7 @@ public class DocWidgetToolbar extends FlowPane{
 	private Button imageGalleryButton;
 	private Button htmlButton;
 	private Button mediaButton;
+	private Button threeDButton;
 	private Button backgroundButton;
 	
 	private HBox pagePane;
@@ -138,10 +139,11 @@ public class DocWidgetToolbar extends FlowPane{
 		mediaButton.getStyleClass().add("last");
 		htmlButton = new Button(Translator.get("Html"));
 		imageGalleryButton = new Button(Translator.get("Image Gallery"));
+		threeDButton = new Button(Translator.get("3D Widget"));
 		backgroundButton = new Button(Translator.get("Page Background"));
 		
 		widgetPane.getStyleClass().add("segmented-button-bar-class");
-		widgetPane.getChildren().addAll(imageButton, imageGalleryButton, backgroundButton, htmlButton, mediaButton);
+		widgetPane.getChildren().addAll(imageButton, imageGalleryButton, backgroundButton, htmlButton, mediaButton, threeDButton);
 	}
 
 	private void initPageControls() {
@@ -297,6 +299,13 @@ public class DocWidgetToolbar extends FlowPane{
 			@Override
 			public void handle(ActionEvent arg0) {
 				guiFacade.pageBackgroundPressed();
+			}
+		});
+		
+		threeDButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				guiFacade.addThreeDWidgetPressed();
 			}
 		});
 		

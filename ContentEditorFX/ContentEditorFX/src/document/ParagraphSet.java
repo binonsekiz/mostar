@@ -12,7 +12,6 @@ public class ParagraphSet {
 	private ParagraphSpace paragraphSpace;
 	private Column column;
 	private float angle;
-	private StringBuffer textBuffer;
 	private DocumentText parent;
 	
 	public ParagraphSet(DocumentText parent) {
@@ -26,7 +25,6 @@ public class ParagraphSet {
 	}
 
 	public String getText() {
-	//	return getText(paragraphs.get(0).getStartIndex(), paragraphs.get(paragraphs.size()-1).getEndIndex());
 		String retVal = "";
 		for(int i = 0; i < paragraphs.size(); i++) {
 			retVal = retVal + paragraphs.get(i).getText();

@@ -29,9 +29,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package document.threed.symbolic;
+package zzzzdeprecated.document.threed.symbolic;
 
-import document.threed.PolygonMesh;
+import zzzzdeprecated.document.threed.PolygonMesh;
 
 public class OriginalPointArray extends SymbolicPointArray {
     PolygonMesh mesh;

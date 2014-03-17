@@ -757,4 +757,19 @@ public class Polygon {
 				
 		return retVal;
 	}
+
+	public Polygon copy() {
+		float[] vertices2 = this.localVertices.clone();
+		Polygon retVal = new Polygon(vertices2);
+		retVal.x = x;
+		retVal.y = y;
+		retVal.originX = originX;
+		retVal.originY = originY;
+		retVal.rotation = rotation;
+		retVal.scaleX = scaleX;
+		retVal.scaleY = scaleY;
+		retVal.indexList = this.indexList.clone();
+		
+		return retVal;
+	}
 }

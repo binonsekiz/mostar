@@ -54,7 +54,10 @@ public class ParagraphSpace {
 	public Vector2 getTextDivisionStartPoint() {
 		float angle = paragraphSet.getAngle();
 		
-		Rectangle boundingRectangle = allowedShape.getBoundingRectangle();
+		Polygon rotatedShape = allowedShape.copy();
+		rotatedShape.rotate(angle * -1);
+		
+		Rectangle boundingRectangle = rotatedShape.getBoundingRectangle();
 		
 		System.out.println("Offset point calculation started, rect: " + boundingRectangle);
 		

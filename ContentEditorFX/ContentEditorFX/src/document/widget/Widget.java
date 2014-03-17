@@ -70,6 +70,7 @@ public abstract class Widget {
 		ImageGalleryWidget,
 		MediaWidget,
 		WebViewWidget,
+		ThreeDViewerWidget,
 	}
 	
 	public enum TextWrapType{

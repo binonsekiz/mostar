@@ -34,9 +34,9 @@ public class GeometryHelper {
 	
 	public static Polygon getRectanglePolygon(LineSegment segment, float height, float angle) {
 		float[] vertices = new float[8];
-		vertices[0] = (float) (segment.getLeftPoint().x + height * Math.sin(Math.toRadians(angle)));
+		vertices[0] = (float) (segment.getLeftPoint().x - height * Math.sin(Math.toRadians(angle)));
 		vertices[1] = (float) (segment.getLeftPoint().y + height * Math.cos(Math.toRadians(angle)));
-		vertices[2] = (float) (segment.getRightPoint().x + height * Math.sin(Math.toRadians(angle)));
+		vertices[2] = (float) (segment.getRightPoint().x - height * Math.sin(Math.toRadians(angle)));
 		vertices[3] = (float) (segment.getRightPoint().y + height * Math.cos(Math.toRadians(angle)));
 		vertices[4] = segment.getRightPoint().x;
 		vertices[5] = segment.getRightPoint().y;

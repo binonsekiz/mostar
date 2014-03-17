@@ -29,10 +29,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package gui.threedimension;
+package zzzzdeprecated.gui.threedimension;
 
 import java.util.Arrays;
 
+import zzzzdeprecated.document.threed.PolygonMesh;
+import zzzzdeprecated.document.threed.SubdivisionMesh;
+import zzzzdeprecated.document.threed.SubdivisionMesh.BoundaryMode;
+import zzzzdeprecated.document.threed.SubdivisionMesh.MapBorderMode;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -46,10 +50,6 @@ import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
-import document.threed.PolygonMesh;
-import document.threed.SubdivisionMesh;
-import document.threed.SubdivisionMesh.BoundaryMode;
-import document.threed.SubdivisionMesh.MapBorderMode;
 
 /**
  * A MeshView node for Polygon Meshes
