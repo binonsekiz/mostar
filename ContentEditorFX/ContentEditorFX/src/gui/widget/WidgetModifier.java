@@ -66,7 +66,7 @@ public abstract class WidgetModifier extends ShapedPane{
 	
 	protected void initializeGui() {
 		widgetStack = new Pane();
-		widgetStack.setId("red-pane");
+	//	widgetStack.setId("red-pane");
 		
 		if(widgetNode!= null){
 			widgetStack.getChildren().add(widgetNode);
@@ -162,7 +162,7 @@ public abstract class WidgetModifier extends ShapedPane{
 	protected void gainFocus(){
 		widgetModifyFacade.changeVersatilePane(this);
 		widgetModifyFacade.gainedFocusSignal(this);
-		this.setId("single-image-widget-selected");
+	//	this.setId("single-image-widget-selected");
 	}
 	
 	/**
@@ -170,7 +170,7 @@ public abstract class WidgetModifier extends ShapedPane{
 	 * e.g.: hide the resize handlers etc.
 	 */
 	public void loseFocus(){
-		this.setId("single-image-widget");
+	//	this.setId("single-image-widget");
 //		((ColumnViewPane) this.getParent()).refresh();
 		hasFocus = false;
 	}

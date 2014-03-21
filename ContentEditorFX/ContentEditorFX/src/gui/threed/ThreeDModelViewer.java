@@ -5,6 +5,8 @@ import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -38,21 +40,22 @@ public class ThreeDModelViewer extends Pane{
     private double mouseOldY;
     private double mouseDeltaX;
     private double mouseDeltaY;
+    
+    private SubScene subScene;
 	
 	public ThreeDModelViewer() {
 		initGui();
-		buildScene();
 		buildCamera();
 		buildAxes();
 		buildMolecule();
-		this.getChildren().add(root);
+		buildScene();
 		initEvents();
+	//	this.getChildren().add(root);
 	}
 
 	private void initEvents() {
 		setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override public void handle(MouseEvent me) {
-            	System.out.println("Mouse pressed on three d model viewer");
                 mousePosX = me.getSceneX();
                 mousePosY = me.getSceneY();
                 mouseOldX = me.getSceneX();
@@ -62,7 +65,6 @@ public class ThreeDModelViewer extends Pane{
         setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent me) {
-            	System.out.println("Mouse dragged on three d model viewer");
                 mouseOldX = mousePosX;
                 mouseOldY = mousePosY;
                 mousePosX = me.getSceneX();
@@ -71,7 +73,7 @@ public class ThreeDModelViewer extends Pane{
                 mouseDeltaY = (mousePosY - mouseOldY);
 
                 double modifier = 1.0;
-                double modifierFactor = 0.1;
+                double modifierFactor = 0.3;
 
                 if (me.isControlDown()) {
                     modifier = 0.1;
@@ -104,6 +106,12 @@ public class ThreeDModelViewer extends Pane{
 		cameraXForm3 = new XForm();
 		cameraDistance = 450;
 		moleculeGroup = new XForm();
+		subScene = new SubScene(this, 250, 250, true, SceneAntialiasing.BALANCED);
+		subScene.setCamera(camera);
+		subScene.setRoot(root);
+		subScene.setFill(Color.LIGHTBLUE);
+		subScene.autosize();
+		this.getChildren().add(subScene);
 	}
 
 	private void buildMolecule() {

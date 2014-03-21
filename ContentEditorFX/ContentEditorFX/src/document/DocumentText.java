@@ -27,7 +27,7 @@ public class DocumentText {
 		set1.setAngle(0);
 		
 		Paragraph paragraph = new Paragraph(this, 0);
-		paragraph.setText("aaaaa bbbbb");
+		paragraph.setText("a");
 		addParagraph(paragraph, set1);
 		paragraph.setStyle(DebugHelper.debugStyle1);
 		

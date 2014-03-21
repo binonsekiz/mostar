@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!-- Bu cihaz listesi programı yeniden derlemeden genişletilebilir 	-->
+<!-- This list of devices is extensible without recompiling		    -->
+<devices>
+	<device name = "Acer Iconia Tab" 				manufacturer = "Acer" 	model = "Iconia Tab 10.1" 			resolution = "1280x800" 	screenSize = "10.1"		deviceType = "Tablet"></device>
+	<device name = "Amazon Kindle Fire" 			manufacturer = "Amazon" model = "Kindle Fire 7" 			resolution = "1024×600" 	screenSize = "7"		deviceType = "Tablet"></device>
+	<device name = "Apple iPad 9.7" 				manufacturer = "Apple" 	model = "iPad 9.7" 					resolution = "1024×768" 	screenSize = "9.7"		deviceType = "Tablet"></device>
+	<device name = "Apple iPad 2 9.7" 				manufacturer = "Apple" 	model = "iPad 2 9.7"				resolution = "1024×768" 	screenSize = "9.7"		deviceType = "Tablet"></device>
+	<device name = "Apple iPad 3 9.7" 				manufacturer = "Apple" 	model = "iPad 3 9.7"				resolution = "2048×1536" 	screenSize = "9.7"		deviceType = "Tablet"></device>
+	<device name = "Apple iPhone 3GS 3.5" 			manufacturer = "Apple" 	model = "iPhone 3GS 3.5"			resolution = "480x320" 		screenSize = "3.5"		deviceType = "Smartphone"></device>
+	<device name = "Apple iPhone 4S 3.5" 			manufacturer = "Apple" 	model = "iPhone 4S 3.5"				resolution = "960x640" 		screenSize = "3.5"		deviceType = "Smartphone"></device>
+	<device name = "Apple iPhone 5 4" 				manufacturer = "Apple" 	model = "iPhone 5 4"				resolution = "1136x640"		screenSize = "4"		deviceType = "Smartphone"></device>
+	<device name = "ASUS Transformer TF101 10.1" 	manufacturer = "Asus" 	model = "Transformer TF101 10.1"	resolution = "1280×800"		screenSize = "10.1"		deviceType = "Tablet"></device>
+	
+
+</devices>
+<!--
+ASUS Transformer TF101 10.1″ 1280×800 Tablet 
+ASUS Transformer Prime TF201 10.1″ 1280×800 Tablet 
+Barnes & Noble NOOK 7″ 1024×600 Tablet 
+BlackBerry Playbook 7″ 1024×600 Tablet 
+BlackBerry Torch 9800 3.2″ 480×360 Smartphone 
+BlackBerry Torch 9810 3.2″ 640×480 Smartphone 
+Colby Kyros 7″ 800×480 Tablet 
+HP TouchPad 9.7″ 768×1024 Tablet 
+HTC Amaze 4G 4.3″ 960×540 Smartphone 
+HTC Evo 3D 4.3″ 960×540 Smartphone 
+HTC Flyer 7″ 1024×600 Tablet 
+HTC Sensation 4G 4.3″ 960×540 Smartphone 
+HTC Thunderbolt 4.3″ 480×800 Smartphone 
+Lenovo IdeaPad A1 7″ 1024×600 Tablet 
+Lenovo ThinkPad 10.1″ 1280×800 Tablet 
+LG G2x 4G 4″ 800×400 Smartphone 
+LG G-Slate 8.9″ 768×1280 Tablet 
+Motorola Droid BIONIC 4.3″ 540×960 Smartphone 
+Motorola Droid RAZR 4.3″ 540×960 Smartphone 
+Motorola Droid Xyboard 10.1 10.1″ 1280×800 Tablet 
+Motorola Xoom 10.1″ 1280×800 Tablet 
+Nokia Lumia 900 4.3″ 480×800 Smartphone 
+Samsung Brightside 3.1″ 240×320 Smartphone 
+Samsung Epic 4G Touch 4.52″ 800×480 Smartphone 
+Samsung Exhibit 4G 3.5″ 480×800 Smartphone 
+Samsung Focus Flash 3.7″ 480×800 Smartphone 
+Samsung Galaxy S 4G 4″ 480×800 Smartphone 
+Samsung Galaxy S II 4.52″ 800×480 Smartphone 
+Samsung Galaxy S III 4.8″ 1280×720 Smartphone 
+Samsung Galaxy Tab 7″ 1024×600 Tablet 
+Samsung Galaxy Tab 7.7 7.7″ 1280×800 Tablet 
+Samsung Galaxy Tab 10.1 10.1″ 1280×800 Tablet 
+Samsung Gravity Smart 3.2″ 320×480 Smartphone 
+Samsung Sidekick 4G 3.5″ 800×480 Smartphone 
+Sony Tablet S 9.4″ 1280×800 Tablet 
+T-Mobile MyTouch 4G Slide 3.8″ 800×480 
+Smartphone T-Mobile SpringBoard 7″ 1280×800 Tablet 
+Toshiba Thrive 10.1″ 1280×800 Tablet
+-->
