@@ -1,14 +1,14 @@
 package gui.widget;
 
 import gui.columnview.ColumnView;
-import gui.threed.ThreeDModelViewer;
+import gui.threed.SimpleThreeDModelViewer;
 import control.WidgetModifyFacade;
 import document.Column;
 import document.widget.ThreeDViewerWidget;
 
 public class ThreeDViewerWidgetModifier extends WidgetModifier{
 	
-	private ThreeDModelViewer viewer;
+	private SimpleThreeDModelViewer viewer;
 
 	public ThreeDViewerWidgetModifier(WidgetModifyFacade widgetModifyFacade, Column parent, ColumnView parentPane) {
 		super(widgetModifyFacade, parent, parentPane);
@@ -26,7 +26,7 @@ public class ThreeDViewerWidgetModifier extends WidgetModifier{
 	}
 	
 	private void initGui() {
-		viewer = new ThreeDModelViewer();
+		viewer = new SimpleThreeDModelViewer();
 		this.widgetNode = viewer;
 	}
 

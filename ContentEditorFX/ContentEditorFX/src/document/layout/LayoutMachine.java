@@ -12,17 +12,12 @@ import gui.columnview.ParagraphOnCanvas;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
-
-
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 //import javafx.scene.canvas.GraphicsContext;
 //import javafx.scene.paint.Color;
 import settings.GlobalAppSettings;
 import settings.GlobalAppSettings.LineFitOption;
-import sun.swing.BakedArrayList;
 import control.TextModifyFacade;
 import document.Column;
 import document.PageInsets;

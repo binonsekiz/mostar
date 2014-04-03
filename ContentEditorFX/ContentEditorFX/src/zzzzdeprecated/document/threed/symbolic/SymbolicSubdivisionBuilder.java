@@ -38,9 +38,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javafx.geometry.Point2D;
 import zzzzdeprecated.document.threed.SubdivisionMesh.BoundaryMode;
 import zzzzdeprecated.document.threed.SubdivisionMesh.MapBorderMode;
-import javafx.geometry.Point2D;
 
 /**
  * 

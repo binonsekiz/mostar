@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <translation>
-<text id = "Content Editor">İçerik Editörü</text>
+<text id = "portis">portis</text>
+<text id = "Content Editor">İçerik Düzenleyicisi</text>
+<text id = "3D Editor">3B Editörü</text>
 <text id = "Sign up">Üye ol</text>
 <text id = "Textbox">Yazı kutusu</text>
 <text id = "Image">Resim</text>
@@ -66,4 +68,8 @@
 <text id = "Merge">Genişlet</text>
 <text id = "Behind">Arkada bırak</text>
 <text id = "Front">Öne getir</text>
+<text id = "Move">Taşı</text>
+<text id = "Rotate">Döndür</text>
+<text id = "Scale">Ölçeklendir</text>
+<text id = "Box">Küp</text>
 </translation>

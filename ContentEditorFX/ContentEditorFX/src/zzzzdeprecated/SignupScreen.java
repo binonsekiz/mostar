@@ -1,4 +1,4 @@
-package gui.login;
+package zzzzdeprecated;
 
 import gui.GFrame;
 import gui.GFrame.WindowType;
@@ -24,6 +24,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import settings.Translator;
 
+@Deprecated
 public class SignupScreen extends BorderPane implements ScreenType{
 
 	private TextField usernameField;

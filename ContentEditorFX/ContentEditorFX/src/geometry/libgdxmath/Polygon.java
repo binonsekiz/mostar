@@ -1,6 +1,5 @@
 package geometry.libgdxmath;
 
-import geometry.libgdxmath.Polygon.LineSegmentIntersection;
 import javafx.scene.canvas.GraphicsContext;
 import settings.GlobalAppSettings;
 

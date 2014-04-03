@@ -13,7 +13,6 @@ import javafx.scene.image.ImageView;
 import control.WidgetModifyFacade;
 import document.Column;
 import document.widget.SingleImageWidget;
-import document.widget.Widget;
 
 public class SingleImageWidgetModifier extends WidgetModifier{
 

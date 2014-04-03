@@ -1,6 +1,5 @@
 package gui.threed;
 
-import document.threed.XForm;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -15,18 +14,19 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
+import document.threed.TDModelNode;
 
-public class ThreeDModelViewer extends Pane{
+public class SimpleThreeDModelViewer extends Pane{
 	
 	private Group root;
 	private Group axisGroup;
-	private XForm world;
+	private TDModelNode world;
 	private PerspectiveCamera camera;
-	private XForm cameraXForm;
-	private XForm cameraXForm2;
-	private XForm cameraXForm3;
+	private TDModelNode cameraXForm;
+	private TDModelNode cameraXForm2;
+	private TDModelNode cameraXForm3;
 	private double cameraDistance;
-	private XForm moleculeGroup;
+	private TDModelNode moleculeGroup;
 	private Timeline timeline;
 	private boolean timelinePlaying = false;
 	private double ONE_FRAME = 1.0 / 24.0;
@@ -43,14 +43,13 @@ public class ThreeDModelViewer extends Pane{
     
     private SubScene subScene;
 	
-	public ThreeDModelViewer() {
+	public SimpleThreeDModelViewer() {
 		initGui();
 		buildCamera();
 		buildAxes();
 		buildMolecule();
 		buildScene();
 		initEvents();
-	//	this.getChildren().add(root);
 	}
 
 	private void initEvents() {
@@ -99,13 +98,13 @@ public class ThreeDModelViewer extends Pane{
 	private void initGui() {
 		root = new Group();
 		axisGroup = new Group();
-		world = new XForm();
+		world = new TDModelNode();
 		camera = new PerspectiveCamera(true);
-		cameraXForm = new XForm();
-		cameraXForm2 = new XForm();
-		cameraXForm3 = new XForm();
+		cameraXForm = new TDModelNode();
+		cameraXForm2 = new TDModelNode();
+		cameraXForm3 = new TDModelNode();
 		cameraDistance = 450;
-		moleculeGroup = new XForm();
+		moleculeGroup = new TDModelNode();
 		subScene = new SubScene(this, 250, 250, true, SceneAntialiasing.BALANCED);
 		subScene.setCamera(camera);
 		subScene.setRoot(root);
@@ -140,12 +139,12 @@ public class ThreeDModelViewer extends Pane{
         //             [*] hydrogen2Sphere
         //         [*] bond2Cylinder
 
-        XForm moleculeXForm = new XForm();
-        XForm oxygenXForm = new XForm();
-        XForm hydrogen1SideXForm = new XForm();
-        XForm hydrogen1XForm = new XForm();
-        XForm hydrogen2SideXForm = new XForm();
-        XForm hydrogen2XForm = new XForm();
+        TDModelNode moleculeXForm = new TDModelNode();
+        TDModelNode oxygenXForm = new TDModelNode();
+        TDModelNode hydrogen1SideXForm = new TDModelNode();
+        TDModelNode hydrogen1XForm = new TDModelNode();
+        TDModelNode hydrogen2SideXForm = new TDModelNode();
+        TDModelNode hydrogen2XForm = new TDModelNode();
 
         Sphere oxygenSphere = new Sphere(40.0);
         oxygenSphere.setMaterial(redMaterial);

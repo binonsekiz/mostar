@@ -35,10 +35,10 @@ package zzzzdeprecated.document.threed;
 import java.util.ArrayList;
 import java.util.List;
 
-import zzzzdeprecated.document.threed.symbolic.SymbolicPolygonMesh;
-import zzzzdeprecated.document.threed.symbolic.SymbolicSubdivisionBuilder;
 import javafx.collections.ArrayChangeListener;
 import javafx.collections.ObservableFloatArray;
+import zzzzdeprecated.document.threed.symbolic.SymbolicPolygonMesh;
+import zzzzdeprecated.document.threed.symbolic.SymbolicSubdivisionBuilder;
 
 /**
  * Catmull Clark subdivision surface polygon mesh

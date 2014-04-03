@@ -1,4 +1,4 @@
-package gui.start;
+package zzzzdeprecated;
 
 import gui.GFrame.WindowType;
 import gui.ScreenType;
@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import settings.Translator;
 
+@Deprecated
 public class StartScreen extends Pane implements ScreenType{
 
 	private final int rightPaneOffset = 5;

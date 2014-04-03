@@ -7,6 +7,7 @@ import gui.docmodify.DocOverview;
 import gui.docmodify.DocVersatilePane;
 import gui.docmodify.DocWidgetToolbar;
 import gui.helper.DebugHelper;
+import gui.threed.ThreeDModifyScreen;
 import gui.widget.WidgetModifier;
 
 import java.io.File;
@@ -19,6 +20,7 @@ import settings.Translator;
 import control.Caret;
 import control.StyleModifyFacade;
 import control.TextModifyFacade;
+import control.ThreeDEventFacade;
 import control.WidgetModifyFacade;
 import document.Column;
 import document.Document;
@@ -33,12 +35,14 @@ public class DocModifyScreenGuiFacade {
 	private DocBottomToolbar docBottomToolbar;
 	private DocVersatilePane docVersatilePane;
 	private DocDebugView docDebugView;
+	private ThreeDModifyScreen tdModifyScreen;
 	private DebugHelper debugHelper;
 	
 	private TextModifyFacade textModifyFacade;
 	private WidgetModifyFacade widgetModifyFacade;
 	private StyleModifyFacade styleModifyFacade;
 	private ShapeDrawFacade shapeDrawFacade;
+	private ThreeDEventFacade threeDEventFacade;
 	
 	private Caret caret;
 	
@@ -57,6 +61,7 @@ public class DocModifyScreenGuiFacade {
 		widgetModifyFacade = new WidgetModifyFacade(this);
 		styleModifyFacade = new StyleModifyFacade();
 		shapeDrawFacade = new ShapeDrawFacade();
+		threeDEventFacade = new ThreeDEventFacade();
 		caret = new Caret(textModifyFacade);
 		textModifyFacade.setCaret(caret);
 		KeyboardManager.instance.setTextFacade(textModifyFacade);
@@ -78,6 +83,7 @@ public class DocModifyScreenGuiFacade {
 		textModifyFacade.setDocumentAndView(document, documentView);
 		widgetModifyFacade.setDocumentAndView(document, documentView);
 		styleModifyFacade.setDocumentAndView(document, documentView);
+		threeDEventFacade.setDocumentAndView(document, documentView);
 		docBottomToolbar.setGuiFacade(this);
 		documentView.associateWithDocument(document);
 		docOverview.populateTreeView();
@@ -198,10 +204,6 @@ public class DocModifyScreenGuiFacade {
 		return textModifyFacade;
 	}
 
-	public void setGuiDebugText(String string) {
-		docBottomToolbar.setDebugString(string);
-	}
-
 	public void setOverlayCanvasVisible(boolean value) {
 		documentView.setOverlayCanvasVisible(value);
 	}
@@ -212,10 +214,6 @@ public class DocModifyScreenGuiFacade {
 
 	public void requestDocumentViewRefresh() {
 		documentView.refresh();
-	}
-
-	public void refocusTextField() {
-		docBottomToolbar.refocusOnTextField();
 	}
 
 	public void setLinePolygonsVisible(boolean value) {
@@ -248,6 +246,22 @@ public class DocModifyScreenGuiFacade {
 
 	public ShapeDrawFacade getShapeDrawFacade() {
 		return shapeDrawFacade;
+	}
+
+	public ThreeDEventFacade getThreeDEventFacade() {
+		return threeDEventFacade;
+	}
+
+	public void newButtonPressed() {
+		System.out.println("new button");
+	}
+
+	public void saveButtonPressed() {
+		System.out.println("save button");
+	}
+
+	public void loadButtonPressed() {
+		System.out.println("load button");
 	}
 
 	

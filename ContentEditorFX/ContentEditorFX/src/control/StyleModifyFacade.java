@@ -1,17 +1,11 @@
 package control;
 
-import gui.columnview.DocumentView;
-import document.Document;
-import document.DocumentText;
 import document.style.TextStyle;
 import document.style.TextStyleRepository;
 
-public class StyleModifyFacade {
+public class StyleModifyFacade extends Facade{
 	
-	private DocumentText documentText;
 	private Caret caret;
-	private Document document;
-	private DocumentView documentView;
 	private TextModifyFacade textModifyFacade;
 	private TextStyle backupStyle;
 	
@@ -43,12 +37,6 @@ public class StyleModifyFacade {
 		}
 		TextStyleRepository.setSelectedStyle(initStyle);
 		return initStyle;
-	}
-	
-	public void setDocumentAndView(Document document, DocumentView documentView) {
-		this.document = document;
-		this.documentView = documentView;
-		this.documentText = document.getDocumentText();
 	}
 	
 	public void setCaret(Caret caret) {

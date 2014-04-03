@@ -196,11 +196,9 @@ public abstract class ShapedPane extends Pane implements VisualView {
 	public void onMouseEntered(MouseEvent event) {
 		isMouseInside = true;
 		if(isShapeInitialized == false){
-			System.out.println("SHAPE INIT YO");
 			initializeShape();
 			isShapeInitialized = true;
 		}
-		System.out.println("mouse entered");
 	}
 	
 	public void onMouseExited(MouseEvent event) {

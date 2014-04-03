@@ -1,11 +1,5 @@
 package gui.columnview;
 
-import geometry.libgdxmath.Polygon;
-import gui.ShapedPane;
-import gui.docmodify.DocDebugView;
-import gui.helper.DebugHelper;
-import gui.widget.WidgetModifier;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,6 +29,11 @@ import event.modification.ModificationInstance;
 import event.modification.ModificationType;
 import event.modification.ResizeModification;
 import event.modification.TranslateModification;
+import geometry.libgdxmath.Polygon;
+import gui.ShapedPane;
+import gui.docmodify.DocDebugView;
+import gui.helper.DebugHelper;
+import gui.widget.WidgetModifier;
 
 public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	private static int totalCount = 0;
@@ -104,7 +103,6 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		    @Override
 		    public void handle(MouseEvent event) {
 		        selfReference.onMouseEvent(event);
-		        parent.refocusTextField();
 		        selfReference.requestFocus();
 		        DebugHelper.mouseClickEvent();
 		    }

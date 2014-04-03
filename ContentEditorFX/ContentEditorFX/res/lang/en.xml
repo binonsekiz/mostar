@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <translation>
+<text id = "portis">portis</text>
 <text id = "Content Editor">Content Editor</text>
+<text id = "3D Editor">3D Editor</text>
 <text id = "Sign up">Sign Up</text>
 <text id = "Textbox">Text Box</text>
 <text id = "Image">Image</text>
@@ -64,4 +66,8 @@
 <text id = "Merge">Merge</text>
 <text id = "Behind">Behind</text>
 <text id = "Front">Front</text>
+<text id = "Move">Move</text>
+<text id = "Rotate">Rotate</text>
+<text id = "Scale">Scale</text>
+<text id = "Box">Box</text>
 </translation>

@@ -1,6 +1,5 @@
 package document;
 
-import gui.ShapedPane;
 import gui.helper.DebugHelper;
 
 import java.util.ArrayList;

@@ -5,54 +5,25 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
-import settings.Translator;
 import event.DocModifyScreenGuiFacade;
-import event.input.KeyboardManager;
 
 public class DocBottomToolbar extends ToolBar{
-	
-	private Button prevColumnButton;
-	private Button nextColumnButton;
-	private Text currentPageText;
-	private int activePage;	//this is the actual page number, starting from 0.
-	
-	private Button prevChapterButton;
-	private Button nextChapterButton;
-	private Text currentChapterText;
-	private int activeChapter;
-	
-	private Button prevSectionButton;
-	private Button nextSectionButton;
-	private Text currentSectionText;
-	private int activeSection;
-	
 	private Button zoomIncreaseButton;
 	private TextField zoomField;
 	private Button zoomDecreaseButton;
-	
-//	private SecretTextField secretField;
-	
+		
 	private double zoomFactor;
 	private boolean isZoomChanged;
-	
-	private boolean isDebugLabelVisible;
-	private Label debugLabel;
 	
 	private DocModifyScreenGuiFacade guiFacade;
 	
 	public DocBottomToolbar(){
-		isDebugLabelVisible = true;
 		this.setId("docwidget-toolbar");
 		initializeGui();
 		initializeEvents();
-		activePage = 1;
-		activeSection = 1;
-		activeChapter = 1;
 	}
 
 	private void initializeEvents() {
@@ -76,28 +47,8 @@ public class DocBottomToolbar extends ToolBar{
 			}
 		});
 	}
-	
-	public void updateLabels(){
-
-	}
 
 	private void initializeGui() {
-		HBox pageBox = new HBox();
-		HBox chapterBox = new HBox();
-		HBox sectionBox = new HBox();
-		
-		prevColumnButton = new Button("<");
-		nextColumnButton = new Button(">");
-		currentPageText = new Text(" " + Translator.get("Page") + " 1 ");
-		
-		prevChapterButton = new Button("<");
-		nextChapterButton = new Button(">");
-		currentChapterText = new Text(" " + Translator.get("Chapter") + " 1 ");
-		
-		prevSectionButton = new Button("<");
-		nextSectionButton = new Button(">");
-		currentSectionText = new Text(" " + Translator.get("Section") + " 1 ");
-		
 		zoomIncreaseButton = new Button("+");
 		zoomDecreaseButton = new Button("-");
 		
@@ -150,56 +101,12 @@ public class DocBottomToolbar extends ToolBar{
 		zoomDecreaseButton.setTranslateX(20);
 		zoomField.setTranslateX(20);
 		zoomIncreaseButton.setTranslateX(20);
-		
-//		secretField = new SecretTextField();
-		
-		pageBox.getChildren().addAll(prevColumnButton,currentPageText,nextColumnButton);
-		sectionBox.getChildren().addAll(prevSectionButton, currentSectionText, nextSectionButton);
-		chapterBox.getChildren().addAll(prevChapterButton, currentChapterText, nextChapterButton);
-		
-		if(isDebugLabelVisible){
-			debugLabel = new Label();
-			this.getItems().add(debugLabel);
-		}
-		
-		this.getItems().addAll(chapterBox, sectionBox, pageBox, zoomDecreaseButton, zoomField, zoomIncreaseButton/*, secretField*/);
+
+		this.getItems().addAll(zoomDecreaseButton, zoomField, zoomIncreaseButton);
 	}
 	
 	public void setGuiFacade(DocModifyScreenGuiFacade guiFacade){
 		this.guiFacade = guiFacade;
-//		secretField.setTextModifyFacade(guiFacade.getTextModifyFacade());
-	}
-
-	public int getActivePage() {
-		return activePage;
-	}
-
-	public void changePageSelection(int selectionIndex) {
-		this.activePage = selectionIndex + 1;
-		currentPageText.setText(activePage + "");
-	}
-
-	public int getActiveChapter() {
-		return 0;
-	}
-	
-	public void setDebugString(String text){
-		if(isDebugLabelVisible){
-			debugLabel.setText(text);
-		}
-	}
-	
-	public void refocusOnTextField() {
-		KeyboardManager.instance.writingModeFocus();
-	}
-	
-	public enum DocNavigationButtons{
-		NextColumn,
-		PreviousColumn,
-		NextChapter,
-		PreviousChapter,
-		NextSection,
-		PreviousSection
 	}
 	
 }

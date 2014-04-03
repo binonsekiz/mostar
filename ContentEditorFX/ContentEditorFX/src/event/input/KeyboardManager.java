@@ -15,6 +15,7 @@ public class KeyboardManager implements EventHandler<KeyEvent>{
 	
 	public KeyboardManager(){
 		instance = this;
+		writingMode = true;
 	}
 
 	public void keyPressed(KeyEvent event) {

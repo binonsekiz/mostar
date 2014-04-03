@@ -1,9 +1,8 @@
-package gui;
+package zzzzdeprecated;
 
 import gui.GFrame.WindowType;
+import gui.ScreenType;
 import gui.helper.EffectHelper;
-import gui.login.SignupScreen;
-import gui.start.StartScreen;
 
 import java.util.Random;
 
@@ -18,6 +17,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+@Deprecated
 public class DividedPane extends Pane implements ScreenType{
 	
 	private double widthFactor = 0.2;

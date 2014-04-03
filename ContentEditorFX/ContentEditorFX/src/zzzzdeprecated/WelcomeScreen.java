@@ -1,5 +1,5 @@
 
-package gui.login;
+package zzzzdeprecated;
 
 import gui.GFrame;
 import gui.GFrame.WindowType;
@@ -12,6 +12,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import settings.Translator;
 
+@Deprecated
 public class WelcomeScreen extends BorderPane implements ScreenType{
 	
 	private Text leftText;

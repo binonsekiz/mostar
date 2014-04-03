@@ -1,11 +1,6 @@
 package zzzzdeprecated;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import document.PageInsets;
-import document.style.TextStyle;
 
 public class TextLineSpace {
 

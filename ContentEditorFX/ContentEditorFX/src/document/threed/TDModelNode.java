@@ -37,8 +37,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
-public class XForm extends Group {
-
+public class TDModelNode extends Group {
+	
     public enum RotateOrder {
         XYZ, XZY, YXZ, YZX, ZXY, ZYX
     }
@@ -54,12 +54,12 @@ public class XForm extends Group {
     { rz.setAxis(Rotate.Z_AXIS); }
     public Scale s = new Scale();
 
-    public XForm() { 
+    public TDModelNode() { 
         super(); 
         getTransforms().addAll(t, rz, ry, rx, s); 
     }
 
-    public XForm(RotateOrder rotateOrder) { 
+    public TDModelNode(RotateOrder rotateOrder) { 
         super(); 
         // choose the order of rotations based on the rotateOrder
         switch (rotateOrder) {

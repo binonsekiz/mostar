@@ -9,16 +9,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
-import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollBar;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Affine;
 import javafx.util.Duration;
 import settings.GlobalAppSettings;
 import document.Column;
@@ -340,10 +337,6 @@ public class DocumentView extends Pane implements CanvasOwner{
 	
 	public boolean isTextCanvasVisible() {
 		return this.isTextCanvasVisible;
-	}
-
-	public void refocusTextField() {
-		guiFacade.refocusTextField();
 	}
 
 	public void setLinePolygonsVisible(boolean value) {

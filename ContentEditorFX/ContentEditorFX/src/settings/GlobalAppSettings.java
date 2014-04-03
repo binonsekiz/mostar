@@ -33,11 +33,14 @@ public class GlobalAppSettings {
 	public static double minFrameHeight = 320;
 	public static double frameWidth = 1080;
 	public static double frameHeight = 960;
+	public static double smallFrameWidth = 600;
+	public static double smallFrameHeight = 200;
 	private static boolean guiDebugGuidelines;
 	private static boolean isTestModeOn;
 	public static boolean areLineViewCountsVisible = true;
 	public static double memoryStatUpdateRate = 500f;
 	public static LineFitOption selectedFitLineOption = LineFitOption.averageFit;
+	public static double dimmerTime = 500;
 	
 	public enum LineFitOption {
 		strictFit,

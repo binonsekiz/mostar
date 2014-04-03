@@ -38,7 +38,7 @@ public class EffectHelper {
 		isInitialized = true;
 		titleBlend = new Blend();
 		titleBlend.setMode(BlendMode.MULTIPLY);
-		titleBlur = new GaussianBlur(2);
+		titleBlur = new GaussianBlur(1.5);
 		titleReflection = new Reflection();
 		titleReflection.setFraction(0.5f);
 		titleBlend.setTopInput(titleBlur);

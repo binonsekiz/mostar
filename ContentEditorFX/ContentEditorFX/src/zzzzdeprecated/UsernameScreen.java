@@ -1,4 +1,4 @@
-package gui.login;
+package zzzzdeprecated;
 
 import gui.GFrame;
 import gui.GFrame.WindowType;
@@ -28,6 +28,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import settings.Translator;
 
+@Deprecated
 public class UsernameScreen extends BorderPane implements ScreenType{
 
 	private TextField usernameField;

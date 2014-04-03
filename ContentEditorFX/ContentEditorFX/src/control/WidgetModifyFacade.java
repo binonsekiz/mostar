@@ -2,12 +2,9 @@ package control;
 
 import java.util.ArrayList;
 
-import document.Document;
-import document.widget.ThreeDViewerWidget;
 import document.widget.Widget.TextWrapType;
 import event.DocModifyScreenGuiFacade;
 import gui.columnview.ColumnView;
-import gui.columnview.DocumentView;
 import gui.widget.ImageGalleryWidgetModifier;
 import gui.widget.MediaWidgetModifier;
 import gui.widget.SingleImageWidgetModifier;
@@ -15,11 +12,9 @@ import gui.widget.ThreeDViewerWidgetModifier;
 import gui.widget.WebViewWidgetModifier;
 import gui.widget.WidgetModifier;
 
-public class WidgetModifyFacade {
+public class WidgetModifyFacade extends Facade{
 	
 	private DocModifyScreenGuiFacade guiFacade;
-	private Document document;
-	private DocumentView documentView;
 	private Caret caret;
 	private WidgetFocusHandler widgetFocusHandler;
 	private ArrayList<WidgetModifier> widgetModifiers;
@@ -27,12 +22,6 @@ public class WidgetModifyFacade {
 	public WidgetModifyFacade(DocModifyScreenGuiFacade guiFacade){
 		this.guiFacade = guiFacade;
 		this.widgetFocusHandler = new WidgetFocusHandler();
-	}
-
-	public void setDocumentAndView(Document document,
-			DocumentView documentView) {
-		this.document = document;
-		this.documentView = documentView;
 	}
 
 	public void setCaret(Caret caret) {

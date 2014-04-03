@@ -64,6 +64,10 @@
         linear-gradient(to top, -light-black 2%, -dark-black 98%);
 }
 
+#dimmer {
+    -fx-background-color: rgb(0,0,0,0.3);
+}
+
 #NumberField {
     -fx-border-width: 1;
     -fx-border-color: lightgray;
@@ -131,6 +135,20 @@
 #docmodify-screen {
 	-fx-border-color: #990000;
 	-fx-border-width: 3px;
+}
+
+#welcome-popup{
+	-light-black: rgb(74, 75, 78);
+    -dark-highlight: rgb(87, 89, 92);
+    -dark-black: rgb(39, 40, 40);
+    -darkest-black: rgb(5, 5, 5);
+    -mid-gray: rgb(216, 222, 227);
+	
+	-fx-base: -dark-black;
+	-fx-font-size:12;
+	-fx-background-color: 
+		linear-gradient(to bottom, derive(-fx-base, -30%), derive(-fx-base, -60%) ),
+		linear-gradient(to bottom, -light-black 2%, -dark-black 98%);
 }
 
 #docwidget-toolbar{

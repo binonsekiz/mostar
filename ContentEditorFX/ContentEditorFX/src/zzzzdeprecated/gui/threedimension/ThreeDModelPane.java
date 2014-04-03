@@ -33,10 +33,6 @@ package zzzzdeprecated.gui.threedimension;
 
 import java.util.Arrays;
 
-import zzzzdeprecated.document.threed.PolygonMesh;
-import zzzzdeprecated.document.threed.SubdivisionMesh;
-import zzzzdeprecated.document.threed.SubdivisionMesh.BoundaryMode;
-import zzzzdeprecated.document.threed.SubdivisionMesh.MapBorderMode;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -50,6 +46,10 @@ import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
+import zzzzdeprecated.document.threed.PolygonMesh;
+import zzzzdeprecated.document.threed.SubdivisionMesh;
+import zzzzdeprecated.document.threed.SubdivisionMesh.BoundaryMode;
+import zzzzdeprecated.document.threed.SubdivisionMesh.MapBorderMode;
 
 /**
  * A MeshView node for Polygon Meshes

@@ -7,10 +7,8 @@ import java.util.ArrayList;
 
 import javafx.scene.Cursor;
 import document.Document;
-import document.DocumentText;
 import document.Paragraph;
 import document.style.TextStyle;
-import document.style.TextStyleRepository;
 
 /**
  * This is a facade class that all the gui events happening on text (including cut/copy/undo etc.) has to go through.
@@ -18,19 +16,14 @@ import document.style.TextStyleRepository;
  * @author sahin
  *
  */
-public class TextModifyFacade {
-	private DocumentText documentText;
+public class TextModifyFacade extends Facade{
 	private Caret caret;
-	private Document document;
-	private DocumentView documentView;
 	
 	public TextModifyFacade() {
 	}
 	
 	public void setDocumentAndView(Document document, DocumentView documentView) {
-		this.document = document;
-		this.documentView = documentView;
-		this.documentText = document.getDocumentText();
+		super.setDocumentAndView(document, documentView);
 		caret.setDocumentText(documentText);
 	}
 	

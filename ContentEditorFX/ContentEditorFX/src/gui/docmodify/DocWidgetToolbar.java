@@ -2,8 +2,6 @@ package gui.docmodify;
 
 import java.util.Collections;
 
-import control.StyleModifyFacade;
-import document.style.TextStyle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -18,13 +16,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import settings.Translator;
+import control.StyleModifyFacade;
+import document.style.TextStyle;
 import event.DocModifyScreenGuiFacade;
 import gui.helper.ColorGrid;
-import gui.helper.MathHelper;
 
 public class DocWidgetToolbar extends FlowPane{
 
 	private static final double GAP_CONST = 5;
+	
+	private HBox saveLoadPane;
+	private Button newButton;
+	private Button saveButton;
+	private Button loadButton;
 	
 	private HBox widgetPane;
 	private Button textButton;
@@ -80,6 +84,7 @@ public class DocWidgetToolbar extends FlowPane{
 	}
 
 	private void initGui() {
+		initSaveLoadControls();
 		initWidgetControls();
 		initPageControls();
 		initComboBoxes();
@@ -97,9 +102,9 @@ public class DocWidgetToolbar extends FlowPane{
 		this.setId("docwidget-toolbar");
 		this.setPadding(new Insets(3));
 		
-		this.getChildren().addAll(pagePane, widgetPane, fontPane, colorPane, importPane, shapePane);
+		this.getChildren().addAll(saveLoadPane, pagePane, widgetPane, fontPane, colorPane, importPane, shapePane);
 	}
-	
+
 	private void deactivateControls() {
 		fontBox.setDisable(true);
 		fontSizeBox.setDisable(true);
@@ -127,6 +132,17 @@ public class DocWidgetToolbar extends FlowPane{
 		
 		shapePane.getStyleClass().add("segmented-button-bar-class");
 		shapePane.getChildren().addAll(drawShapeButton, drawTableButton, drawSignButton, drawGraphicButton);
+	}
+	
+	private void initSaveLoadControls() {
+		saveLoadPane = new HBox();
+		
+		newButton = new Button(Translator.get("New"));
+		saveButton = new Button(Translator.get("Save"));
+		loadButton = new Button(Translator.get("Load"));
+		
+		saveLoadPane.getStyleClass().add("segmented-button-bar-class");
+		saveLoadPane.getChildren().addAll(newButton, saveButton, loadButton);
 	}
 
 	private void initWidgetControls() {
@@ -331,6 +347,27 @@ public class DocWidgetToolbar extends FlowPane{
 			@Override
 			public void handle(ActionEvent arg0) {
 				guiFacade.drawShapeButtonPressed();
+			}
+		});
+		
+		newButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				guiFacade.newButtonPressed();
+			}
+		});
+		
+		saveButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				guiFacade.saveButtonPressed();
+			}
+		});
+		
+		loadButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				guiFacade.loadButtonPressed();
 			}
 		});
 	}

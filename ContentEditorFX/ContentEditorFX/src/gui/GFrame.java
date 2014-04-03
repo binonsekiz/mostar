@@ -1,25 +1,25 @@
 package gui;
 
 import event.input.KeyboardManager;
-import gui.docmodify.DocModifyScreen;
 import gui.docmodify.test.TestFacade;
-import gui.login.SignupScreen;
-import gui.login.TemplateScreen;
-import gui.login.UsernameScreen;
-import gui.login.WelcomeScreen;
-import gui.start.StartScreen;
+import gui.start.TitleScreen;
 
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -29,7 +29,10 @@ import settings.GlobalAppSettings;
 
 public class GFrame extends Application {
 
+	private StackPane root;
+	private StackPane dimmer;
 	private StackPane sceneChangePane;
+	private GaussianBlur dimBlur;
 	private Pane activePane;
 	
 	private Scene mainScene;
@@ -42,30 +45,29 @@ public class GFrame extends Application {
 	
 	//whenever a new gui screen is added to the project,
 	//insert it here to get it fast loaded on startup
-	private WelcomeScreen welcomeScreen;
-	private UsernameScreen usernameScreen;
-	private DocModifyScreen docModifyScreen;
-	private SignupScreen signupScreen;
-	private StartScreen startScreen;
-	private TemplateScreen templateScreen;
+	private DocTabbedView docTabbedView;
+	private TitleScreen titleStage;
 	
 	private KeyboardManager keyboardManager;
-	
-	private DividedPane dividedPane;
-	
+		
 	@Override
 	public void start(final Stage mainStage){
 		instance = this;
 		this.mainStage = mainStage;
 	//	testPath();
 		mainPath();
+	//	titleStagePath();
 	}
 	
+	private void titleStagePath() {
+		titleStage = new TitleScreen(this);
+	}
+
 	private void testPath(){
-	
+		
 	}
 	
-	private void mainPath(){
+	public void mainPath(){
 		panes = new ArrayList<Pane>();
 		panesAsTypes = new ArrayList<ScreenType>();
 		
@@ -77,6 +79,7 @@ public class GFrame extends Application {
 		if(GlobalAppSettings.isTestModeOn())
 			TestFacade.startTests();
 		
+		mainStage.centerOnScreen();
 		mainStage.show();
 	
 		AnimationTimer timer = new AnimationTimer() {
@@ -92,43 +95,48 @@ public class GFrame extends Application {
 	}
 
 	private void initializePanes() {
-		welcomeScreen = new WelcomeScreen();
-		usernameScreen = new UsernameScreen();
-		docModifyScreen = new DocModifyScreen();
-		signupScreen = new SignupScreen();
-		startScreen = new StartScreen();
-		dividedPane = new DividedPane();
-		templateScreen = new TemplateScreen();
+		docTabbedView = new DocTabbedView();
 		
-		panes.add(welcomeScreen); panesAsTypes.add(welcomeScreen);
-		panes.add(usernameScreen); panesAsTypes.add(usernameScreen);
-		panes.add(docModifyScreen); panesAsTypes.add(docModifyScreen);
-		panes.add(signupScreen); panesAsTypes.add(signupScreen);
-		panes.add(startScreen); panesAsTypes.add(startScreen);
-		panes.add(dividedPane); panesAsTypes.add(dividedPane);
-		panes.add(templateScreen); panesAsTypes.add(templateScreen);
+		panes.add(docTabbedView); panesAsTypes.add(docTabbedView);
 		
 		for(int i = 0; i < panes.size(); i++){
 			panes.get(i).setOpacity(0);
 			sceneChangePane.getChildren().add(panes.get(i));
 		}
 		
-	//	activePane = welcomeScreen;
-	//	activePane = startScreen;
-	//	activePane = dividedPane;
-		activePane = docModifyScreen;
+		activePane = docTabbedView;
 		activePane.setOpacity(1);
 		activePane.toFront();
 	}
 
 	private void initializeMainScene() {
-		mainStage.setTitle("Mostar - Sürüm 0.0.2 Demo - 15.08.2013");
+		mainStage.setTitle("Portis - Sürüm 0.0.3 - 30.03.2014");
 		mainStage.setMinHeight(GlobalAppSettings.minFrameHeight);
 		mainStage.setMinWidth(GlobalAppSettings.minFrameWidth);
 		mainStage.setOpacity(0);
+		
+		root = new StackPane();
+		dimmer = new StackPane();
+		
 		sceneChangePane = new StackPane();
 		sceneChangePane.setMinSize(GlobalAppSettings.minFrameWidth, GlobalAppSettings.minFrameHeight);
-		mainScene = new Scene(sceneChangePane, GlobalAppSettings.frameWidth, GlobalAppSettings.frameHeight, Color.WHITE);
+		root.setMinSize(GlobalAppSettings.minFrameWidth, GlobalAppSettings.minFrameHeight);
+		dimmer.setMinSize(GlobalAppSettings.minFrameWidth, GlobalAppSettings.minFrameHeight);
+		
+		root.getChildren().addAll(sceneChangePane,dimmer);
+		dimmer.toBack();
+		dimmer.setVisible(false);
+		dimmer.setId("dimmer");
+		dimmer.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent t) {
+                t.consume();
+                hidePopup();
+            }
+        });
+		dimBlur = new GaussianBlur(0);
+		sceneChangePane.setEffect(dimBlur);
+				
+		mainScene = new Scene(root, GlobalAppSettings.frameWidth, GlobalAppSettings.frameHeight, Color.WHITE);
 		mainScene.getStylesheets().add("gui/styles/skin1.css");
 		mainStage.setScene(mainScene);
 		
@@ -136,7 +144,39 @@ public class GFrame extends Application {
 		mainScene.addEventHandler(KeyEvent.KEY_RELEASED, keyboardManager);
 		mainScene.addEventHandler(KeyEvent.KEY_TYPED, keyboardManager);
 	}
+	
+	public void showPopup(Node popup) {
+		dimmer.getChildren().clear();
+		dimmer.getChildren().add(popup);
+		dimmer.setVisible(true);
+		dimmer.toFront();
+		dimmer.setOpacity(0);
 
+		Timeline dimTimeline = new Timeline();
+		dimTimeline.getKeyFrames().add(
+				new KeyFrame(Duration.millis(GlobalAppSettings.dimmerTime), 
+				new KeyValue(dimmer.opacityProperty(), 1, Interpolator.EASE_IN),
+				new KeyValue(dimBlur.radiusProperty(), 5, Interpolator.EASE_IN)));
+		dimTimeline.play();
+	}
+
+	public void hidePopup() {
+		Timeline undimTimeline = new Timeline();
+		undimTimeline.getKeyFrames().add(
+				new KeyFrame(Duration.millis(GlobalAppSettings.dimmerTime), 
+				new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent arg0) {
+						dimmer.setVisible(false);
+						dimmer.getChildren().clear();
+					}
+				},
+				new KeyValue(dimmer.opacityProperty(), 0, Interpolator.EASE_IN),
+				new KeyValue(dimBlur.radiusProperty(), 0, Interpolator.EASE_IN)));
+		
+		undimTimeline.play();
+	}
+	
 	public Pane changePane(WindowType windowType, WindowType referringPage){
 		//find the new pane
 		Pane newPane = null;
@@ -205,7 +245,11 @@ public class GFrame extends Application {
 		SignupScreen, 
 		StartScreen,
 		DividedPane, 
-		TemplateScreen,
+		TemplateScreen, 
+		DocTabbedView, 
+		ThreeDModifyScreen, 
+		TitleScreen, 
+		TemplateModifyScreen,
 	}
 	
 }
