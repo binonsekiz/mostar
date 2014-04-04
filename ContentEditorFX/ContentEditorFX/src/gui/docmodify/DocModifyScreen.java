@@ -4,8 +4,8 @@ import event.DocModifyScreenGuiFacade;
 import gui.GFrame.WindowType;
 import gui.ScreenType;
 import gui.columnview.DocumentView;
+import gui.popup.WelcomePopup;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 
 public class DocModifyScreen extends BorderPane implements ScreenType{
 
@@ -15,6 +15,8 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 	private DocBottomToolbar docBottomToolbar;
 	private DocVersatilePane docVersatilePane;
 	private DocDebugView docDebugView;
+	
+	private WelcomePopup welcomePopup;
 	
 	private DocModifyScreenGuiFacade guiFacade;
 	private WindowType referrer;
@@ -34,18 +36,14 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 		docDebugView = new DocDebugView();
 		guiFacade = new DocModifyScreenGuiFacade(documentView, docWidgetToolbar, docOverview, docBottomToolbar, docVersatilePane, docDebugView);
 		
-		//TODO: for demo use only
-		VBox toolbarBox = new VBox();
-		toolbarBox.getChildren().addAll(docWidgetToolbar);
-		
-//		this.setId("docmodify-screen");
-		
-		this.setTop(toolbarBox);
+		this.setTop(docWidgetToolbar);
 		this.setLeft(docDebugView);
 		this.setCenter(documentView);
 		this.setRight(docVersatilePane);
 		this.setBottom(docBottomToolbar);
 
+		welcomePopup = new WelcomePopup(guiFacade);
+		welcomePopup.show();
 	}
 	
 	private void initEvents(){

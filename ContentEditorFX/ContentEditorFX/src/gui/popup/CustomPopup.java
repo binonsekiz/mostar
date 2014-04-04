@@ -1,12 +1,18 @@
 package gui.popup;
 
-import javafx.stage.Popup;
+import gui.GFrame;
+import javafx.scene.layout.StackPane;
 
-public class CustomPopup extends Popup{
-
+public abstract class CustomPopup extends StackPane{
 	
-	public CustomPopup() {
-		
+	public void show() {
+		GFrame.instance.showPopup(this);
 	}
+	
+	public void hide() {
+		GFrame.instance.hidePopup();
+	}
+
+	public abstract boolean isDisposedWhenClickedOutside();
 	
 }

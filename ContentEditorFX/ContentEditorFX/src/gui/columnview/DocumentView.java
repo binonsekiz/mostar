@@ -12,6 +12,8 @@ import javafx.geometry.Orientation;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -36,9 +38,6 @@ public class DocumentView extends Pane implements CanvasOwner{
 	
 	private DocModifyScreenGuiFacade guiFacade;
 	
-	private Pane customScrollPane;
-	private ScrollBar horizontalScrollBar;
-	private ScrollBar verticalScrollBar;
 	private GridPane gridPane;
 	
 	private ArrayList<ColumnView> columnViews;
@@ -55,11 +54,8 @@ public class DocumentView extends Pane implements CanvasOwner{
 
 	private boolean isOverlayCanvasVisible;
 	private boolean isTextCanvasVisible;
-
 	private boolean isRefreshInProgress;
-
 	private boolean areLinePolygonsVisible;
-
 	private boolean isPageInsetVisible;
 
 	public DocumentView(){
@@ -73,20 +69,13 @@ public class DocumentView extends Pane implements CanvasOwner{
 	private void initGui() {
 		this.setClip(new Rectangle(0,0,this.getWidth(), this.getHeight()));
 		this.setId("docmodify-pane");
-		
-		customScrollPane = new Pane();
+
 		gridPane = new GridPane();
 		gridPane.setVgap(20);
 		gridPane.setHgap(20);
-		horizontalScrollBar = new ScrollBar();
-		verticalScrollBar = new ScrollBar();
-		horizontalScrollBar.setOrientation(Orientation.HORIZONTAL);
-		verticalScrollBar.setOrientation(Orientation.VERTICAL);
 		
 		overlayCanvas = new OverlayCanvas(this);
 		overlayContext = overlayCanvas.getGraphicsContext2D();
-		customScrollPane.setLayoutX(0);
-		customScrollPane.setLayoutY(0);
 		overlayCanvas.setLayoutX(0);
 		overlayCanvas.setLayoutY(0);
 		
@@ -102,8 +91,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 		areLinePolygonsVisible = true;
 		zoomFactor = 1;	
 		
-		customScrollPane.getChildren().addAll(gridPane, overlayCanvas, debugCanvas, verticalScrollBar, horizontalScrollBar);
-		this.getChildren().addAll(customScrollPane);
+		this.getChildren().addAll(gridPane, overlayCanvas, debugCanvas);
 		overlayCanvas.toFront();
 		debugCanvas.toFront();
 	}
@@ -249,7 +237,6 @@ public class DocumentView extends Pane implements CanvasOwner{
 		
 		guiFacade.notifyRefreshHappened();
 		fixCanvasSize();
-		customScrollPane.toBack();
 		overlayCanvas.toFront();
 		debugCanvas.toFront();
 	}
@@ -263,16 +250,6 @@ public class DocumentView extends Pane implements CanvasOwner{
 			debugCanvas.setWidth(getWidth());
 		if(debugCanvas.getHeight() != getHeight())
 			debugCanvas.setHeight(getHeight());
-	
-		horizontalScrollBar.setPrefHeight(10);
-		verticalScrollBar.setPrefWidth(10);
-		
-		horizontalScrollBar.setLayoutY(getHeight() - 15);
-		verticalScrollBar.setLayoutX(getWidth() - 15);
-		
-		horizontalScrollBar.setPrefWidth(getWidth() - verticalScrollBar.getWidth());
-		verticalScrollBar.setPrefHeight(getHeight() - horizontalScrollBar.getHeight());
-		//refreshOverlay();
 	}
 
 	public ColumnView getActiveColumnView() {

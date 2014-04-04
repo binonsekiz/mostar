@@ -2,6 +2,7 @@ package gui;
 
 import event.input.KeyboardManager;
 import gui.docmodify.test.TestFacade;
+import gui.popup.CustomPopup;
 import gui.start.TitleScreen;
 
 import java.util.ArrayList;
@@ -15,13 +16,16 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -31,9 +35,11 @@ public class GFrame extends Application {
 
 	private StackPane root;
 	private StackPane dimmer;
+	private StackPane popupPane;
 	private StackPane sceneChangePane;
 	private GaussianBlur dimBlur;
 	private Pane activePane;
+	private CustomPopup activePopup;
 	
 	private Scene mainScene;
 	private Stage mainStage;
@@ -54,9 +60,14 @@ public class GFrame extends Application {
 	public void start(final Stage mainStage){
 		instance = this;
 		this.mainStage = mainStage;
-	//	testPath();
-		mainPath();
-	//	titleStagePath();
+		activePopup = null;
+		
+		if(true) {
+			mainPath();
+		}
+		else {
+			titleStagePath();
+		}
 	}
 	
 	private void titleStagePath() {
@@ -127,14 +138,27 @@ public class GFrame extends Application {
 		dimmer.toBack();
 		dimmer.setVisible(false);
 		dimmer.setId("dimmer");
+		dimmer.setAlignment(Pos.CENTER);
 		dimmer.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent t) {
-                t.consume();
-                hidePopup();
+            	if(activePopup != null && activePopup.isDisposedWhenClickedOutside()) {
+            		t.consume();
+                	hidePopup();
+            	}
             }
         });
 		dimBlur = new GaussianBlur(0);
 		sceneChangePane.setEffect(dimBlur);
+		
+		HBox hbox = new HBox();
+		hbox.setAlignment(Pos.CENTER);
+		VBox vbox = new VBox();
+		vbox.setAlignment(Pos.CENTER);
+		popupPane = new StackPane();
+		
+		dimmer.getChildren().add(hbox);
+		hbox.getChildren().add(vbox);
+		vbox.getChildren().add(popupPane);
 				
 		mainScene = new Scene(root, GlobalAppSettings.frameWidth, GlobalAppSettings.frameHeight, Color.WHITE);
 		mainScene.getStylesheets().add("gui/styles/skin1.css");
@@ -145,22 +169,25 @@ public class GFrame extends Application {
 		mainScene.addEventHandler(KeyEvent.KEY_TYPED, keyboardManager);
 	}
 	
-	public void showPopup(Node popup) {
-		dimmer.getChildren().clear();
-		dimmer.getChildren().add(popup);
+	public void showPopup(CustomPopup popup) {
+		popupPane.getChildren().clear();
 		dimmer.setVisible(true);
 		dimmer.toFront();
 		dimmer.setOpacity(0);
-
+		activePopup = popup;
+		
+		popupPane.getChildren().add(popup);
+		
 		Timeline dimTimeline = new Timeline();
 		dimTimeline.getKeyFrames().add(
 				new KeyFrame(Duration.millis(GlobalAppSettings.dimmerTime), 
 				new KeyValue(dimmer.opacityProperty(), 1, Interpolator.EASE_IN),
-				new KeyValue(dimBlur.radiusProperty(), 5, Interpolator.EASE_IN)));
+				new KeyValue(dimBlur.radiusProperty(), 8, Interpolator.EASE_IN)));
 		dimTimeline.play();
 	}
 
 	public void hidePopup() {
+		activePopup = null;
 		Timeline undimTimeline = new Timeline();
 		undimTimeline.getKeyFrames().add(
 				new KeyFrame(Duration.millis(GlobalAppSettings.dimmerTime), 
@@ -168,7 +195,7 @@ public class GFrame extends Application {
 					@Override
 					public void handle(ActionEvent arg0) {
 						dimmer.setVisible(false);
-						dimmer.getChildren().clear();
+						popupPane.getChildren().clear();
 					}
 				},
 				new KeyValue(dimmer.opacityProperty(), 0, Interpolator.EASE_IN),
