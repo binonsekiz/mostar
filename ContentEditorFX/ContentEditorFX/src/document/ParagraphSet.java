@@ -1,5 +1,7 @@
 package document;
 
+import geometry.libgdxmath.LineSegment;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -48,7 +50,6 @@ public class ParagraphSet {
 		this.paragraphs.add(paragraph);
 		Collections.sort(paragraphs);
 		paragraph.setParagraphSet(this);
-	//	mergeWithSimilarStyles();
 	}
 	
 	public int getStartIndex() {
@@ -64,7 +65,6 @@ public class ParagraphSet {
 	}
 
 	public ArrayList<TextLine> fillWithAvailableText() {
-		System.out.println("ParagraphSet::Fill With Available Text Started");
 		ArrayList<TextLine> retList = new ArrayList<TextLine>();
 		LayoutMachine machine = column.getLayoutMachine();
 		
@@ -74,13 +74,16 @@ public class ParagraphSet {
 		//get all the paragraph texts to start in filling.
 		for(int i = 0; i < paragraphs.size(); i++) {
 			TextFillReturnValue retValue = paragraphs.get(i).fillWithAvailableText(machine, startSegment, startOffset);
-			System.out.println("\tGot retValue: " + retValue);
 			startSegment = retValue.getFinishLine();
 			startOffset = retValue.getFinishOffset();
 			retList.addAll(retValue.getTextLines());
 		}
 		
-		System.out.println("ParagraphSet::Fill With Available Text finished");
+		System.out.println("Calculated text lines");
+		for(int i = 0; i < retList.size(); i++) {
+			System.out.println(retList.get(i));
+		}
+		
 		return retList;
 	}
 
@@ -116,19 +119,5 @@ public class ParagraphSet {
 
 	public void removeParagraph(Paragraph p2) {
 		this.paragraphs.remove(p2);
-	//	mergeWithSimilarStyles();
 	}
-
-/*	private void mergeWithSimilarStyles() {
-		for(int i = 0; i < paragraphs.size() - 1; i++) {
-			Paragraph p1 = paragraphs.get(i);
-			Paragraph p2 = paragraphs.get(i+1);
-			
-			if(p1.getStyle().isEqual(p2.getStyle())) {
-				p1.mergeWith(p2);
-				i--;
-			}
-		}
-	}*/
-
 }

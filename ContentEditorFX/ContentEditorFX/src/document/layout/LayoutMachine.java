@@ -38,6 +38,8 @@ public class LayoutMachine {
 	private TextStyle backupStyle;
 	private Column parent;
 	
+	private TextModifyFacade facade;
+	
 	public LayoutMachine(Column parent){
 		this.parent = parent;
 		backupSegments = new ArrayList<LineSegment>();
@@ -45,10 +47,11 @@ public class LayoutMachine {
 	}
 	
 	public void initialSetup() {
+		System.out.println("1.Initial Setup");
 		ArrayList<ParagraphSet> sets = parent.getParagraphSets();
 		for(int i = 0; i < sets.size(); i++) {
 			startTextDivision(sets.get(i));
-			sets.get(i).fillWithAvailableText();	
+			sets.get(i).fillWithAvailableText();
 		}
 	}
 	
@@ -69,12 +72,40 @@ public class LayoutMachine {
 			
 			//At this moment, each line segment corresponds to one or more text lines.
 			for(int j = 0; j < textLines.size(); j++) {
-				LineOnCanvas newLine = new LineOnCanvas(parent, paragraphOnCanvas, facade);
-				newLine.setTextLine(textLines.get(j));
-				newLine.setLineSegment(lineSegments.get(j));
-				paragraphOnCanvas.insertLine(newLine);
+				buildSingleLineOnCanvas(parent, paragraphOnCanvas, textLines.get(i), lineSegments.get(i));
 			}
 		}
+	}
+	
+	public void validateLineOnCanvases(Paragraph paragraph, ColumnView columnView) {
+		ParagraphOnCanvas paragraphOnCanvas = null;
+		for(int i = 0; i < columnView.getParagraphsOnCanvas().size(); i++) {
+			if( columnView.getParagraphsOnCanvas().get(i).containsParagraph(paragraph)){
+				paragraphOnCanvas = columnView.getParagraphsOnCanvas().get(i);
+				break;
+			}
+		}
+				
+		for(int i = 0; i < paragraph.getLineSegments().size(); i++) {
+			TextLine textLine = paragraph.getTextLines().get(i);
+			if(i >= paragraphOnCanvas.getLinesOnCanvas().size()) {
+				//an additional line on canvas is needed here.
+				buildSingleLineOnCanvas(columnView, paragraphOnCanvas, paragraph.getTextLines().get(i), paragraph.getLineSegments().get(i));
+			}
+			paragraphOnCanvas.getLinesOnCanvas().get(i).setTextLine(textLine);
+			paragraphOnCanvas.getLinesOnCanvas().get(i).setLineSegment(paragraph.getLineSegments().get(i));
+		}
+
+		for(int i = paragraphOnCanvas.getLinesOnCanvas().size() - 1; i >= paragraph.getLineSegments().size(); i--) {
+			paragraphOnCanvas.getLinesOnCanvas().remove(i);
+		}
+	}
+	
+	private void buildSingleLineOnCanvas(ColumnView view, ParagraphOnCanvas paragraphOnCanvas, TextLine textLine, LineSegment lineSegment) {
+		LineOnCanvas newLine = new LineOnCanvas(view, paragraphOnCanvas, facade);
+		newLine.setTextLine(textLine);
+		newLine.setLineSegment(lineSegment);
+		paragraphOnCanvas.insertLine(newLine);
 	}
 	
 	public void startTextDivision(ParagraphSet paragraphSet) {
@@ -86,6 +117,10 @@ public class LayoutMachine {
 		
 		//TODO: erase this line
 		DocumentView.getDebugContext().clearRect(0, 0, 2000, 2000);
+	}
+
+	public LineSegment getDefaultSegment(TextStyle style) {
+		return getNextAvailableLineSegment(style);
 	}
 	
 	public LineSegment getNextAvailableLineSegment(TextStyle style) {
@@ -152,7 +187,7 @@ public class LayoutMachine {
 		float angle = paragraphSet.getAngle();
 		angle = (angle + 90) % 360;
 		
-		lineSegmentOffset.moveWithGivenAngle(angle, backupStyle.getLineSpacingHeight());		
+		lineSegmentOffset.moveWithGivenAngle(angle, backupStyle.getLineSpacingHeight());
 	}
 
 	/**
@@ -311,4 +346,8 @@ public class LayoutMachine {
 			reuseSegmentFromOffset(lastCalculatedWidth);
 		}
 	}
+
+	public void setTextModifyFacade(TextModifyFacade facade) {
+		this.facade = facade;
+	}		
 }

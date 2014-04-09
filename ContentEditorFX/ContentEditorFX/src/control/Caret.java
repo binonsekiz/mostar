@@ -208,6 +208,8 @@ public class Caret{
 		else {
 			caretParagraph.insertText(text, Math.min(caretIndex, anchor), Math.max(caretIndex,anchor));
 		}
+		//getActiveColumnView().refresh();
+		caretParagraph.validateLineOnCanvases(getActiveColumnView());
 		setCaretIndex(Math.min(caretIndex, anchor) + text.length());
 	}
 

@@ -48,29 +48,9 @@ public class KeyboardManager implements EventHandler<KeyEvent>{
 	}
 
 	public void keyReleased(KeyEvent event) {
-//		System.out.println("Global key released (TEXT): " + event.getText());
-//		System.out.println("Global key released (CODE): " + event.getCode());
-//		System.out.println("Global key released (CHAR): \t" + event.getCharacter());
-		
-	//	if(event.getCode() == KeyCode.SPACE) {
-		//	textFacade.insertString(" ");
-		//}
-		//else 
-		/*if(event.getCode() == KeyCode.TAB) {
-			textFacade.insertString("\t");
-		}*/
 	}
 
 	public void keyTyped(KeyEvent event) {
-//		System.out.println("Global key typed (TEXT): " + event.getText());
-//		System.out.println("Global key typed (CODE): " + event.getCode());
-//		System.out.println("Global key typed (CHAR): \t" + event.getCharacter());
-	/*	KeyCode code = event.getCode();
-		
-		if(code == KeyCode.SPACE) {
-			System.out.println("SPACE PRESSED");
-			textFacade.insertSingleChar(" ");
-		}*/
 	}
 	
 	public void setTextFacade(TextModifyFacade facade) {

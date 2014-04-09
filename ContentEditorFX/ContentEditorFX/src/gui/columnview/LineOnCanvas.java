@@ -66,7 +66,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 		debugObjectCount = debugObjectCounter;
 		debugObjectCounter++;
 		
-	//	System.out.println("Line on Canvas initialized: " + debugObjectCount);
+		System.out.println("Line on Canvas initialized: " + debugObjectCount);
 		this.parent = parent;
 		this.parentParagraph = parentParagraph;
 		this.textModifyFacade = textModifyFacade;

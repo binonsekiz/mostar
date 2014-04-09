@@ -1,6 +1,7 @@
 package document;
 
 import geometry.libgdxmath.LineSegment;
+import gui.columnview.ColumnView;
 import gui.columnview.ParagraphOnCanvas;
 import gui.helper.MathHelper;
 
@@ -62,25 +63,14 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>{
 		lineSegments = new ArrayList<LineSegment>();
 		hasElements = false;
 		setText(text);
-	//	computeStringWidths();
-	//	initEvents();
 	}
 	
 	public void setParagraphOnCanvas(ParagraphOnCanvas view) {
 		this.paragraphView = view;
 	}
-	
-	private void initEvents() {
-		startIndexInBigText.addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> arg0,
-					Number oldValue, Number arg2) {
-				
-			}
-		});
-	}
 
 	private void updateTextLines() {
+		System.out.println("UPDATE TEXT LINES");
 		getParagraphSet().getColumn().getLayoutMachine().initialSetup();
 	}
 
@@ -157,6 +147,22 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>{
 		}
 		
 		Collections.sort(textLines);
+		
+		if(textLines.size() == 0){
+			int indexOffset = 0;
+			if(indexInParent > 0) {
+				indexOffset = documentText.getParagraph(indexInParent - 1).getEndIndex();
+				startIndexInBigText.set(indexOffset);
+			}
+			
+			LineSegment defaultSegment = machine.getDefaultSegment(style);
+			if(defaultSegment != null) {
+				TextLine defaultLine = new TextLine(this, indexOffset, indexOffset);
+				lineSegments.add(machine.getDefaultSegment(style));
+				textLines.add(defaultLine);
+			}
+		}
+		
 		retVal = new TextFillReturnValue(textLines, Math.max(0, segmentCounter - 1), lastCalculatedWidth);
 		
 		return retVal;
@@ -291,6 +297,7 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>{
 
 	public void insertText(String text, int caretIndex) {
 		this.textBuffer.insert(caretIndex - startIndexInBigText.get(), text);
+		System.out.println("Text buffer becomes: " + textBuffer.toString());
 		updateTextLines();	
 	}
 
@@ -431,6 +438,10 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>{
 			return 1;
 		}
 		return 0;
+	}
+
+	public void validateLineOnCanvases(ColumnView columnView) {
+		paragraphSet.getColumn().getLayoutMachine().validateLineOnCanvases(this, columnView);
 	}
 
 	

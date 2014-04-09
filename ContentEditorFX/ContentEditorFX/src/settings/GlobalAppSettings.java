@@ -1,5 +1,7 @@
 package settings;
 
+import gui.columnview.DocumentView.ScrollMode;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +31,9 @@ public class GlobalAppSettings {
 	public static final double caretBlinkRate = 1000;
 	public static final float caretMovementTime = 100f;
 	public static final float pointerJumpSize = 10;
+	public static final ScrollMode defaultDocumentViewScrollMode = ScrollMode.Continuous;
+	public static double gridHGap = 20;
+	public static double gridVGap = 20;
 	public static double minFrameWidth = 240;
 	public static double minFrameHeight = 320;
 	public static double frameWidth = 1080;

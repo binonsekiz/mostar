@@ -5,6 +5,8 @@ import gui.GFrame.WindowType;
 import gui.ScreenType;
 import gui.columnview.DocumentView;
 import gui.popup.WelcomePopup;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.BorderPane;
 
 public class DocModifyScreen extends BorderPane implements ScreenType{
@@ -41,7 +43,7 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 		this.setCenter(documentView);
 		this.setRight(docVersatilePane);
 		this.setBottom(docBottomToolbar);
-
+		
 		welcomePopup = new WelcomePopup(guiFacade);
 		welcomePopup.show();
 	}

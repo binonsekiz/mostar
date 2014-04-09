@@ -56,7 +56,7 @@ public class TextModifyFacade extends Facade{
 
 	public void insertString(String text) {
 		caret.insertString(text);
-		caret.getActiveColumnView().refresh();
+//		caret.getActiveColumnView().refresh();
 	}
 	
 	public void addNewParagraphToEnd(TextStyle style) {

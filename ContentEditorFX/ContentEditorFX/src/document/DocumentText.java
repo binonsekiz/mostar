@@ -26,7 +26,7 @@ public class DocumentText {
 		set1.setAngle(0);
 		
 		Paragraph paragraph = new Paragraph(this, 0);
-		paragraph.setText("a");
+		paragraph.setText("");
 		addParagraph(paragraph, set1);
 		paragraph.setStyle(DebugHelper.debugStyle1);
 		
@@ -143,7 +143,7 @@ public class DocumentText {
 	
 	/**
 	 * Counts the characters between caretIndex and the first space occurrence
-	 * Expected to return 0 or negative values.
+	 * Expected to return 0 or negative values. Will be used for ctrl+arrow
 	 * @param caretIndex
 	 * @return
 	 */
@@ -154,7 +154,7 @@ public class DocumentText {
 	
 	/**
 	 * Counts the characters between caretIndex and the first space occurrence
-	 * Expected to return 0 or positive values. okürýns
+	 * Expected to return 0 or positive values. 
 	 * @param caretIndex
 	 * @return
 	 */
@@ -186,6 +186,15 @@ public class DocumentText {
 				retVal.add(paragraphSets.get(i));
 		}
 		return retVal;
+	}
+
+	public ParagraphSet getParagraphSetBefore(ParagraphSet paragraphSet) {
+		int index = paragraphSets.indexOf(paragraphSet);
+		index --;
+		if(index < 0)
+			return null;
+		else
+			return paragraphSets.get(index);
 	}
 
 	

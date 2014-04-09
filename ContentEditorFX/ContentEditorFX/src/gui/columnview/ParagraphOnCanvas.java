@@ -38,6 +38,7 @@ public class ParagraphOnCanvas {
 		this.textModifyFacade = facade;
 		lines = new ArrayList<LineOnCanvas>();
 		
+		getLayoutMachine().setTextModifyFacade(facade);
 		getLayoutMachine().buildLineOnCanvases(parent, this, paragraphSet, facade);
 	}
 
@@ -66,8 +67,11 @@ public class ParagraphOnCanvas {
 	}
 	
 	public void refresh() {
-		lines.clear();
-		getLayoutMachine().buildLineOnCanvases(parent, this, paragraphSet, textModifyFacade);
+	//	lines.clear();
+	//	getLayoutMachine().buildLineOnCanvases(parent, this, paragraphSet, textModifyFacade);
+		for(int i = 0; i < paragraphSet.getParagraphCount(); i++) {
+			paragraphSet.getParagraph(i).validateLineOnCanvases(parent);
+		}
 		for(int i = 0; i < lines.size(); i++){
 			lines.get(i).refresh();
 		}
@@ -158,6 +162,14 @@ public class ParagraphOnCanvas {
 
 	public String getText(TextLine textLine) {
 		return getText(textLine.getStartIndex(), textLine.getEndIndex());
+	}
+
+	public boolean containsParagraph(Paragraph paragraph) {
+		for(int i = 0; i < paragraphSet.getParagraphCount(); i++){
+			if(paragraphSet.getParagraph(i) == paragraph)
+				return true;
+		}
+		return false;
 	}
 
 }

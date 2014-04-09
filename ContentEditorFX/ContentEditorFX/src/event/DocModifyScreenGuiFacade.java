@@ -1,6 +1,7 @@
 package event;
 
 import gui.columnview.DocumentView;
+import gui.columnview.DocumentView.ScrollMode;
 import gui.docmodify.DocBottomToolbar;
 import gui.docmodify.DocDebugView;
 import gui.docmodify.DocOverview;
@@ -106,6 +107,7 @@ public class DocModifyScreenGuiFacade {
 		Column newColumn = new Column(document.getMeasurement(), document.getPageInsets());
 		document.addColumn(newColumn, activeColumnIndex);
 		documentView.addColumn(newColumn, activeColumnIndex);
+		documentView.requestFocus();
 	}
 
 	public void addImageWidgetPressed() {
@@ -114,6 +116,7 @@ public class DocModifyScreenGuiFacade {
 //		docModifyPane.getActivePageView().addEmptyImage();
 		widgetModifyFacade.addImageWidget();
 		documentView.refresh();
+		documentView.requestFocus();
 	}
 
 	public void addHtmlWidgetPressed() {
@@ -122,6 +125,7 @@ public class DocModifyScreenGuiFacade {
 //		docModifyPane.getActivePageView().addWebView();
 		widgetModifyFacade.addWebViewWidget();
 		documentView.refresh();
+		documentView.requestFocus();
 	}
 
 	public void addMediaWidgetPressed() {
@@ -129,6 +133,7 @@ public class DocModifyScreenGuiFacade {
 //		docModifyPane.getActivePageView().addMediaView();
 		widgetModifyFacade.addMediaViewWidget();
 		documentView.refresh();
+		documentView.requestFocus();
 	}
 	
 	public void addImageGalleryWidgetPressed() {
@@ -136,17 +141,19 @@ public class DocModifyScreenGuiFacade {
 //		docModifyPane.getActivePageView().addImageGallery();
 		widgetModifyFacade.addImageGalleryWidget();
 		documentView.refresh();
+		documentView.requestFocus();
 	}
 	
 	public void addThreeDWidgetPressed() {
 		// TODO Auto-generated method stub
 		widgetModifyFacade.addThreeDWidgetPressed();
 		documentView.refresh();
+		documentView.requestFocus();
 	}
 	
 	public void addTextBoxPressed() {
 		// TODO Auto-generated method stub
-		
+		documentView.requestFocus();
 	}
 	
 	public void changeActiveColumn(int activeColumn) {
@@ -174,10 +181,12 @@ public class DocModifyScreenGuiFacade {
 				e.printStackTrace();
 			}	
 	    }
+	    documentView.requestFocus();
 	}
 	
 	public void changeVersatilePane(WidgetModifier modifier){
 		docVersatilePane.show(modifier);
+		documentView.requestFocus();
 	}
 
 	public void documentPaneZoomChanged(double zoomFactor) {
@@ -206,10 +215,12 @@ public class DocModifyScreenGuiFacade {
 
 	public void setOverlayCanvasVisible(boolean value) {
 		documentView.setOverlayCanvasVisible(value);
+		documentView.requestFocus();
 	}
 
 	public void setTextCanvasVisible(boolean value) {
 		documentView.setTextCanvasVisible(value);
+		documentView.requestFocus();
 	}
 
 	public void requestDocumentViewRefresh() {
@@ -218,30 +229,37 @@ public class DocModifyScreenGuiFacade {
 
 	public void setLinePolygonsVisible(boolean value) {
 		documentView.setLinePolygonsVisible(value);
+		documentView.requestFocus();
 	}
 
 	public void setInsetVisible(boolean value) {
 		documentView.setInsetVisible(value);
+		documentView.requestFocus();
 	}
 
 	public void changeFontName(String arg2) {
 		styleModifyFacade.changeFontName(arg2);
+		documentView.requestFocus();
 	}
 
 	public void changeFontSize(String arg2) {
 		styleModifyFacade.changeFontSize(Double.parseDouble(arg2));
+		documentView.requestFocus();
 	}
 
 	public void debugResetTextIndices() {
 		document.getDocumentText().debugValidateAllTextLines();
+		documentView.requestFocus();
 	}
 
 	public void updateVisualStyleControls() {
 		docWidgetToolbar.updateVisualStyleControls();
+		documentView.requestFocus();
 	}
 
 	public void drawShapeButtonPressed() {
 		shapeDrawFacade.changeShapeDrawingMode(ShapeDrawingMode.PolygonDrawing);
+		documentView.requestFocus();
 	}
 
 	public ShapeDrawFacade getShapeDrawFacade() {
@@ -254,14 +272,25 @@ public class DocModifyScreenGuiFacade {
 
 	public void newButtonPressed() {
 		System.out.println("new button");
+		documentView.requestFocus();
 	}
 
 	public void saveButtonPressed() {
 		System.out.println("save button");
+		documentView.requestFocus();
 	}
 
 	public void loadButtonPressed() {
 		System.out.println("load button");
+		documentView.requestFocus();
+	}
+
+	public void setDocumentViewScrollBehaviour(ScrollMode mode) {
+		documentView.setScrollBehaviour(mode);
+	}
+
+	public void setDebugCanvasVisible(boolean b) {
+		documentView.setDebugCanvasVisible(b);
 	}
 
 	

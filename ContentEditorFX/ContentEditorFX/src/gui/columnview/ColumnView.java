@@ -230,13 +230,14 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		overlayContext = parent.getGraphicsContext();
 		
 		overlayContext.save();
+		overlayContext.translate(/*-1 * this.getBoundsInParent().getMinX() + */parent.getOverlayOffsetX(), /*-1 * this.getBoundsInParent().getMinY() +*/ parent.getOverlayOffsetY());
 		overlayContext.clearRect(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY(), column.getWidth(), column.getHeight());
 		
-		overlayContext.setStroke(Color.FIREBRICK);
 		overlayContext.setLineWidth(2);
-		overlayContext.strokeRect(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY(), column.getWidth(), column.getHeight());
+	//	overlayContext.strokeRect(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY(), column.getWidth(), column.getHeight());
 		
-		overlayContext.translate(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY());
+		overlayContext.setStroke(Color.HOTPINK);
+		overlayContext.strokeRect(0, 0, column.getWidth(), column.getHeight());
 		
 		for(int i = 0; i < visuals.size(); i++){
 			VisualView view = visuals.get(i);
