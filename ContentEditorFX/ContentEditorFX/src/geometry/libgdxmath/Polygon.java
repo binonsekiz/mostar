@@ -1,7 +1,15 @@
 package geometry.libgdxmath;
 
+import java.io.Serializable;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import document.PersistentObject;
 import javafx.scene.canvas.GraphicsContext;
 import settings.GlobalAppSettings;
+import storage.XmlManager;
 
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
@@ -18,8 +26,11 @@ import settings.GlobalAppSettings;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-/** Encapsulates a 2D polygon defined by it's vertices relative to an origin point (default of 0, 0). */
-public class Polygon {
+/**
+ *  Encapsulates a 2D polygon defined by it's vertices relative to an origin point (default of 0, 0). 
+ */
+public class Polygon implements Serializable, PersistentObject{
+	private static final long serialVersionUID = 1289325039892826840L;
 	private float[] localVertices;
 	
 	private float[] worldVertices;
@@ -34,6 +45,32 @@ public class Polygon {
 	private short[] indexList;
 
 	private Rectangle localBounds;
+	
+	public Node getXmlNode(Document doc) {
+		Element polygonElement = doc.createElement("Polygon");
+		
+		XmlManager.insertNumberElement(doc, polygonElement, "X", x);
+		XmlManager.insertNumberElement(doc, polygonElement, "Y", y);
+		XmlManager.insertNumberElement(doc, polygonElement, "OriginX", originX);
+		XmlManager.insertNumberElement(doc, polygonElement, "OriginY", originY);
+		XmlManager.insertNumberElement(doc, polygonElement, "Rotation", rotation);
+		XmlManager.insertNumberElement(doc, polygonElement, "ScaleX", scaleX);
+		XmlManager.insertNumberElement(doc, polygonElement, "ScaleY", scaleY);
+		
+		Element localVerticesElement = doc.createElement("LocalVertices");
+		for(int i = 0; i < localVertices.length; i++) {
+			XmlManager.insertNumberElement(doc, localVerticesElement, "Float" + i, localVertices[i]);
+		}
+		polygonElement.appendChild(localVerticesElement);
+		
+		Element indicesElement = doc.createElement("Indices");
+		for(int i = 0; i < indexList.length; i++) {
+			XmlManager.insertNumberElement(doc, indicesElement, "Float" + i, indexList[i]);
+		}
+		polygonElement.appendChild(indicesElement);
+		
+		return polygonElement;
+	}
 	
 	/** Constructs a new polygon with no vertices. */
 	public Polygon () {

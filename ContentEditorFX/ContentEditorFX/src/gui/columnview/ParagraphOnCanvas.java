@@ -2,6 +2,7 @@ package gui.columnview;
 
 import gui.docmodify.DocDebugView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -20,7 +21,7 @@ import document.layout.LayoutMachine;
  * @author sahin
  *
  */
-public class ParagraphOnCanvas {
+public class ParagraphOnCanvas{
 
 	private ColumnView parent;
 	

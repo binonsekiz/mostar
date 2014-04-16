@@ -139,7 +139,7 @@ public class DocWidgetToolbar extends FlowPane{
 		
 		newButton = new Button(Translator.get("New"));
 		saveButton = new Button(Translator.get("Save"));
-		loadButton = new Button(Translator.get("Load"));
+		loadButton = new Button(Translator.get("Open"));
 		
 		saveLoadPane.getStyleClass().add("segmented-button-bar-class");
 		saveLoadPane.getChildren().addAll(newButton, saveButton, loadButton);

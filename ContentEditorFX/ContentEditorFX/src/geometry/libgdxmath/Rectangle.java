@@ -14,9 +14,16 @@ package geometry.libgdxmath;
  ******************************************************************************/
 import java.io.Serializable;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import storage.XmlManager;
+import document.PersistentObject;
+
 /** Encapsulates a 2D rectangle defined by it's bottom corner point and its extends in x (width) and y (height).
  * @author badlogicgames@gmail.com */
-public class Rectangle implements Serializable {
+public class Rectangle implements Serializable, PersistentObject{
 	/** Static temporary rectangle. Use with care! Use only when sure other code will not also use this. */
 	static public final Rectangle tmp = new Rectangle();
 
@@ -30,6 +37,17 @@ public class Rectangle implements Serializable {
 	/** Constructs a new rectangle with all values set to zero */
 	public Rectangle () {
 
+	}
+	
+	public Node getXmlNode(Document doc) {
+		Element rectElement = doc.createElement("Rectangle");
+		
+		XmlManager.insertNumberElement(doc, rectElement, "X", x);
+		XmlManager.insertNumberElement(doc, rectElement, "Y", y);
+		XmlManager.insertNumberElement(doc, rectElement, "Width", width);
+		XmlManager.insertNumberElement(doc, rectElement, "Height", height);
+
+		return rectElement;
 	}
 
 	/** Constructs a new rectangle with the given corner point in the bottom left and dimensions.
@@ -337,4 +355,6 @@ public class Rectangle implements Serializable {
 		this.y = floatValue;
 		return this;
 	}
+
+	
 }

@@ -27,6 +27,7 @@
 <text id = "Open Web Page">Open Web Page</text>
 <text id = "New">New</text>
 <text id = "Open">Open</text>
+<text id = "Save">Save</text>
 <text id = "Chapter">Chapter</text>
 <text id = "Section">Section</text>
 <text id = "Book">Book</text>
@@ -70,4 +71,6 @@
 <text id = "Rotate">Rotate</text>
 <text id = "Scale">Scale</text>
 <text id = "Box">Box</text>
+<text id = "Save Document">Save Document</text>
+<text id = "Open Document">Open Document</text>
 </translation>

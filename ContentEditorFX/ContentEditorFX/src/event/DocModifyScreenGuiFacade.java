@@ -8,6 +8,8 @@ import gui.docmodify.DocOverview;
 import gui.docmodify.DocVersatilePane;
 import gui.docmodify.DocWidgetToolbar;
 import gui.helper.DebugHelper;
+import gui.storage.FilePickerWrapper;
+import gui.storage.FilePickerWrapper.FilePickerType;
 import gui.threed.ThreeDModifyScreen;
 import gui.widget.WidgetModifier;
 
@@ -18,6 +20,7 @@ import java.io.FileNotFoundException;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import settings.Translator;
+import storage.RepositoryManager;
 import control.Caret;
 import control.StyleModifyFacade;
 import control.TextModifyFacade;
@@ -38,6 +41,8 @@ public class DocModifyScreenGuiFacade {
 	private DocDebugView docDebugView;
 	private ThreeDModifyScreen tdModifyScreen;
 	private DebugHelper debugHelper;
+	private FilePickerWrapper filePicker;
+	private RepositoryManager repositoryManager;
 	
 	private TextModifyFacade textModifyFacade;
 	private WidgetModifyFacade widgetModifyFacade;
@@ -57,12 +62,14 @@ public class DocModifyScreenGuiFacade {
 		this.docVersatilePane = docVersatilePane;
 		this.docDebugView = docDebugView;
 		this.debugHelper = new DebugHelper();
-			
+		
 		textModifyFacade = new TextModifyFacade();
 		widgetModifyFacade = new WidgetModifyFacade(this);
 		styleModifyFacade = new StyleModifyFacade();
 		shapeDrawFacade = new ShapeDrawFacade();
 		threeDEventFacade = new ThreeDEventFacade();
+		repositoryManager = new RepositoryManager();
+		filePicker = new FilePickerWrapper(this, repositoryManager);
 		caret = new Caret(textModifyFacade);
 		textModifyFacade.setCaret(caret);
 		KeyboardManager.instance.setTextFacade(textModifyFacade);
@@ -278,11 +285,13 @@ public class DocModifyScreenGuiFacade {
 	public void saveButtonPressed() {
 		System.out.println("save button");
 		documentView.requestFocus();
+		filePicker.open(FilePickerType.SaveDocument);
 	}
 
 	public void loadButtonPressed() {
 		System.out.println("load button");
 		documentView.requestFocus();
+		filePicker.open(FilePickerType.OpenDocument);
 	}
 
 	public void setDocumentViewScrollBehaviour(ScrollMode mode) {

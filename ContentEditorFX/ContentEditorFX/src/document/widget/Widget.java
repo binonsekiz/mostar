@@ -1,14 +1,28 @@
 package document.widget;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import storage.XmlManager;
 import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Rectangle;
+import document.PersistentObject;
 
-public abstract class Widget {
+public abstract class Widget implements PersistentObject{
 
 	private int pageNumber;
-	private WidgetType type;
 	private Polygon shape;
 	private TextWrapType textWrap;
+	
+	protected Element getXmlAbstractNode(Document doc) {
+		Element widgetElement = doc.createElement("Widget");
+		
+		XmlManager.insertNumberElement(doc, widgetElement, "PageNumber", pageNumber);
+		XmlManager.insertSingleElement(doc, widgetElement, shape);
+		XmlManager.insertStringElement(doc, widgetElement, "TextWrap", textWrap.toString());
+		
+		return widgetElement;
+	}
 	
 	public Widget(){
 		textWrap = TextWrapType.Inline;

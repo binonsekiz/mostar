@@ -3,8 +3,14 @@ package document;
 import geometry.GeometryHelper;
 import geometry.libgdxmath.Polygon;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import storage.XmlManager;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -13,7 +19,7 @@ import document.PageSpecs.Measurement;
 import document.layout.LayoutMachine;
 import document.widget.Widget;
 
-public class Column {
+public class Column implements PersistentObject{
 
 	public static Column debugInstance;
 	private Measurement pageSize;
@@ -25,6 +31,20 @@ public class Column {
 	private ArrayList<Polygon> shapes;
 	
 	private LayoutMachine layoutMachine;
+	
+	@Override
+	public Node getXmlNode(Document doc) {
+		Element columnElement = doc.createElement("Column");
+		
+		XmlManager.insertSingleElement(doc, columnElement, pageSize);
+		XmlManager.insertSingleElement(doc, columnElement, insets.get());
+		XmlManager.insertArrayListElements(doc, columnElement, "Widgets", widgets);
+		XmlManager.insertSingleElement(doc, columnElement, columnShape);
+		XmlManager.insertArrayListId(doc, columnElement, "ParagraphSets", paragraphSets);
+		XmlManager.insertArrayListElements(doc, columnElement, "Shapes", shapes);
+		
+		return columnElement;
+	}
 	
 	public Column(Measurement measurement, PageInsets newInsets){
 		System.out.println("Column initialized");
@@ -126,4 +146,5 @@ public class Column {
 		shapesAndWidgets.addAll(shapes);
 		return shapesAndWidgets;
 	}
+
 }

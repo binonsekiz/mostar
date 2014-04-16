@@ -2,9 +2,13 @@ package document;
 
 import java.util.ArrayList;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import storage.XmlManager;
 import document.PageSpecs.Measurement;
 
-public class Document {
+public class Document implements PersistentObject{
 	public static Document instance;
 	
 	//defaults for every new page
@@ -13,6 +17,16 @@ public class Document {
 	
 	private DocumentText globalText;
 	private ArrayList<Column> columns;
+	
+	@Override
+	public Node getXmlNode(org.w3c.dom.Document doc) {
+		Element documentElement = doc.createElement("PortisInteractiveocument");
+		XmlManager.insertSingleElement(doc, documentElement, measurement);
+		XmlManager.insertSingleElement(doc, documentElement, pageInsets);
+		XmlManager.insertSingleElement(doc, documentElement, globalText);
+		XmlManager.insertArrayListElements(doc, documentElement, "Columns", columns);
+		return documentElement;
+	}
 	
 	public Document(){
 		System.out.println("Document initialized");
@@ -57,4 +71,5 @@ public class Document {
 	public DocumentText getDocumentText(){
 		return globalText;
 	}
+
 }

@@ -5,16 +5,30 @@ import geometry.libgdxmath.LineSegment;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import storage.XmlManager;
 import document.Paragraph.TextFillReturnValue;
 import document.layout.LayoutMachine;
 
-public class ParagraphSet {
+public class ParagraphSet implements PersistentIndexedObject {
 
 	private ArrayList<Paragraph> paragraphs;
 	private ParagraphSpace paragraphSpace;
 	private Column column;
 	private float angle;
+	private int indexInDocument;
 	private DocumentText parent;
+	
+	public Node getXmlNode(org.w3c.dom.Document doc) {
+		Element paragraphSetElement = doc.createElement("ParagraphSet");
+		
+		XmlManager.insertSingleElement(doc, paragraphSetElement, paragraphSpace);
+		XmlManager.insertNumberElement(doc, paragraphSetElement, "Angle", angle);
+				
+		return paragraphSetElement;
+	}
 	
 	public ParagraphSet(DocumentText parent) {
 		System.out.println("Paragraph set initialized");
@@ -119,5 +133,14 @@ public class ParagraphSet {
 
 	public void removeParagraph(Paragraph p2) {
 		this.paragraphs.remove(p2);
+	}
+
+	public void setIndexInDocument(int indexInDocument) {
+		this.indexInDocument = indexInDocument;
+	}
+	
+	@Override
+	public int getPersistenceId() {
+		return indexInDocument;
 	}
 }

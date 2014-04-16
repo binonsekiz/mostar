@@ -9,6 +9,7 @@ import gui.columnview.DocumentView;
 import gui.columnview.LineOnCanvas;
 import gui.columnview.ParagraphOnCanvas;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -26,8 +27,8 @@ import document.ParagraphSet;
 import document.TextLine;
 import document.style.TextStyle;
 
-public class LayoutMachine {
-
+public class LayoutMachine{
+	
 	private PageInsets insets;
 	private boolean textDivisionMode;
 	private ParagraphSet paragraphSet;

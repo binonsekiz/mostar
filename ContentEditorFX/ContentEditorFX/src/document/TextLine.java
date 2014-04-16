@@ -1,16 +1,29 @@
 package document;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import document.style.TextStyle;
 
-public class TextLine implements Comparable<TextLine> {
+public class TextLine implements Comparable<TextLine>, PersistentObject {
 
 	private SimpleIntegerProperty startIndex;
 	private SimpleIntegerProperty endIndex;
 	
 	private Paragraph parent;
+
+	@Override
+	public Node getXmlNode(Document doc) {
+		Element textLineElement = doc.createElement("TextLine");
+		textLineElement.setAttribute("StartIndex" , startIndex.get() + "");
+		textLineElement.setAttribute("EndIndex", endIndex.get() + "");
+		textLineElement.setAttribute("ParagraphIndex", parent.getIndexInParent() + "");
+		return textLineElement;
+	}
 	
 	public TextLine(Paragraph parent, int startIndex, int endIndex) {
 		System.out.println("TextLine initialized, start: " + startIndex + ", end: " + endIndex);
@@ -87,5 +100,6 @@ public class TextLine implements Comparable<TextLine> {
 	public Paragraph getParent() {
 		return parent;
 	}
+
 	
 }

@@ -2,15 +2,30 @@ package document;
 
 import gui.helper.DebugHelper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import storage.XmlManager;
 import document.style.TextStyle;
 
-public class DocumentText {
+public class DocumentText implements PersistentObject{
 
 	private ArrayList<Paragraph> globalText;
 	private ArrayList<ParagraphSet> paragraphSets;
 	private Document document;
+	
+	public Node getXmlNode(org.w3c.dom.Document doc) {
+		Element docTextElement = doc.createElement("DocumentText");
+		
+		XmlManager.insertArrayListElements(doc, docTextElement, "Paragraphs", globalText);
+		XmlManager.insertArrayListElements(doc, docTextElement, "ParagraphSets", paragraphSets);
+
+		return docTextElement;
+	}
+
 	
 	public DocumentText (Document document) {
 		System.out.println("DocumentText initialized");
@@ -79,6 +94,7 @@ public class DocumentText {
 	
 	public void addParagraphSet(ParagraphSet paragraphSet) {
 		this.paragraphSets.add(paragraphSet);
+		paragraphSet.setIndexInDocument(this.paragraphSets.size() - 1);
 	}
 	
 	public TextStyle getStyleAt(int caretIndex) {

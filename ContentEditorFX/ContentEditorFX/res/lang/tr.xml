@@ -27,6 +27,7 @@
 <text id = "Open Web Page">Web Sayfası ekle</text>
 <text id = "New">Yeni</text>
 <text id = "Open">Aç</text>
+<text id = "Save">Kaydet</text>
 <text id = "Chapter">Ünite</text>
 <text id = "Section">Bölüm</text>
 <text id = "Book">Kitap</text>
@@ -72,4 +73,6 @@
 <text id = "Rotate">Döndür</text>
 <text id = "Scale">Ölçeklendir</text>
 <text id = "Box">Küp</text>
+<text id = "Save Document">Belgeyi Kaydet</text>
+<text id = "Open Document">Belge Aç</text>
 </translation>

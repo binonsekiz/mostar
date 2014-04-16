@@ -1,12 +1,30 @@
 package geometry.libgdxmath;
 
 import javafx.scene.canvas.GraphicsContext;
-import settings.GlobalAppSettings;
 
-public class LineSegment implements Comparable<LineSegment>{
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import settings.GlobalAppSettings;
+import storage.XmlManager;
+import document.PersistentObject;
+
+public class LineSegment implements Comparable<LineSegment>, PersistentObject{
 	private Vector2 firstPoint;
 	private Vector2 secondPoint;
 	private Vector2 normal;
+
+	@Override
+	public Node getXmlNode(Document doc) {
+		Element lineSegmentElement = doc.createElement("LineSegment");
+		
+		XmlManager.insertSingleElement(doc, lineSegmentElement, firstPoint);
+		XmlManager.insertSingleElement(doc, lineSegmentElement, secondPoint);
+		XmlManager.insertSingleElement(doc, lineSegmentElement, normal);
+		
+		return lineSegmentElement;
+	}
 	
 	public LineSegment(Vector2 firstPoint, Vector2 secondPoint){
 		this.firstPoint = firstPoint;
@@ -169,5 +187,6 @@ public class LineSegment implements Comparable<LineSegment>{
 	public LineSegment cpy() {
 		return new LineSegment(firstPoint.cpy(), secondPoint.cpy());
 	}
+
 
 }

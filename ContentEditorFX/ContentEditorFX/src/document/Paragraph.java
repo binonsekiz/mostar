@@ -5,11 +5,16 @@ import gui.columnview.ColumnView;
 import gui.columnview.ParagraphOnCanvas;
 import gui.helper.MathHelper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.stream.IntStream;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import storage.XmlManager;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,7 +29,7 @@ import document.style.TextStyle;
  * @author sahin
  *
  */
-public class Paragraph implements CharSequence, Comparable<Paragraph>{
+public class Paragraph implements CharSequence, Comparable<Paragraph>, PersistentIndexedObject{
 
 	private TextStyle style;
 	private StringBuffer textBuffer;
@@ -46,6 +51,28 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>{
 	private ParagraphOnCanvas paragraphView;
 	private ParagraphSet paragraphSet;
 	private boolean hasElements;
+	
+	public Node getXmlNode(org.w3c.dom.Document doc) {
+		//init paragraph
+		Element paragraphElement = doc.createElement("Paragraph");
+		paragraphElement.setAttribute("index", indexInParent + "");
+		
+		//add text style
+		paragraphElement.appendChild(style.getXmlNode(doc));
+		
+		//textBuffer
+		Element textElement = doc.createElement("Text");
+		textElement.appendChild(doc.createTextNode(textBuffer.toString()));
+		paragraphElement.appendChild(textElement);
+		
+		//text lines
+		XmlManager.insertArrayListElements(doc, paragraphElement, "TextLines", textLines);
+		
+		//line segments
+		XmlManager.insertArrayListElements(doc, paragraphElement, "LineSegments", lineSegments);
+		
+		return paragraphElement;
+	}
 	
 	public Paragraph(DocumentText parent, int index){
 		this(TextStyle.defaultStyle, "Testing text", parent, index);
@@ -70,7 +97,6 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>{
 	}
 
 	private void updateTextLines() {
-		System.out.println("UPDATE TEXT LINES");
 		getParagraphSet().getColumn().getLayoutMachine().initialSetup();
 	}
 
@@ -443,6 +469,13 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>{
 	public void validateLineOnCanvases(ColumnView columnView) {
 		paragraphSet.getColumn().getLayoutMachine().validateLineOnCanvases(this, columnView);
 	}
+
+	@Override
+	public int getPersistenceId() {
+		return indexInParent;
+	}
+
+	
 
 	
 }

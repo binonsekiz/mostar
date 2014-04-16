@@ -1,7 +1,14 @@
 package document;
 
+import java.io.Serializable;
 
-public class PageSpecs {
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import storage.XmlManager;
+
+
+public class PageSpecs{
 
 	public static final Measurement A4 = new Measurement(210, 297);
 	public static final Measurement A4H = new Measurement(297, 210);
@@ -13,7 +20,7 @@ public class PageSpecs {
 	
 	public static final Measurement DefaultMeasurement = P640x768;
 	
-	public static class Measurement{
+	public static class Measurement implements PersistentObject{
 		private float width;
 		private float height;
 		
@@ -28,6 +35,13 @@ public class PageSpecs {
 		
 		public float getHeight(){
 			return height;
+		}
+
+		public Node getXmlNode(org.w3c.dom.Document doc) {
+			Element measurementElement = doc.createElement("Measurement");
+			XmlManager.insertNumberElement(doc, measurementElement, "Width", width);
+			XmlManager.insertNumberElement(doc, measurementElement, "Height", height);
+			return measurementElement;
 		}
 	}
 }

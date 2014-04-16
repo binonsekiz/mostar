@@ -20,11 +20,16 @@ import geometry.libgdxmath.utils.NumberUtils;
 
 import java.io.Serializable;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import document.PersistentObject;
 import settings.GlobalAppSettings;
 
 /** Encapsulates a 2D vector. Allows chaining methods by returning a reference to itself
  * @author badlogicgames@gmail.com */
-public class Vector2 implements Serializable, Vector<Vector2> {
+public class Vector2 implements Serializable, Vector<Vector2>, PersistentObject {
 	private static final long serialVersionUID = 913902788239530931L;
 
 	public final static Vector2 X = new Vector2(1, 0);
@@ -36,6 +41,14 @@ public class Vector2 implements Serializable, Vector<Vector2> {
 	/** the y-component of this vector **/
 	public float y;
 
+	@Override
+	public Node getXmlNode(Document doc) {
+		Element vector2Element = doc.createElement("Vector2");
+		vector2Element.setAttribute("X", x + "");
+		vector2Element.setAttribute("Y", y + "");
+		return vector2Element;
+	}
+	
 	/** Constructs a new vector at (0,0) */
 	public Vector2 () {
 	}
@@ -389,4 +402,5 @@ public class Vector2 implements Serializable, Vector<Vector2> {
 		this.y = this.y + yDiff;
 		return this;
 	}
+
 }

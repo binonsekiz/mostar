@@ -7,6 +7,10 @@ import geometry.libgdxmath.Vector2;
 
 import java.util.ArrayList;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -15,12 +19,19 @@ import javafx.scene.paint.Color;
  * @author sahin
  *
  */
-public class ParagraphSpace {
+public class ParagraphSpace implements PersistentObject{
 
 	private ArrayList<Paragraph> paragraphs;
 	private Polygon allowedShape;
 	private ParagraphSet paragraphSet;
 	private Column parent;
+
+	public Node getXmlNode(Document doc) {
+		Element paragraphSpaceElement = doc.createElement("ParagraphSpace");
+		paragraphSpaceElement.appendChild(allowedShape.getXmlNode(doc));
+		
+		return paragraphSpaceElement;
+	}
 	
 	public ParagraphSpace(Column parent, Polygon shape) {
 		this.parent = parent;

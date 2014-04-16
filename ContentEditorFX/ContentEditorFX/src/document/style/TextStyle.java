@@ -1,30 +1,48 @@
 package document.style;
 
+import java.io.Serializable;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import gui.helper.FontHelper;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import settings.GlobalAppSettings;
+import storage.XmlManager;
 
 import com.sun.javafx.tk.FontMetrics;
 import com.sun.javafx.tk.Toolkit;
 
 public class TextStyle implements Comparable<TextStyle>{
-	
+
 	public static String defaultFontName = "Vera";
 	public static double defaultFontSize = 12;
 	public static Color defaultStrokeColor = Color.DARKSLATEGRAY;
 	public static Color defaultFillColor = Color.ALICEBLUE;
 	public static float defaultLineSpacingHeight = 20;
 	private static Color defaultSelectionColor = new Color(Color.DARKBLUE.getRed(), Color.DARKBLUE.getGreen(), Color.DARKBLUE.getBlue(), 1f);
-	
 	public static final TextStyle defaultStyle = new TextStyle();
+	
 	private String fontName;
 	private double fontSize;
 	private float lineSpacingHeight;
 	private Color strokeColor;
 	private Color fillColor;
+	
+	public Node getXmlNode(Document doc) {
+		Element textStyleElement = doc.createElement("TextStyle");
+		XmlManager.insertStringElement(doc, textStyleElement, "FontName", fontName);
+		XmlManager.insertNumberElement(doc, textStyleElement, "FontSize", fontSize);
+		XmlManager.insertNumberElement(doc, textStyleElement, "LineSpacingHeight", lineSpacingHeight);
+		XmlManager.insertColorElement(doc, textStyleElement, "StrokeColor", strokeColor);
+		XmlManager.insertColorElement(doc, textStyleElement, "FillColor", fillColor);
+		
+		return textStyleElement;
+	}
 	
 	protected TextStyle(String fontName, double fontSize, Color strokeColor, Color fillColor, float lineSpacingHeight){
 		this.fontName = fontName;

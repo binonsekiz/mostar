@@ -1,14 +1,30 @@
 package document;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import storage.XmlManager;
 import geometry.libgdxmath.Rectangle;
 import document.PageSpecs.Measurement;
 
-public class PageInsets {
+public class PageInsets implements PersistentObject{
 
 	public static PageInsets Default = new PageInsets(PageSpecs.DefaultMeasurement);
 
 	private float minX,minY,maxX,maxY,width,height;
 	private Rectangle usableRectangle;
+
+	public Node getXmlNode(org.w3c.dom.Document doc) {
+		Element pageInsetsElement = doc.createElement("PageInsets");
+		XmlManager.insertNumberElement(doc, pageInsetsElement, "MinX", minX);
+		XmlManager.insertNumberElement(doc, pageInsetsElement, "MinY", minY);
+		XmlManager.insertNumberElement(doc, pageInsetsElement, "MaxX", maxX);
+		XmlManager.insertNumberElement(doc, pageInsetsElement, "MaxY", maxY);
+		XmlManager.insertNumberElement(doc, pageInsetsElement, "Width", width);
+		XmlManager.insertNumberElement(doc, pageInsetsElement, "Height", height);
+		pageInsetsElement.appendChild(usableRectangle.getXmlNode(doc));
+		return pageInsetsElement;
+	}
 	
 	public float getMinX() {
 		return minX;
@@ -85,5 +101,6 @@ public class PageInsets {
 	public Rectangle getUsableRectangle() {
 		return usableRectangle;
 	}
+
 	
 }
