@@ -14,19 +14,35 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.HBoxBuilder;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import settings.GlobalAppSettings;
@@ -56,6 +72,7 @@ public class GFrame extends Application {
 	
 	private KeyboardManager keyboardManager;
 		
+	@SuppressWarnings("unused")
 	@Override
 	public void start(final Stage mainStage){
 		instance = this;
@@ -72,10 +89,6 @@ public class GFrame extends Application {
 	
 	private void titleStagePath() {
 		titleStage = new TitleScreen(this);
-	}
-
-	private void testPath(){
-		
 	}
 	
 	public void mainPath(){
@@ -278,5 +291,4 @@ public class GFrame extends Application {
 		TitleScreen, 
 		TemplateModifyScreen,
 	}
-	
 }

@@ -64,7 +64,7 @@ public class Caret{
 		    public void handle(ActionEvent event) {
 				isCaretVisible = !isCaretVisible;				
 				if(caretParagraph!= null && caretIndex == anchor) {
-					textModifyFacade.getLineViewWithIndex(caretIndex).getColumnView().refreshOverlayCanvas();
+					textModifyFacade.getLineViewWithIndex(caretIndex).getColumnView().getDocumentView().refreshOverlay();
 				}
 		    }
 		}));
@@ -84,7 +84,7 @@ public class Caret{
 					totalDestination = 0;
 				}
 				if(caretParagraph!= null && caretIndex == anchor) {
-					textModifyFacade.getLineViewWithIndex(caretIndex).getColumnView().refreshOverlayCanvas();
+					textModifyFacade.getLineViewWithIndex(caretIndex).getColumnView().getDocumentView().refreshOverlay();
 				}
 		    }
 		}));

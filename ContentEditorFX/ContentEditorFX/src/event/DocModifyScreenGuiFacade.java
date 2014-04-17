@@ -4,6 +4,7 @@ import gui.columnview.DocumentView;
 import gui.columnview.DocumentView.ScrollMode;
 import gui.docmodify.DocBottomToolbar;
 import gui.docmodify.DocDebugView;
+import gui.docmodify.DocModifyScreen;
 import gui.docmodify.DocOverview;
 import gui.docmodify.DocVersatilePane;
 import gui.docmodify.DocWidgetToolbar;
@@ -17,6 +18,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import settings.Translator;
@@ -39,6 +42,7 @@ public class DocModifyScreenGuiFacade {
 	private DocBottomToolbar docBottomToolbar;
 	private DocVersatilePane docVersatilePane;
 	private DocDebugView docDebugView;
+	private DocModifyScreen docModifyScreen;
 	private ThreeDModifyScreen tdModifyScreen;
 	private DebugHelper debugHelper;
 	private FilePickerWrapper filePicker;
@@ -54,7 +58,8 @@ public class DocModifyScreenGuiFacade {
 	
 	private Document document;
 	
-	public DocModifyScreenGuiFacade(DocumentView documentView, DocWidgetToolbar docWidgetToolbar, DocOverview docOverview, DocBottomToolbar docBottomToolbar, DocVersatilePane docVersatilePane, DocDebugView docDebugView) {
+	public DocModifyScreenGuiFacade(DocModifyScreen docModifyScreen, DocumentView documentView, DocWidgetToolbar docWidgetToolbar, DocOverview docOverview, DocBottomToolbar docBottomToolbar, DocVersatilePane docVersatilePane, DocDebugView docDebugView) {
+		this.docModifyScreen = docModifyScreen;
 		this.documentView = documentView;
 		this.docWidgetToolbar = docWidgetToolbar;
 		this.docOverview = docOverview;
@@ -95,6 +100,24 @@ public class DocModifyScreenGuiFacade {
 		docBottomToolbar.setGuiFacade(this);
 		documentView.associateWithDocument(document);
 		docOverview.populateTreeView();
+		
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				
+			}
+		});
+		
+		Task<Void> task = new Task<Void>() {
+	         @Override protected Void call(){
+	        	for(int i = 0; i < 20; i++) {
+					addColumnPressed();
+				}
+				return null;
+	         }
+	     };
+	     
+	     task.run();
 	}
 	
 	public Document getDocument(){
@@ -300,6 +323,14 @@ public class DocModifyScreenGuiFacade {
 
 	public void setDebugCanvasVisible(boolean b) {
 		documentView.setDebugCanvasVisible(b);
+	}
+
+	public void toggleDebugPaneVisible(boolean value) {
+		docModifyScreen.toggleDebugPaneVisible(value);
+	}
+
+	public void toggleVersatilePaneVisible(boolean value) {
+		docModifyScreen.toggleVersatilePaneVisible(value);
 	}
 
 	

@@ -9,6 +9,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollBar;
@@ -78,6 +82,8 @@ public class DocumentView extends Pane implements CanvasOwner{
 	private boolean isDebugCanvasVisible;
 
 	private ScaleTransition transition;
+	private Group contentGroup;
+	private Group zoomGroup;
 	
 	public DocumentView(){
 		selfReference = this;
@@ -109,6 +115,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 		gridPane.setVgap(gridVGap);
 		gridPane.setHgap(gridHGap);
 		gridStack.getChildren().add(gridPane);
+		gridStack.setAlignment(Pos.CENTER_LEFT);
 				
 		overlayCanvas = new OverlayCanvas(this);
 		overlayContext = overlayCanvas.getGraphicsContext2D();
@@ -122,7 +129,12 @@ public class DocumentView extends Pane implements CanvasOwner{
 		debugCanvas.setLayoutY(0);
 		fixCanvasSize();
 		
-		transition = new ScaleTransition(Duration.millis(200), gridStack);
+		contentGroup = new Group();
+		zoomGroup = new Group();
+		zoomGroup.getChildren().add(gridStack);
+		contentGroup.getChildren().add(zoomGroup);
+	
+		transition = new ScaleTransition(Duration.millis(200), zoomGroup);
 		
 		isOverlayCanvasVisible = true;
 		isTextCanvasVisible = true;
@@ -145,7 +157,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 	}
 	
 	private void initContinuousScroll() {
-		continuousScrollPane.setContent(gridStack);
+		continuousScrollPane.setContent(contentGroup);
 		continuousScrollPane.setFocusTraversable(false);
 		continuousScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
 		continuousScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
@@ -188,9 +200,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
-				offsetX = -1 * gridStackWidth * arg2.doubleValue();
-				System.out.println("offset x: " + offsetX);
-				fixCanvasSize();
+				refreshOverlay();
 			}
 		});
 		
@@ -198,11 +208,21 @@ public class DocumentView extends Pane implements CanvasOwner{
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
-				offsetY = -1 * gridStackHeight * arg2.doubleValue();
-				System.out.println("offset y: " + offsetY);
-				fixCanvasSize();
+				refreshOverlay();
 			}
 		});
+	}
+
+	protected void recalculateOffsets() {
+		//offsetX = -1 * (gridStackWidth - continuousScrollPane.getViewportBounds().getWidth()) * continuousScrollPane.getHvalue()/* + zoomGroup.getBoundsInParent().getMinX()*/;
+		//offsetY = (gridStackHeight - continuousScrollPane.getViewportBounds().getHeight()) * continuousScrollPane.getVvalue()/*+ zoomGroup.getBoundsInParent().getMinY()*/;
+	
+		offsetX = -1 * ((continuousScrollPane.getHvalue() - continuousScrollPane.getHmin()) / (continuousScrollPane.getHmax() - continuousScrollPane.getHmin())) 
+				* (zoomGroup.getBoundsInParent().getWidth() - continuousScrollPane.getViewportBounds().getWidth());
+		offsetY = ((continuousScrollPane.getVvalue() - continuousScrollPane.getVmin()) / (continuousScrollPane.getVmax() - continuousScrollPane.getVmin())) 
+				* (zoomGroup.getBoundsInParent().getHeight() - continuousScrollPane.getViewportBounds().getHeight());
+		
+		System.out.println("Offset X: " + offsetX + ", offset y: " + offsetY);
 	}
 
 	public LineOnCanvas getLineThatIncludesIndex(int index) {
@@ -309,7 +329,6 @@ public class DocumentView extends Pane implements CanvasOwner{
 		overlayCanvas.toFront();
 		debugCanvas.toFront();
 	}
-	
 
 	@Override
 	public void notifyOverlayRepaintNeeded() {
@@ -317,24 +336,19 @@ public class DocumentView extends Pane implements CanvasOwner{
 	}
 	
 	public void refreshOverlay() {
-		if(!isRefreshInProgress){
-			isRefreshInProgress = true;
-			Timeline timer = new Timeline(new KeyFrame(Duration.millis(GlobalAppSettings.fastDeviceFrameMillis), new EventHandler<ActionEvent>(){
-				@Override
-			    public void handle(ActionEvent event) {
-			        refreshAllOverlay();
-			        isRefreshInProgress = false;
-			    }
-			}));
-			timer.setCycleCount(1);
-			timer.setAutoReverse(false);
-			timer.play();
-		}
+        refreshAllOverlay();
 	}
 
 	protected void refreshAllOverlay() {
+		recalculateOffsets();
+		overlayContext.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
+		
+		Bounds visibleRectangle = getVisibleViewportBounds();
+		
 		for(int i = 0; i < columnViews.size(); i++){
-			columnViews.get(i).refreshOverlayCanvas();
+			if(columnViews.get(i).getBoundsInParent().intersects(visibleRectangle)) {
+				columnViews.get(i).refreshOverlayCanvas();
+			}
 		}
 		
 		guiFacade.notifyRefreshHappened();
@@ -519,5 +533,14 @@ public class DocumentView extends Pane implements CanvasOwner{
 		else{
 			debugCanvas.setOpacity(0);
 		}
+	}
+
+	public double getOverlayScale() {
+		return zoomFactor;
+	}
+	
+	public Bounds getVisibleViewportBounds() {
+		BoundingBox retVal = new BoundingBox(offsetX * -1, offsetY * -1, continuousScrollPane.getViewportBounds().getWidth() / zoomFactor, continuousScrollPane.getViewportBounds().getHeight() / zoomFactor);
+		return retVal;
 	}
 }

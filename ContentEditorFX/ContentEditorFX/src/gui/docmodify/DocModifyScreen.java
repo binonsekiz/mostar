@@ -5,8 +5,6 @@ import gui.GFrame.WindowType;
 import gui.ScreenType;
 import gui.columnview.DocumentView;
 import gui.popup.WelcomePopup;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.BorderPane;
 
 public class DocModifyScreen extends BorderPane implements ScreenType{
@@ -25,7 +23,6 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 	
 	public DocModifyScreen(){
 		initGui();
-		initEvents();
 	}
 	
 	private void initGui(){
@@ -36,35 +33,14 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 		docBottomToolbar = new DocBottomToolbar();		
 		docVersatilePane = new DocVersatilePane();
 		docDebugView = new DocDebugView();
-		guiFacade = new DocModifyScreenGuiFacade(documentView, docWidgetToolbar, docOverview, docBottomToolbar, docVersatilePane, docDebugView);
+		guiFacade = new DocModifyScreenGuiFacade(this, documentView, docWidgetToolbar, docOverview, docBottomToolbar, docVersatilePane, docDebugView);
 		
 		this.setTop(docWidgetToolbar);
-		this.setLeft(docDebugView);
 		this.setCenter(documentView);
-		this.setRight(docVersatilePane);
 		this.setBottom(docBottomToolbar);
 		
 		welcomePopup = new WelcomePopup(guiFacade);
 		welcomePopup.show();
-	}
-	
-	private void initEvents(){
-	/*	this.widthProperty().addListener(new ChangeListener<Number>(){
-			@Override
-			public void changed(ObservableValue<? extends Number> arg0,
-					Number oldValue, Number newValue) {
-				docModifyPane.setPrefWidth((Double) newValue - docOverview.getWidth() - docVersatilePane.getWidth());
-			}
-		});
-		
-		this.heightProperty().addListener(new ChangeListener<Number>(){
-			@Override
-			public void changed(ObservableValue<? extends Number> arg0,
-					Number oldValue, Number newValue) {
-				// TODO Auto-generated method stub
-				docModifyPane.setPrefHeight((Double) newValue);
-			}
-		});*/
 	}
 	
 	public DocModifyScreenGuiFacade getGuiFacade(){
@@ -80,5 +56,22 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 	public void setReferrer(WindowType referrer) {
 		this.referrer = referrer;
 	}
+
+	public void toggleDebugPaneVisible(boolean value) {
+		if(value) {
+			this.setLeft(docDebugView);
+		}
+		else{
+			this.setLeft(null);
+		}
+	}
 	
+	public void toggleVersatilePaneVisible(boolean value) {
+		if(value) {
+			this.setRight(docVersatilePane);
+		}
+		else{
+			this.setRight(null);
+		}
+	}
 }

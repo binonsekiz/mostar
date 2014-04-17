@@ -31,6 +31,7 @@ import event.modification.ModificationType;
 import event.modification.ResizeModification;
 import event.modification.TranslateModification;
 import geometry.libgdxmath.Polygon;
+import geometry.libgdxmath.Rectangle;
 import gui.ShapedPane;
 import gui.docmodify.DocDebugView;
 import gui.helper.DebugHelper;
@@ -229,16 +230,21 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 
 	public void refreshOverlayCanvas(){
 		overlayContext = parent.getGraphicsContext();
-		
+				
 		overlayContext.save();
-		overlayContext.translate(/*-1 * this.getBoundsInParent().getMinX() + */parent.getOverlayOffsetX(), /*-1 * this.getBoundsInParent().getMinY() +*/ parent.getOverlayOffsetY());
-		overlayContext.clearRect(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY(), column.getWidth(), column.getHeight());
+		overlayContext.translate(parent.getOverlayOffsetX(), parent.getOverlayOffsetY());
+		overlayContext.scale(parent.getOverlayScale(), parent.getOverlayScale());
+	/*	overlayContext.clearRect(
+				this.getBoundsInParent().getMinX() - GlobalAppSettings.gridHGap/2, 
+				this.getBoundsInParent().getMinY() - GlobalAppSettings.gridVGap/2, 
+				this.getBoundsInParent().getWidth() + GlobalAppSettings.gridHGap/2, 
+				this.getBoundsInParent().getHeight() + GlobalAppSettings.gridVGap/2);*/
 		
 		overlayContext.setLineWidth(2);
 	//	overlayContext.strokeRect(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY(), column.getWidth(), column.getHeight());
 		
 		overlayContext.setStroke(Color.HOTPINK);
-		overlayContext.strokeRect(0, 0, column.getWidth(), column.getHeight());
+		overlayContext.strokeRect(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY(), this.getBoundsInParent().getWidth(), this.getBoundsInParent().getHeight());
 		
 		for(int i = 0; i < visuals.size(); i++){
 			VisualView view = visuals.get(i);

@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
 import event.DocModifyScreenGuiFacade;
@@ -18,7 +19,10 @@ public class DocBottomToolbar extends ToolBar{
 	
 	private Button continuousScroll;
 	private Button discreteScroll;
-		
+	
+	private ToggleButton leftDebugPanelToggle;
+	private ToggleButton rightDebugPanelToggle;
+	
 	private double zoomFactor;
 	private boolean isZoomChanged;
 	
@@ -48,6 +52,20 @@ public class DocBottomToolbar extends ToolBar{
 				zoomFactor = Math.floor(zoomFactor * 100) / 100;
 				zoomField.setText(zoomFactor + "");
 				guiFacade.documentPaneZoomChanged(zoomFactor);
+			}
+		});
+		
+		leftDebugPanelToggle.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				guiFacade.toggleDebugPaneVisible(leftDebugPanelToggle.isSelected());
+			}
+		});
+		
+		rightDebugPanelToggle.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				guiFacade.toggleVersatilePaneVisible(rightDebugPanelToggle.isSelected());
 			}
 		});
 		
@@ -111,6 +129,13 @@ public class DocBottomToolbar extends ToolBar{
 		zoomIncreaseButton = new Button("+");
 		zoomDecreaseButton = new Button("-");
 		
+		HBox hbox3 = new HBox();
+		leftDebugPanelToggle = new ToggleButton("Debug Pane");
+		rightDebugPanelToggle = new ToggleButton("Versatile Pane");
+		hbox3.getChildren().addAll(leftDebugPanelToggle, rightDebugPanelToggle);
+		leftDebugPanelToggle.setTranslateX(50);
+		rightDebugPanelToggle.setTranslateX(50);
+		
 		//using a double value prevents dot and comma misuse.
 		// In English 100.0 = 100,0 in Turkish.
 		double value = 100.0;
@@ -130,7 +155,7 @@ public class DocBottomToolbar extends ToolBar{
 		discreteScroll = new Button("Discrete");
 		hbox2.getChildren().addAll(continuousScroll, discreteScroll);
 
-		this.getItems().addAll(hbox1, hbox2);
+		this.getItems().addAll(hbox1, hbox2, hbox3);
 	}
 	
 	public void setGuiFacade(DocModifyScreenGuiFacade guiFacade){
