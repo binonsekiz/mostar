@@ -1,20 +1,22 @@
 package document.widget;
 
+import geometry.libgdxmath.Polygon;
+import geometry.libgdxmath.Rectangle;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import storage.XmlManager;
-import geometry.libgdxmath.Polygon;
-import geometry.libgdxmath.Rectangle;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.PersistentObject;
 
-public abstract class Widget implements PersistentObject{
+public class Widget implements PersistentObject{
 
 	private int pageNumber;
 	private Polygon shape;
 	private TextWrapType textWrap;
 	
-	protected Element getXmlAbstractNode(Document doc) {
+	public Element getXmlNode(Document doc) {
 		Element widgetElement = doc.createElement("Widget");
 		
 		XmlManager.insertNumberElement(doc, widgetElement, "PageNumber", pageNumber);
@@ -28,6 +30,10 @@ public abstract class Widget implements PersistentObject{
 		textWrap = TextWrapType.Inline;
 	}
 	
+	public Widget(Element element) {
+		loadFromXmlElement(element);
+	}
+
 	public int getPageNumber() {
 		return pageNumber;
 	}
@@ -68,7 +74,9 @@ public abstract class Widget implements PersistentObject{
 	 * Make sure subclasses implement this correctly
 	 * @return
 	 */
-	public abstract WidgetType getType();
+	public WidgetType getType() {
+		throw new RuntimeException("Typeless Widget");
+	}
 
 	public Polygon getShape() {
 		return shape;
@@ -92,5 +100,10 @@ public abstract class Widget implements PersistentObject{
 		Merge,
 		Behind,
 		Front
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();
 	}
 }

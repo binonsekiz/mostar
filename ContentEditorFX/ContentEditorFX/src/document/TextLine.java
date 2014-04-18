@@ -1,12 +1,14 @@
 package document;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.style.TextStyle;
 
 public class TextLine implements Comparable<TextLine>, PersistentObject {
@@ -33,6 +35,10 @@ public class TextLine implements Comparable<TextLine>, PersistentObject {
 		initEvents();
 	}
 	
+	public TextLine(Element element) {
+		loadFromXmlElement(element);
+	}
+
 	private void initEvents() {
 		startIndex.addListener(new ChangeListener<Number>() {
 			@Override
@@ -99,6 +105,11 @@ public class TextLine implements Comparable<TextLine>, PersistentObject {
 
 	public Paragraph getParent() {
 		return parent;
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();
 	}
 
 	

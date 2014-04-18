@@ -2,7 +2,6 @@ package gui.columnview;
 
 import gui.docmodify.DocDebugView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;

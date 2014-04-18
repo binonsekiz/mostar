@@ -9,7 +9,6 @@ import gui.columnview.DocumentView;
 import gui.columnview.LineOnCanvas;
 import gui.columnview.ParagraphOnCanvas;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 

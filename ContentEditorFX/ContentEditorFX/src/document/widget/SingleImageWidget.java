@@ -1,20 +1,20 @@
 package document.widget;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import storage.XmlManager;
-import document.widget.Widget.WidgetType;
 import geometry.GeometryHelper;
 import geometry.libgdxmath.Polygon;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import storage.XmlManager;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 public class SingleImageWidget extends Widget{
 	
 	@Override
-	public Node getXmlNode(Document doc) {
-		Element singleImageWidgetElement = super.getXmlAbstractNode(doc);
+	public Element getXmlNode(Document doc) {
+		Element singleImageWidgetElement = super.getXmlNode(doc);
 		XmlManager.insertStringElement(doc, singleImageWidgetElement, "Type", WidgetType.SingleImageWidget.toString());
 		return singleImageWidgetElement;
 	}
@@ -26,9 +26,18 @@ public class SingleImageWidget extends Widget{
 		setShape(shape);
 	}
 
+	public SingleImageWidget(Element element) {
+		loadFromXmlElement(element);	
+	}
+
 	@Override
 	public WidgetType getType() {
 		return WidgetType.SingleImageWidget;
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();		
 	}
 
 

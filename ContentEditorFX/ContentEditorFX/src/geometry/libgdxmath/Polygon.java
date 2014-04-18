@@ -2,14 +2,16 @@ package geometry.libgdxmath;
 
 import java.io.Serializable;
 
+import javafx.scene.canvas.GraphicsContext;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import document.PersistentObject;
-import javafx.scene.canvas.GraphicsContext;
 import settings.GlobalAppSettings;
 import storage.XmlManager;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import document.PersistentObject;
 
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
@@ -91,6 +93,10 @@ public class Polygon implements Serializable, PersistentObject{
 		calculateDoubleVertices();
 	}
 	
+	public Polygon(Element element) {
+		loadFromXmlElement(element);
+	}
+
 	private void setupIndexList(){
 		indexList = new short[(localVertices.length/2 - 2) * 3];	
 		for(int i = 0; i < indexList.length; i+= 3){
@@ -807,5 +813,10 @@ public class Polygon implements Serializable, PersistentObject{
 		retVal.indexList = this.indexList.clone();
 		
 		return retVal;
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();		
 	}
 }

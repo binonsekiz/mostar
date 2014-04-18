@@ -1,10 +1,12 @@
 package document;
 
+import geometry.libgdxmath.Rectangle;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import storage.XmlManager;
-import geometry.libgdxmath.Rectangle;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.PageSpecs.Measurement;
 
 public class PageInsets implements PersistentObject{
@@ -72,6 +74,10 @@ public class PageInsets implements PersistentObject{
 		usableRectangle = new Rectangle(minX, minY, getActualWidth(), getActualHeight());
 	}
 
+	public PageInsets(Element element) {
+		loadFromXmlElement(element);
+	}
+
 	public float getPageWidth() {
 		return width;
 	}
@@ -100,6 +106,11 @@ public class PageInsets implements PersistentObject{
 
 	public Rectangle getUsableRectangle() {
 		return usableRectangle;
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();
 	}
 
 	

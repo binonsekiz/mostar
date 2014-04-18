@@ -33,6 +33,10 @@ public class LineSegment implements Comparable<LineSegment>, PersistentObject{
 		normal.rotate(90).nor();
 	}
 	
+	public LineSegment(Element element) {
+		loadFromXmlElement(element);
+	}
+
 	public LineSegment trimToFitInPolygon(Polygon polygon) {
 		return polygon.getPortionInside(this);
 	}
@@ -186,6 +190,12 @@ public class LineSegment implements Comparable<LineSegment>, PersistentObject{
 
 	public LineSegment cpy() {
 		return new LineSegment(firstPoint.cpy(), secondPoint.cpy());
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

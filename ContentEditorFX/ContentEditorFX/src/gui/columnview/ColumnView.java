@@ -1,6 +1,5 @@
 package gui.columnview;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,7 +30,6 @@ import event.modification.ModificationType;
 import event.modification.ResizeModification;
 import event.modification.TranslateModification;
 import geometry.libgdxmath.Polygon;
-import geometry.libgdxmath.Rectangle;
 import gui.ShapedPane;
 import gui.docmodify.DocDebugView;
 import gui.helper.DebugHelper;
@@ -147,7 +145,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		}
 		else{
 			shapeDrawFacade.onMouseEvent(event, selfReference);
-			refreshOverlayCanvas();
+			parent.refreshOverlay();
 		}
 	}
 
@@ -169,7 +167,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		
 		if(selectedShapeIndex != smallestAreaIndex) {
 			this.selectedShapeIndex = smallestAreaIndex;
-			refreshOverlayCanvas();
+			parent.refreshOverlay();
 			DocDebugView.instance.setDebugText(smallestAreaSize + "", 3);
 		}
 	}
@@ -218,7 +216,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 
 	private void refreshAll(){
 		if(parent.isOverlayCanvasVisible()) {
-			refreshOverlayCanvas();
+			parent.refreshAllOverlay();
 		}
 		if(parent.isTextCanvasVisible()) {
 			refreshTextCanvas();
@@ -234,14 +232,8 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		overlayContext.save();
 		overlayContext.translate(parent.getOverlayOffsetX(), parent.getOverlayOffsetY());
 		overlayContext.scale(parent.getOverlayScale(), parent.getOverlayScale());
-	/*	overlayContext.clearRect(
-				this.getBoundsInParent().getMinX() - GlobalAppSettings.gridHGap/2, 
-				this.getBoundsInParent().getMinY() - GlobalAppSettings.gridVGap/2, 
-				this.getBoundsInParent().getWidth() + GlobalAppSettings.gridHGap/2, 
-				this.getBoundsInParent().getHeight() + GlobalAppSettings.gridVGap/2);*/
 		
 		overlayContext.setLineWidth(2);
-	//	overlayContext.strokeRect(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY(), column.getWidth(), column.getHeight());
 		
 		overlayContext.setStroke(Color.HOTPINK);
 		overlayContext.strokeRect(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY(), this.getBoundsInParent().getWidth(), this.getBoundsInParent().getHeight());

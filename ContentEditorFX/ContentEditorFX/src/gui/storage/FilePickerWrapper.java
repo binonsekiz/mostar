@@ -2,11 +2,11 @@ package gui.storage;
 
 import java.io.File;
 
-import event.DocModifyScreenGuiFacade;
+import javafx.stage.FileChooser;
 import settings.Translator;
 import storage.LocalPersistentRepository;
 import storage.RepositoryManager;
-import javafx.stage.FileChooser;
+import event.DocModifyScreenGuiFacade;
 
 public class FilePickerWrapper {
 
@@ -64,6 +64,10 @@ public class FilePickerWrapper {
 		else if(type == FilePickerType.OpenDocument) {
 			fileChooser.setTitle(Translator.get("Open Document"));
 			selectedFile = fileChooser.showOpenDialog(null);
+			if(selectedFile!=null) {
+				LocalPersistentRepository localRepo = repositoryManager.getDefaultLocalRepository();
+				localRepo.loadDocument(selectedFile);
+			}
 		}
 		
 		setDefaultFolder(selectedFile);

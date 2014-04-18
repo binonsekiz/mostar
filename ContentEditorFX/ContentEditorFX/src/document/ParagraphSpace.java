@@ -7,12 +7,14 @@ import geometry.libgdxmath.Vector2;
 
 import java.util.ArrayList;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * This is a small set of ParagraphWithStyle's bundled in a single shape.
@@ -39,6 +41,10 @@ public class ParagraphSpace implements PersistentObject{
 		this.allowedShape = shape;
 	}
 	
+	public ParagraphSpace(Element element) {
+		loadFromXmlElement(element);
+	}
+
 	public void setParagraphSet(ParagraphSet paragraphSet) {
 		this.paragraphSet = paragraphSet;
 	}
@@ -106,6 +112,11 @@ public class ParagraphSpace implements PersistentObject{
 	
 	public String toString() {
 		return "Paragraph Space: " + allowedShape + ", paragraph count: " + paragraphs.size();
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();
 	}
 	
 	

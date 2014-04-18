@@ -2,13 +2,13 @@ package document;
 
 import gui.helper.DebugHelper;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import storage.XmlManager;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.style.TextStyle;
 
 public class DocumentText implements PersistentObject{
@@ -73,6 +73,11 @@ public class DocumentText implements PersistentObject{
 		addParagraph(paragraph, newSet);
 	}*/
 	
+	public DocumentText(Element element) {
+		loadFromXmlElement(element);
+	}
+
+
 	public void addParagraph(Paragraph paragraph, ParagraphSet paragraphSet) {
 		if(!paragraphSets.contains(paragraphSet)){
 			paragraphSets.add(paragraphSet);
@@ -211,6 +216,12 @@ public class DocumentText implements PersistentObject{
 			return null;
 		else
 			return paragraphSets.get(index);
+	}
+
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();
 	}
 
 	

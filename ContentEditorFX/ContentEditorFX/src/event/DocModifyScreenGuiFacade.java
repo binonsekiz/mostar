@@ -111,7 +111,7 @@ public class DocModifyScreenGuiFacade {
 		Task<Void> task = new Task<Void>() {
 	         @Override protected Void call(){
 	        	for(int i = 0; i < 20; i++) {
-					addColumnPressed();
+				//	addColumnPressed();
 				}
 				return null;
 	         }

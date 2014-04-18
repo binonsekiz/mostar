@@ -24,8 +24,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import document.PersistentObject;
 import settings.GlobalAppSettings;
+import document.PersistentObject;
 
 /** Encapsulates a 2D vector. Allows chaining methods by returning a reference to itself
  * @author badlogicgames@gmail.com */
@@ -65,6 +65,10 @@ public class Vector2 implements Serializable, Vector<Vector2>, PersistentObject 
 	 * @param v The vector */
 	public Vector2 (Vector2 v) {
 		set(v);
+	}
+
+	public Vector2(Element element) {
+		loadFromXmlElement(element);	
 	}
 
 	/** @return a copy of this vector */
@@ -401,6 +405,12 @@ public class Vector2 implements Serializable, Vector<Vector2>, PersistentObject 
 		this.x = this.x + xDiff;
 		this.y = this.y + yDiff;
 		return this;
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -1,22 +1,22 @@
 package document.widget;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import storage.XmlManager;
-import document.widget.Widget.WidgetType;
 import geometry.GeometryHelper;
 import geometry.libgdxmath.Polygon;
 import javafx.scene.image.Image;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import storage.XmlManager;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class ImageGalleryWidget extends Widget{
 	
 	private Image[] images;
 	
 	@Override
-	public Node getXmlNode(Document doc) {
-		Element mediaWidgetElement = super.getXmlAbstractNode(doc);
+	public Element getXmlNode(Document doc) {
+		Element mediaWidgetElement = super.getXmlNode(doc);
 		XmlManager.insertStringElement(doc, mediaWidgetElement, "Type", WidgetType.MediaWidget.toString());
 		//TODO: insert image names
 		return mediaWidgetElement;
@@ -29,7 +29,11 @@ public class ImageGalleryWidget extends Widget{
 		setShape(shape);
 		images = new Image[9];
 	}
-	
+
+	public ImageGalleryWidget(Element element) {
+		loadFromXmlElement(element);
+	}
+
 	@Override
 	public WidgetType getType() {
 		return WidgetType.ImageGalleryWidget;
@@ -41,6 +45,11 @@ public class ImageGalleryWidget extends Widget{
 
 	public void setImage(int i, Image image) {
 		this.images[i] = image;
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();
 	}
 
 }

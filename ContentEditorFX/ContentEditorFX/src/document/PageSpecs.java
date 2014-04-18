@@ -1,14 +1,14 @@
 package document;
 
-import java.io.Serializable;
-
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import storage.XmlManager;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
-public class PageSpecs{
+public class PageSpecs implements PersistentObject{
 
 	public static final Measurement A4 = new Measurement(210, 297);
 	public static final Measurement A4H = new Measurement(297, 210);
@@ -29,6 +29,10 @@ public class PageSpecs{
 			this.height = height;
 		}
 		
+		public Measurement(Element item) {
+			loadFromXmlElement(item);
+		}
+
 		public float getWidth(){
 			return width;
 		}
@@ -43,5 +47,20 @@ public class PageSpecs{
 			XmlManager.insertNumberElement(doc, measurementElement, "Height", height);
 			return measurementElement;
 		}
+
+	//	@Override
+		public void loadFromXmlElement(Element element) {
+			throw new NotImplementedException();
+		}
+	}
+
+	@Override
+	public Node getXmlNode(Document doc) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();
 	}
 }

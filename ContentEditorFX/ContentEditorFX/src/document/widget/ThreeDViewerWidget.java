@@ -1,19 +1,19 @@
 package document.widget;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import storage.XmlManager;
-import document.widget.Widget.WidgetType;
 import geometry.GeometryHelper;
 import geometry.libgdxmath.Polygon;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import storage.XmlManager;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class ThreeDViewerWidget extends Widget{
 
 	@Override
-	public Node getXmlNode(Document doc) {
-		Element threeDWidgetElement = super.getXmlAbstractNode(doc);
+	public Element getXmlNode(Document doc) {
+		Element threeDWidgetElement = super.getXmlNode(doc);
 		XmlManager.insertStringElement(doc, threeDWidgetElement, "Type", WidgetType.ThreeDViewerWidget.toString());
 		return threeDWidgetElement;
 	}
@@ -25,9 +25,18 @@ public class ThreeDViewerWidget extends Widget{
 		setShape(shape);
 	}
 	
+	public ThreeDViewerWidget(Element element) {
+		loadFromXmlElement(element);
+	}
+
 	@Override
 	public WidgetType getType() {
 		return WidgetType.ThreeDViewerWidget;
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();
 	}
 
 

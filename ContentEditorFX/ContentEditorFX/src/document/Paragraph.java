@@ -5,19 +5,18 @@ import gui.columnview.ColumnView;
 import gui.columnview.ParagraphOnCanvas;
 import gui.helper.MathHelper;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.stream.IntStream;
 
+import javafx.beans.property.SimpleIntegerProperty;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import storage.XmlManager;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import com.sun.javafx.tk.FontMetrics;
 
@@ -92,6 +91,10 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>, Persisten
 		setText(text);
 	}
 	
+	public Paragraph(Element element) {
+		loadFromXmlElement(element);
+	}
+
 	public void setParagraphOnCanvas(ParagraphOnCanvas view) {
 		this.paragraphView = view;
 	}
@@ -473,6 +476,11 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>, Persisten
 	@Override
 	public int getPersistenceId() {
 		return indexInParent;
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();
 	}
 
 	

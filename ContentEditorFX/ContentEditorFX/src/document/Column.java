@@ -3,18 +3,19 @@ package document;
 import geometry.GeometryHelper;
 import geometry.libgdxmath.Polygon;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.image.Image;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import storage.XmlManager;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.image.Image;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.PageSpecs.Measurement;
 import document.layout.LayoutMachine;
 import document.widget.Widget;
@@ -66,6 +67,10 @@ public class Column implements PersistentObject{
 		layoutMachine = new LayoutMachine(this);
 	}
 	
+	public Column(Element element) {
+		throw new NotImplementedException();
+	}
+
 	protected void initialSetup() {
 		layoutMachine.initialSetup();
 	}
@@ -145,6 +150,12 @@ public class Column implements PersistentObject{
 		}
 		shapesAndWidgets.addAll(shapes);
 		return shapesAndWidgets;
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

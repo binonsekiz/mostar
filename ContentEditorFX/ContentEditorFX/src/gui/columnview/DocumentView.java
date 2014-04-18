@@ -85,6 +85,12 @@ public class DocumentView extends Pane implements CanvasOwner{
 	private Group contentGroup;
 	private Group zoomGroup;
 	
+	private Rectangle debugBox;
+
+	private double scaledOffsetX;
+
+	private double scaledOffsetY;
+	
 	public DocumentView(){
 		selfReference = this;
 		columnViews = new ArrayList<ColumnView>();
@@ -133,6 +139,9 @@ public class DocumentView extends Pane implements CanvasOwner{
 		zoomGroup = new Group();
 		zoomGroup.getChildren().add(gridStack);
 		contentGroup.getChildren().add(zoomGroup);
+		
+		debugBox = new Rectangle(0, 0, 4, 4);
+		zoomGroup.getChildren().add(debugBox);
 	
 		transition = new ScaleTransition(Duration.millis(200), zoomGroup);
 		
@@ -214,15 +223,16 @@ public class DocumentView extends Pane implements CanvasOwner{
 	}
 
 	protected void recalculateOffsets() {
-		//offsetX = -1 * (gridStackWidth - continuousScrollPane.getViewportBounds().getWidth()) * continuousScrollPane.getHvalue()/* + zoomGroup.getBoundsInParent().getMinX()*/;
-		//offsetY = (gridStackHeight - continuousScrollPane.getViewportBounds().getHeight()) * continuousScrollPane.getVvalue()/*+ zoomGroup.getBoundsInParent().getMinY()*/;
-	
 		offsetX = -1 * ((continuousScrollPane.getHvalue() - continuousScrollPane.getHmin()) / (continuousScrollPane.getHmax() - continuousScrollPane.getHmin())) 
 				* (zoomGroup.getBoundsInParent().getWidth() - continuousScrollPane.getViewportBounds().getWidth());
-		offsetY = ((continuousScrollPane.getVvalue() - continuousScrollPane.getVmin()) / (continuousScrollPane.getVmax() - continuousScrollPane.getVmin())) 
+		offsetY = -1 * ((continuousScrollPane.getVvalue() - continuousScrollPane.getVmin()) / (continuousScrollPane.getVmax() - continuousScrollPane.getVmin())) 
 				* (zoomGroup.getBoundsInParent().getHeight() - continuousScrollPane.getViewportBounds().getHeight());
 		
-		System.out.println("Offset X: " + offsetX + ", offset y: " + offsetY);
+		scaledOffsetX = offsetX / zoomFactor;
+		scaledOffsetY = offsetY / zoomFactor;
+		
+		debugBox.setX(-1 * scaledOffsetX);
+		debugBox.setY(-1 * scaledOffsetY);
 	}
 
 	public LineOnCanvas getLineThatIncludesIndex(int index) {
@@ -417,6 +427,12 @@ public class DocumentView extends Pane implements CanvasOwner{
 		transition.setToX(zoomFactor);
 		transition.setToY(zoomFactor);
 		transition.setCycleCount(1);
+		transition.setOnFinished(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				refreshAllOverlay();
+			}
+		});
 		transition.setAutoReverse(false);
 		transition.play();
 		this.zoomFactor = zoomFactor;
@@ -540,7 +556,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 	}
 	
 	public Bounds getVisibleViewportBounds() {
-		BoundingBox retVal = new BoundingBox(offsetX * -1, offsetY * -1, continuousScrollPane.getViewportBounds().getWidth() / zoomFactor, continuousScrollPane.getViewportBounds().getHeight() / zoomFactor);
+		BoundingBox retVal = new BoundingBox(offsetX * -1 / zoomFactor, offsetY * -1 / zoomFactor, continuousScrollPane.getViewportBounds().getWidth() / zoomFactor, continuousScrollPane.getViewportBounds().getHeight() / zoomFactor);
 		return retVal;
 	}
 }

@@ -18,9 +18,19 @@ public class Document implements PersistentObject{
 	private DocumentText globalText;
 	private ArrayList<Column> columns;
 	
-	@Override
+	//@Override
+	public void loadFromXmlElement(Element element) {
+		if(!element.getTagName().equals("PortisInteractiveDocument")) throw new RuntimeException("Malformed XML");
+		
+		measurement = (Measurement) XmlManager.loadObjectFromXmlElement("Measurement", element);
+		pageInsets = (PageInsets) XmlManager.loadObjectFromXmlElement("PageInsets", element);
+		globalText = (DocumentText) XmlManager.loadObjectFromXmlElement("DocumentText", element);
+		columns = XmlManager.loadArrayListFromXmlElement(columns, "Columns", "Column", element);
+		
+	}
+	
 	public Node getXmlNode(org.w3c.dom.Document doc) {
-		Element documentElement = doc.createElement("PortisInteractiveocument");
+		Element documentElement = doc.createElement("PortisInteractiveDocument");
 		XmlManager.insertSingleElement(doc, documentElement, measurement);
 		XmlManager.insertSingleElement(doc, documentElement, pageInsets);
 		XmlManager.insertSingleElement(doc, documentElement, globalText);
@@ -42,6 +52,10 @@ public class Document implements PersistentObject{
 		for(int i = 0; i < columns.size(); i++) {
 			columns.get(i).initialSetup();
 		}
+	}
+	
+	public Document(Element element) {
+		loadFromXmlElement(element);
 	}
 	
 	public void addColumn(Column c, int index) {
@@ -71,5 +85,6 @@ public class Document implements PersistentObject{
 	public DocumentText getDocumentText(){
 		return globalText;
 	}
+
 
 }

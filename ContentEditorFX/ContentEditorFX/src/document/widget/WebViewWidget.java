@@ -1,18 +1,19 @@
 package document.widget;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import storage.XmlManager;
 import geometry.GeometryHelper;
 import geometry.libgdxmath.Polygon;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import storage.XmlManager;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class WebViewWidget extends Widget{
 	
 	@Override
-	public Node getXmlNode(Document doc) {
-		Element webViewWidgetElement = super.getXmlAbstractNode(doc);
+	public Element getXmlNode(Document doc) {
+		Element webViewWidgetElement = super.getXmlNode(doc);
 		XmlManager.insertStringElement(doc, webViewWidgetElement, "Type", WidgetType.WebViewWidget.toString());
 		return webViewWidgetElement;
 	}
@@ -24,9 +25,18 @@ public class WebViewWidget extends Widget{
 		setShape(shape);
 	}
 
+	public WebViewWidget(Element element) {
+		loadFromXmlElement(element);
+	}
+
 	@Override
 	public WidgetType getType() {
 		return WidgetType.WebViewWidget;
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();
 	}
 
 

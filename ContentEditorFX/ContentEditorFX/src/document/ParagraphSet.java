@@ -1,7 +1,5 @@
 package document;
 
-import geometry.libgdxmath.LineSegment;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -9,6 +7,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import storage.XmlManager;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.Paragraph.TextFillReturnValue;
 import document.layout.LayoutMachine;
 
@@ -34,6 +33,10 @@ public class ParagraphSet implements PersistentIndexedObject {
 		System.out.println("Paragraph set initialized");
 		this.parent = parent;
 		paragraphs = new ArrayList<Paragraph>();
+	}
+
+	public ParagraphSet(Element element) {
+		loadFromXmlElement(element);
 	}
 
 	public String toString() {
@@ -142,5 +145,10 @@ public class ParagraphSet implements PersistentIndexedObject {
 	@Override
 	public int getPersistenceId() {
 		return indexInDocument;
+	}
+
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();
 	}
 }
