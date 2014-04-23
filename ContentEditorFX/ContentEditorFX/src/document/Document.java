@@ -9,8 +9,6 @@ import storage.XmlManager;
 import document.PageSpecs.Measurement;
 
 public class Document implements PersistentObject{
-	public static Document instance;
-	
 	//defaults for every new page
 	private Measurement measurement;
 	private PageInsets pageInsets;
@@ -18,18 +16,17 @@ public class Document implements PersistentObject{
 	private DocumentText globalText;
 	private ArrayList<Column> columns;
 	
-	//@Override
+	@Override
 	public void loadFromXmlElement(Element element) {
 		if(!element.getTagName().equals("PortisInteractiveDocument")) throw new RuntimeException("Malformed XML");
 		
 		measurement = (Measurement) XmlManager.loadObjectFromXmlElement("Measurement", element);
 		pageInsets = (PageInsets) XmlManager.loadObjectFromXmlElement("PageInsets", element);
 		globalText = (DocumentText) XmlManager.loadObjectFromXmlElement("DocumentText", element);
-		columns = XmlManager.loadArrayListFromXmlElement(columns, "Columns", "Column", element);
-		
+		columns = (ArrayList<Column>) XmlManager.loadArrayListFromXmlElement("Columns", "Column", element);
 	}
 	
-	public Node getXmlNode(org.w3c.dom.Document doc) {
+	public Node saveToXmlNode(org.w3c.dom.Document doc) {
 		Element documentElement = doc.createElement("PortisInteractiveDocument");
 		XmlManager.insertSingleElement(doc, documentElement, measurement);
 		XmlManager.insertSingleElement(doc, documentElement, pageInsets);
@@ -40,7 +37,6 @@ public class Document implements PersistentObject{
 	
 	public Document(){
 		System.out.println("Document initialized");
-		instance = this;
 		this.measurement = PageSpecs.MiniTest;
 		this.pageInsets = new PageInsets(measurement);
 		

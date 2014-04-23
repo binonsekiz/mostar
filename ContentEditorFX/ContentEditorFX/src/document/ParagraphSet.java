@@ -20,13 +20,19 @@ public class ParagraphSet implements PersistentIndexedObject {
 	private int indexInDocument;
 	private DocumentText parent;
 	
-	public Node getXmlNode(org.w3c.dom.Document doc) {
+	public Node saveToXmlNode(org.w3c.dom.Document doc) {
 		Element paragraphSetElement = doc.createElement("ParagraphSet");
 		
 		XmlManager.insertSingleElement(doc, paragraphSetElement, paragraphSpace);
 		XmlManager.insertNumberElement(doc, paragraphSetElement, "Angle", angle);
 				
 		return paragraphSetElement;
+	}
+	
+	@Override
+	public void loadFromXmlElement(Element element) {
+		paragraphSpace = (ParagraphSpace) XmlManager.loadObjectFromXmlElement("ParagraphSpace", element);
+		angle = XmlManager.loadNumberFromXmlElement("Angle", element).floatValue();
 	}
 	
 	public ParagraphSet(DocumentText parent) {
@@ -145,10 +151,5 @@ public class ParagraphSet implements PersistentIndexedObject {
 	@Override
 	public int getPersistenceId() {
 		return indexInDocument;
-	}
-
-	@Override
-	public void loadFromXmlElement(Element node) {
-		throw new NotImplementedException();
 	}
 }

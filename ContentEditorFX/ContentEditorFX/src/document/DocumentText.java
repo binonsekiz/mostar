@@ -13,11 +13,12 @@ import document.style.TextStyle;
 
 public class DocumentText implements PersistentObject{
 
+	public static DocumentText instance;
 	private ArrayList<Paragraph> globalText;
 	private ArrayList<ParagraphSet> paragraphSets;
 	private Document document;
 	
-	public Node getXmlNode(org.w3c.dom.Document doc) {
+	public Node saveToXmlNode(org.w3c.dom.Document doc) {
 		Element docTextElement = doc.createElement("DocumentText");
 		
 		XmlManager.insertArrayListElements(doc, docTextElement, "Paragraphs", globalText);
@@ -26,9 +27,16 @@ public class DocumentText implements PersistentObject{
 		return docTextElement;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public void loadFromXmlElement(Element element) {
+		paragraphSets = (ArrayList<ParagraphSet>) XmlManager.loadArrayListFromXmlElement("ParagraphSets", "ParagraphSet", element);
+		globalText = (ArrayList<Paragraph>) XmlManager.loadArrayListFromXmlElement("Paragraphs", "Paragraph", element);
+	}
 	
 	public DocumentText (Document document) {
 		System.out.println("DocumentText initialized");
+		instance = this;
 		this.document = document;
 		globalText = new ArrayList<Paragraph>();
 		
@@ -44,39 +52,12 @@ public class DocumentText implements PersistentObject{
 		paragraph.setText("");
 		addParagraph(paragraph, set1);
 		paragraph.setStyle(DebugHelper.debugStyle1);
-		
-//		ParagraphSet set2 = new ParagraphSet(this);
-//		set2.setColumn(document.getColumns().get(0));
-//		set2.setParagraphSpace(DebugHelper.paragraphSpaces.get(5));
-//		set2.setAngle(0);
-//
-//		Paragraph paragraph2 = new Paragraph(this, 1);
-//		paragraph2.setText("ccccc ddddd");
-//		addParagraph(paragraph2, set2);
-//		paragraph2.setStyle(DebugHelper.debugStyle1);
-//
-//		ParagraphSet set3 = new ParagraphSet(this);
-//		set3.setColumn(document.getColumns().get(0));
-//		set3.setParagraphSpace(DebugHelper.paragraphSpaces.get(0));
-//		set3.setAngle(0);
-//
-//		Paragraph paragraph3 = new Paragraph(this, 2);
-//		paragraph3.setText("ccccc ddddd");
-//		addParagraph(paragraph3, set3);
-//		paragraph3.setStyle(DebugHelper.debugStyle1);
 	}
-
-	/*public void addParagraph(Paragraph paragraph) {
-		//add a new paragraph set as a default
-		ParagraphSet newSet = new ParagraphSet(this);
-		addParagraphSet(newSet);
-		addParagraph(paragraph, newSet);
-	}*/
 	
 	public DocumentText(Element element) {
+		instance = this;
 		loadFromXmlElement(element);
 	}
-
 
 	public void addParagraph(Paragraph paragraph, ParagraphSet paragraphSet) {
 		if(!paragraphSets.contains(paragraphSet)){
@@ -112,11 +93,6 @@ public class DocumentText implements PersistentObject{
 		return null;
 	}
 
-	public void importString(String value) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	public String exportString() {
 		String total = "";
 		for(int i = 0; i < globalText.size(); i++) {
@@ -217,13 +193,4 @@ public class DocumentText implements PersistentObject{
 		else
 			return paragraphSets.get(index);
 	}
-
-
-	@Override
-	public void loadFromXmlElement(Element node) {
-		throw new NotImplementedException();
-	}
-
-	
-	
 }

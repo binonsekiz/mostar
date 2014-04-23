@@ -16,7 +16,7 @@ public class Widget implements PersistentObject{
 	private Polygon shape;
 	private TextWrapType textWrap;
 	
-	public Element getXmlNode(Document doc) {
+	public Element saveToXmlNode(Document doc) {
 		Element widgetElement = doc.createElement("Widget");
 		
 		XmlManager.insertNumberElement(doc, widgetElement, "PageNumber", pageNumber);

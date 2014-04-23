@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import settings.GlobalAppSettings;
 import storage.XmlManager;
@@ -15,8 +16,27 @@ public class LineSegment implements Comparable<LineSegment>, PersistentObject{
 	private Vector2 secondPoint;
 	private Vector2 normal;
 
+
 	@Override
-	public Node getXmlNode(Document doc) {
+	public void loadFromXmlElement(Element element) {
+		NodeList vectors = element.getElementsByTagName("Vector2");
+		
+		for(int i = 0; i < vectors.getLength(); i++) {
+			Element temp = null;
+			if(vectors.item(i) instanceof Element) {
+				temp = (Element) vectors.item(i);
+			}
+			else continue;
+			switch(i) {
+			case 0: firstPoint = new Vector2(temp); break;
+			case 1: secondPoint = new Vector2(temp); break;
+			case 2: normal = new Vector2(temp); break;
+			}
+		}
+	}
+	
+	@Override
+	public Node saveToXmlNode(Document doc) {
 		Element lineSegmentElement = doc.createElement("LineSegment");
 		
 		XmlManager.insertSingleElement(doc, lineSegmentElement, firstPoint);
@@ -191,12 +211,4 @@ public class LineSegment implements Comparable<LineSegment>, PersistentObject{
 	public LineSegment cpy() {
 		return new LineSegment(firstPoint.cpy(), secondPoint.cpy());
 	}
-
-	@Override
-	public void loadFromXmlElement(Element node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
 }

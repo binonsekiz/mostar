@@ -1,5 +1,6 @@
 package gui.popup;
 
+import document.Document;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -25,7 +26,7 @@ public class WelcomePopup extends CustomPopup{
 		newBookPane.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				facade.createNewDocument();
+				facade.createNewDocument(new Document());
 				hide();
 			}
 		});
@@ -33,7 +34,7 @@ public class WelcomePopup extends CustomPopup{
 		loadBookPane.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				System.out.println("rö");
+				facade.loadButtonPressed();
 				hide();
 			}
 		});

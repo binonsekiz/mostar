@@ -16,7 +16,7 @@ public class PageInsets implements PersistentObject{
 	private float minX,minY,maxX,maxY,width,height;
 	private Rectangle usableRectangle;
 
-	public Node getXmlNode(org.w3c.dom.Document doc) {
+	public Node saveToXmlNode(org.w3c.dom.Document doc) {
 		Element pageInsetsElement = doc.createElement("PageInsets");
 		XmlManager.insertNumberElement(doc, pageInsetsElement, "MinX", minX);
 		XmlManager.insertNumberElement(doc, pageInsetsElement, "MinY", minY);
@@ -24,8 +24,19 @@ public class PageInsets implements PersistentObject{
 		XmlManager.insertNumberElement(doc, pageInsetsElement, "MaxY", maxY);
 		XmlManager.insertNumberElement(doc, pageInsetsElement, "Width", width);
 		XmlManager.insertNumberElement(doc, pageInsetsElement, "Height", height);
-		pageInsetsElement.appendChild(usableRectangle.getXmlNode(doc));
+		XmlManager.insertSingleElement(doc, pageInsetsElement, usableRectangle);
 		return pageInsetsElement;
+	}
+
+	@Override
+	public void loadFromXmlElement(Element element) {
+		minX = XmlManager.loadNumberFromXmlElement("MinX", element).floatValue();
+		minY = XmlManager.loadNumberFromXmlElement("MinY", element).floatValue();
+		maxX = XmlManager.loadNumberFromXmlElement("MaxX", element).floatValue();
+		maxY = XmlManager.loadNumberFromXmlElement("MaxY", element).floatValue();
+		width = XmlManager.loadNumberFromXmlElement("Width", element).floatValue();
+		height = XmlManager.loadNumberFromXmlElement("Height", element).floatValue();
+		usableRectangle = (Rectangle) XmlManager.loadObjectFromXmlElement("Rectangle", element);
 	}
 	
 	public float getMinX() {
@@ -108,10 +119,6 @@ public class PageInsets implements PersistentObject{
 		return usableRectangle;
 	}
 
-	@Override
-	public void loadFromXmlElement(Element node) {
-		throw new NotImplementedException();
-	}
 
 	
 }

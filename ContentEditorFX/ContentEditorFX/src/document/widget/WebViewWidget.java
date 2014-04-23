@@ -12,8 +12,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class WebViewWidget extends Widget{
 	
 	@Override
-	public Element getXmlNode(Document doc) {
-		Element webViewWidgetElement = super.getXmlNode(doc);
+	public Element saveToXmlNode(Document doc) {
+		Element webViewWidgetElement = super.saveToXmlNode(doc);
 		XmlManager.insertStringElement(doc, webViewWidgetElement, "Type", WidgetType.WebViewWidget.toString());
 		return webViewWidgetElement;
 	}

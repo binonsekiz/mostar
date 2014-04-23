@@ -77,8 +77,6 @@ public class ParagraphOnCanvas{
 		}
 		
 		allowedSpace.draw(parent.getGraphicsContext());
-		
-		DocDebugView.instance.debugRefreshTotalDocument(Document.instance);
 	}
 	
 	public void refreshOverlay() {

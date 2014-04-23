@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import settings.Translator;
 import control.StyleModifyFacade;
+import document.Document;
 import document.style.TextStyle;
 import event.DocModifyScreenGuiFacade;
 import gui.helper.ColorGrid;
@@ -251,7 +252,7 @@ public class DocWidgetToolbar extends FlowPane{
 		newBookButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.createNewDocument();
+				guiFacade.createNewDocument(new Document());
 			}
 		});
 		

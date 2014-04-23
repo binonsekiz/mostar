@@ -13,8 +13,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class SingleImageWidget extends Widget{
 	
 	@Override
-	public Element getXmlNode(Document doc) {
-		Element singleImageWidgetElement = super.getXmlNode(doc);
+	public Element saveToXmlNode(Document doc) {
+		Element singleImageWidgetElement = super.saveToXmlNode(doc);
 		XmlManager.insertStringElement(doc, singleImageWidgetElement, "Type", WidgetType.SingleImageWidget.toString());
 		return singleImageWidgetElement;
 	}

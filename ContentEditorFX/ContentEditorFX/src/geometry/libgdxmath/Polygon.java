@@ -7,6 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import settings.GlobalAppSettings;
 import storage.XmlManager;
@@ -48,7 +49,7 @@ public class Polygon implements Serializable, PersistentObject{
 
 	private Rectangle localBounds;
 	
-	public Node getXmlNode(Document doc) {
+	public Node saveToXmlNode(Document doc) {
 		Element polygonElement = doc.createElement("Polygon");
 		
 		XmlManager.insertNumberElement(doc, polygonElement, "X", x);
@@ -58,20 +59,22 @@ public class Polygon implements Serializable, PersistentObject{
 		XmlManager.insertNumberElement(doc, polygonElement, "Rotation", rotation);
 		XmlManager.insertNumberElement(doc, polygonElement, "ScaleX", scaleX);
 		XmlManager.insertNumberElement(doc, polygonElement, "ScaleY", scaleY);
-		
-		Element localVerticesElement = doc.createElement("LocalVertices");
-		for(int i = 0; i < localVertices.length; i++) {
-			XmlManager.insertNumberElement(doc, localVerticesElement, "Float" + i, localVertices[i]);
-		}
-		polygonElement.appendChild(localVerticesElement);
-		
-		Element indicesElement = doc.createElement("Indices");
-		for(int i = 0; i < indexList.length; i++) {
-			XmlManager.insertNumberElement(doc, indicesElement, "Float" + i, indexList[i]);
-		}
-		polygonElement.appendChild(indicesElement);
+		XmlManager.insertFloatArrayElement(doc, polygonElement, "LocalVertices", localVertices);
 		
 		return polygonElement;
+	}
+	
+	@Override
+	public void loadFromXmlElement(Element element) {
+		x = XmlManager.loadNumberFromXmlElement("X", element).floatValue();
+		y = XmlManager.loadNumberFromXmlElement("Y", element).floatValue();
+		originX = XmlManager.loadNumberFromXmlElement("OriginX", element).floatValue();
+		originY = XmlManager.loadNumberFromXmlElement("OriginY", element).floatValue();
+		scaleX = XmlManager.loadNumberFromXmlElement("ScaleX", element).floatValue();
+		scaleY = XmlManager.loadNumberFromXmlElement("ScaleY", element).floatValue();
+		rotation = XmlManager.loadNumberFromXmlElement("Rotation", element).floatValue();
+		
+		localVertices = XmlManager.loadFloatArrayFromXmlElement("LocalVertices", element);
 	}
 	
 	/** Constructs a new polygon with no vertices. */
@@ -815,8 +818,4 @@ public class Polygon implements Serializable, PersistentObject{
 		return retVal;
 	}
 
-	@Override
-	public void loadFromXmlElement(Element node) {
-		throw new NotImplementedException();		
-	}
 }

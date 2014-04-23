@@ -13,8 +13,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class MediaWidget extends Widget{
 	
 	@Override
-	public Element getXmlNode(Document doc) {
-		Element mediaWidgetElement = super.getXmlNode(doc);
+	public Element saveToXmlNode(Document doc) {
+		Element mediaWidgetElement = super.saveToXmlNode(doc);
 		XmlManager.insertStringElement(doc, mediaWidgetElement, "Type", WidgetType.MediaWidget.toString());
 		return mediaWidgetElement;
 	}

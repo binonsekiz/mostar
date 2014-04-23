@@ -12,8 +12,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class ThreeDViewerWidget extends Widget{
 
 	@Override
-	public Element getXmlNode(Document doc) {
-		Element threeDWidgetElement = super.getXmlNode(doc);
+	public Element saveToXmlNode(Document doc) {
+		Element threeDWidgetElement = super.saveToXmlNode(doc);
 		XmlManager.insertStringElement(doc, threeDWidgetElement, "Type", WidgetType.ThreeDViewerWidget.toString());
 		return threeDWidgetElement;
 	}

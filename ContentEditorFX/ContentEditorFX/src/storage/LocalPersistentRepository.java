@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.ObjectOutputStream;
 
 import document.Document;
+import event.DocModifyScreenGuiFacade;
 
 public class LocalPersistentRepository implements DocumentRepository, TemplateRepository{
 	
@@ -22,18 +23,18 @@ public class LocalPersistentRepository implements DocumentRepository, TemplateRe
 		if(xmlManager == null) {
 			initXmlManager();
 		}
-		xmlManager.saveDocument(document, selectedFile);
+		XmlManager.saveDocument(document, selectedFile);
 	}
 
 	private void initXmlManager() {
 		xmlManager = new XmlManager();
 	}
 
-	public void loadDocument(File selectedFile) {
+	public void loadDocument(File selectedFile, DocModifyScreenGuiFacade facade) {
 		if(xmlManager == null) {
 			initXmlManager();
 		}
-		xmlManager.loadDocument(selectedFile);
+		facade.createNewDocument(XmlManager.loadDocument(selectedFile));
 	}
 	
 }

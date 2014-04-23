@@ -91,8 +91,8 @@ public class DocModifyScreenGuiFacade {
 		docWidgetToolbar.setStyleFacade(styleModifyFacade);
 	}
 	
-	public void createNewDocument(){
-		document = new Document();
+	public void createNewDocument(Document document){
+		this.document = document;
 		textModifyFacade.setDocumentAndView(document, documentView);
 		widgetModifyFacade.setDocumentAndView(document, documentView);
 		styleModifyFacade.setDocumentAndView(document, documentView);
@@ -100,13 +100,6 @@ public class DocModifyScreenGuiFacade {
 		docBottomToolbar.setGuiFacade(this);
 		documentView.associateWithDocument(document);
 		docOverview.populateTreeView();
-		
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				
-			}
-		});
 		
 		Task<Void> task = new Task<Void>() {
 	         @Override protected Void call(){
@@ -189,11 +182,7 @@ public class DocModifyScreenGuiFacade {
 	public void changeActiveColumn(int activeColumn) {
 //		docModifyPane.moveToPage(activeColumn);
 	}
-	
-	public void signInAsAGuestPressed(){
 		
-	}
-	
 	public void pageBackgroundPressed(){
 		FileChooser chooser = new FileChooser();
 	    chooser.setTitle(Translator.get("Open Background Image"));
@@ -207,7 +196,6 @@ public class DocModifyScreenGuiFacade {
 				Image image = new Image(fis);
 //		    	docModifyPane.getActivePageView().setBackground(image);
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
 	    }
@@ -301,18 +289,15 @@ public class DocModifyScreenGuiFacade {
 	}
 
 	public void newButtonPressed() {
-		System.out.println("new button");
 		documentView.requestFocus();
 	}
 
 	public void saveButtonPressed() {
-		System.out.println("save button");
 		documentView.requestFocus();
 		filePicker.open(FilePickerType.SaveDocument);
 	}
 
 	public void loadButtonPressed() {
-		System.out.println("load button");
 		documentView.requestFocus();
 		filePicker.open(FilePickerType.OpenDocument);
 	}

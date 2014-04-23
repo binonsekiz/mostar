@@ -41,6 +41,7 @@ import document.PersistentIndexedObject;
 import document.PersistentObject;
 import document.PersistentObjectType;
 import document.TextLine;
+import document.style.TextStyle;
 import document.widget.ImageGalleryWidget;
 import document.widget.MediaWidget;
 import document.widget.SingleImageWidget;
@@ -50,10 +51,10 @@ import document.widget.Widget;
 
 public class XmlManager {
 	
-	static DocumentBuilderFactory factory;
-	static DocumentBuilder docBuilder;
-	static TransformerFactory transformerFactory;
-	static Transformer transformer;
+	private static DocumentBuilderFactory factory;
+	private static DocumentBuilder docBuilder;
+	private static TransformerFactory transformerFactory;
+	private static Transformer transformer;
 	
 	public XmlManager() {
 		factory = DocumentBuilderFactory.newInstance();
@@ -63,16 +64,25 @@ public class XmlManager {
 			docBuilder = factory.newDocumentBuilder();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+			
+			System.out.println("factory: " + factory);
+			System.out.println("docbuilder: " + docBuilder);
+			System.out.println("transformerFactory: " + transformerFactory);
+			System.out.println("transformer: " + transformer);
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (TransformerConfigurationException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static Document getXmlDocument(document.Document document){
+		System.out.println("1");
 		Document doc = docBuilder.newDocument();
-		doc.appendChild(document.getXmlNode(doc));
+		System.out.println("xml doc: " + doc);
+		System.out.println("document: " + document);
+		doc.appendChild(document.saveToXmlNode(doc));
+		System.out.println("3");
 		return doc;
 	}
 	
@@ -82,29 +92,32 @@ public class XmlManager {
 			Document xmlDoc = docBuilder.parse(file);
 			doc = parseDocumentFromXml(xmlDoc);
 		} catch (SAXException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return doc;
 	}
 
 	public static void saveDocument(final document.Document document, final File selectedFile) {
-		Task<Void> saveTask = new Task<Void>() {
-			@Override
-			protected Void call() throws Exception {
+//		Task<Void> saveTask = new Task<Void>() {
+//			@Override
+//			protected Void call() throws Exception {
+				System.out.println("SAVE TASK: file: " + selectedFile);
 				Document xmlDocument = getXmlDocument(document);
+				System.out.println("xmldocument: " + xmlDocument);
 				DOMSource source = new DOMSource(xmlDocument);
+				System.out.println("source: " + source);
 				StreamResult streamResult = new StreamResult(selectedFile);
+				System.out.println("streamresult: " + streamResult);
 				try {
 					transformer.transform(source, streamResult);
 				} catch (TransformerException e) {
 					e.printStackTrace();
 				}
-				return null;
-			}
-		};
-		
-		new Thread(saveTask).start();
+//				return null;
+//			}
+//		};
+//		
+//		new Thread(saveTask).start();
 	}
 	
 	public static document.Document parseDocumentFromXml(final Document xmlDocument) {
@@ -132,8 +145,119 @@ public class XmlManager {
 		return loadedDocument;
 	}
 	
-	public static PersistentObject loadObjectFromXmlElement(String tagName, Element parent) {
-		NodeList measurementList = parent.getElementsByTagName(tagName);
+	public static Number loadNumberFromXmlElement(String name, Element element) {
+		NodeList measurementList = element.getElementsByTagName(name);
+		Node tempNode = null;
+		Element temp = null;
+		Number number = 0;
+		
+		for(int i = 0; i < measurementList.getLength(); i++) {
+			tempNode = measurementList.item(i);
+			if(tempNode instanceof Element) {
+				temp = (Element) tempNode;
+			}
+			else continue;
+			
+			if(temp.getTagName().equals(name)) {
+				number = Double.parseDouble(temp.getAttribute("value"));
+				break;
+			}
+		}
+		return number;
+	}
+	
+	public static float[] loadFloatArrayFromXmlElement(String arrayName, Element element) {
+		float[] retVal = null;
+		NodeList localVerticesElement = element.getElementsByTagName(arrayName);
+		for(int i = 0; i < localVerticesElement.getLength(); i++){
+			Node temp = localVerticesElement.item(i);
+			Element tempElement = null;
+			if(temp instanceof Element){
+				tempElement = (Element) temp;
+			}
+			else continue;
+			
+			int localVerticeCount = Integer.parseInt(tempElement.getAttribute("count"));
+			retVal = new float[localVerticeCount];
+			
+			for(int j = 0; j < localVerticeCount; j++) {
+				retVal[j] = XmlManager.loadNumberFromXmlElement("Float" + j, tempElement).floatValue();
+			}
+		}
+		return retVal;
+	}
+	
+	public static String loadStringFromXmlElement(String name, Element element) {
+		NodeList measurementList = element.getElementsByTagName(name);
+		Node tempNode = null;
+		Element temp = null;
+		String text = "";
+		
+		for(int i = 0; i < measurementList.getLength(); i++) {
+			tempNode = measurementList.item(i);
+			if(tempNode instanceof Element) {
+				temp = (Element) tempNode;
+			}
+			else continue;
+			
+			if(temp.getTagName().equals(name)) {
+				text = temp.getTextContent();
+				break;
+			}
+		}
+		return text;
+	}
+	
+	public static String loadStringAttributeFromXmlElement(String name, Element element) {
+		NodeList measurementList = element.getElementsByTagName(name);
+		Node tempNode = null;
+		Element temp = null;
+		String text = "";
+		
+		for(int i = 0; i < measurementList.getLength(); i++) {
+			tempNode = measurementList.item(i);
+			if(tempNode instanceof Element) {
+				temp = (Element) tempNode;
+			}
+			else continue;
+			
+			if(temp.getTagName().equals(name)) {
+				text = temp.getAttribute("value");
+				break;
+			}
+		}
+		return text;
+	}
+	
+	public static Color loadColorFromXmlElement(String name, Element element) {
+		NodeList measurementList = element.getElementsByTagName(name);
+		Node tempNode = null;
+		Element temp = null;
+		double r = 0;
+		double g = 0;
+		double b = 0;
+		double o = 0;
+		
+		for(int i = 0; i < measurementList.getLength(); i++) {
+			tempNode = measurementList.item(i);
+			if(tempNode instanceof Element) {
+				temp = (Element) tempNode;
+			}
+			else continue;
+			
+			if(temp.getTagName().equals(name)) {
+				r = Double.parseDouble(temp.getAttribute("R"));
+				g = Double.parseDouble(temp.getAttribute("G"));
+				b = Double.parseDouble(temp.getAttribute("B"));
+				o = Double.parseDouble(temp.getAttribute("O"));
+			}
+			break;
+		}
+		return new Color(r,g,b,o);
+	}
+	
+	public static PersistentObject loadObjectFromXmlElement(String tagName, Element element) {
+		NodeList measurementList = element.getElementsByTagName(tagName);
 		Node tempNode = null;
 		Element temp = null;
 		PersistentObject emptyObject = null;
@@ -147,10 +271,80 @@ public class XmlManager {
 			
 			if(temp.getTagName().equals(tagName)) {
 				emptyObject = createPersistentObject(tagName, temp);
+				break;
 			}
 		}
 		
 		return emptyObject;
+	}
+	
+	public static ArrayList<Integer> loadArrayListIdFromXmlElement(String collectionTagName, String className, Element element) {
+		NodeList nodes = element.getElementsByTagName(collectionTagName);
+		Node tempNode = null;
+		Element temp = null;
+		ArrayList<Integer> returnValue = new ArrayList<Integer>();
+		
+		for(int i = 0; i < nodes.getLength(); i++) {
+			tempNode = nodes.item(i);
+			
+			if(tempNode instanceof Element) {
+				temp = (Element) tempNode;
+			}
+			else continue;
+			
+			NodeList innerNodes = temp.getElementsByTagName(className);
+			Node innerTempNode = null;
+			Element innerTemp = null;
+			
+			for(int j = 0; j < innerNodes.getLength(); j++) {
+				innerTempNode = innerNodes.item(j);
+				
+				if(innerTempNode instanceof Element) {
+					innerTemp = (Element) innerTempNode;
+				}
+				else continue;
+				
+				returnValue.add(Integer.parseInt(innerTemp.getAttribute("index")));
+			}
+		}
+		
+		return returnValue;
+	}
+	
+	public static ArrayList<? extends PersistentObject> loadArrayListFromXmlElement(String collectionTagName, String className, Element element) {
+		NodeList nodes = element.getElementsByTagName(collectionTagName);
+		Node tempNode = null;
+		Element temp = null;
+		ArrayList<PersistentObject> returnValue = new ArrayList<PersistentObject>();
+		
+		for(int i = 0; i < nodes.getLength(); i++) {
+			tempNode = nodes.item(i);
+			
+			if(tempNode instanceof Element) {
+				temp = (Element) tempNode;
+			}
+			else continue;
+			
+			NodeList innerNodes = temp.getElementsByTagName(className);
+			Node innerTempNode = null;
+			Element innerTemp = null;
+			
+			for(int j = 0; j < innerNodes.getLength(); j++) {
+				innerTempNode = innerNodes.item(j);
+				
+				if(innerTempNode instanceof Element) {
+					innerTemp = (Element) innerTempNode;
+				}
+				else continue;
+				
+				if(innerTemp.getTagName().equals(className)) {
+					PersistentObject object = createPersistentObject(className, innerTemp);
+					returnValue.add(object);
+				}
+			}
+		}
+		
+		return returnValue;
 	}
 	
 	private static PersistentObject createPersistentObject(String type, Element element) {
@@ -174,31 +368,9 @@ public class XmlManager {
 		case "Polygon": return new Polygon(element);
 		case "Rectangle": return new Rectangle(element);
 		case "Vector2": return new Vector2(element);
+		case "TextStyle": return new TextStyle(element);
 		}
 		throw new RuntimeException("Unknown xml element type: " + type);
-	}
-	
-	public static <T extends PersistentObject> ArrayList<T> loadArrayListFromXmlElement(ArrayList<T> emptyArrayList, String collectionTagName, String tagName, Element element) {
-		NodeList nodes = element.getElementsByTagName(collectionTagName);
-		Node tempNode = null;
-		Element temp = null;
-		
-		for(int i = 0; i < nodes.getLength(); i++) {
-			tempNode = nodes.item(i);
-			
-			if(tempNode instanceof Element) {
-				temp = (Element) tempNode;
-			}
-			else continue;
-			
-			if(temp.getTagName().equals(tagName)) {
-				emptyArrayList.add(new T());
-			}
-			
-		}
-		
-		
-		return null;
 	}
 	
 	public static void insertNumberElement(Document doc, Element parent, String name, Number value) {
@@ -207,7 +379,22 @@ public class XmlManager {
 		parent.appendChild(tempElement);
 	}
 	
+	public static void insertFloatArrayElement(Document doc, Element parent, String arrayName, float[] array) {
+		Element localVerticesElement = doc.createElement(arrayName);
+		localVerticesElement.setAttribute("count", array.length + "");
+		for(int i = 0; i < array.length; i++) {
+			XmlManager.insertNumberElement(doc, localVerticesElement, "Float" + i, array[i]);
+		}
+		parent.appendChild(localVerticesElement);
+	}
+	
 	public static void insertStringElement(Document doc, Element parent, String name, String value) {
+		Element tempElement = doc.createElement(name);
+		tempElement.setTextContent(value);
+		parent.appendChild(tempElement);
+	}
+	
+	public static void insertStringAttributeElement(Document doc, Element parent, String name, String value) {
 		Element tempElement = doc.createElement(name);
 		tempElement.setAttribute("value", value);
 		parent.appendChild(tempElement);
@@ -231,13 +418,13 @@ public class XmlManager {
 	}
 
 	public static void insertSingleElement(Document doc, Element parent, PersistentObject object) {
-		parent.appendChild(object.getXmlNode(doc));
+		parent.appendChild(object.saveToXmlNode(doc));
 	}
 
-	public static void insertArrayListId(Document doc, Element parent, String name, ArrayList<? extends PersistentIndexedObject> objects) {
+	public static void insertArrayListId(Document doc, Element parent, String name, String innerClassName, ArrayList<? extends PersistentIndexedObject> objects) {
 		Element tempElement = doc.createElement(name);
 		for(int i = 0; i < objects.size(); i++) {
-			insertSingleId(doc, tempElement, name, objects.get(i));
+			insertSingleId(doc, tempElement, innerClassName, objects.get(i));
 		}
 		parent.appendChild(tempElement);
 	}
@@ -248,7 +435,4 @@ public class XmlManager {
 		parent.appendChild(tempElement);
 	}
 
-	
-
-	
 }

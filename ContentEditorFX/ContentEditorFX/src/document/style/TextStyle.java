@@ -16,7 +16,9 @@ import storage.XmlManager;
 import com.sun.javafx.tk.FontMetrics;
 import com.sun.javafx.tk.Toolkit;
 
-public class TextStyle implements Comparable<TextStyle>{
+import document.PersistentObject;
+
+public class TextStyle implements Comparable<TextStyle>, PersistentObject{
 
 	public static String defaultFontName = "Vera";
 	public static double defaultFontSize = 12;
@@ -32,15 +34,24 @@ public class TextStyle implements Comparable<TextStyle>{
 	private Color strokeColor;
 	private Color fillColor;
 	
-	public Node getXmlNode(Document doc) {
+	public Node saveToXmlNode(Document doc) {
 		Element textStyleElement = doc.createElement("TextStyle");
-		XmlManager.insertStringElement(doc, textStyleElement, "FontName", fontName);
+		XmlManager.insertStringAttributeElement(doc, textStyleElement, "FontName", fontName);
 		XmlManager.insertNumberElement(doc, textStyleElement, "FontSize", fontSize);
 		XmlManager.insertNumberElement(doc, textStyleElement, "LineSpacingHeight", lineSpacingHeight);
 		XmlManager.insertColorElement(doc, textStyleElement, "StrokeColor", strokeColor);
 		XmlManager.insertColorElement(doc, textStyleElement, "FillColor", fillColor);
 		
 		return textStyleElement;
+	}
+	
+	@Override
+	public void loadFromXmlElement(Element element) {
+		fontName = XmlManager.loadStringAttributeFromXmlElement("FontName", element);
+		fontSize = XmlManager.loadNumberFromXmlElement("FontSize", element).doubleValue();
+		lineSpacingHeight = XmlManager.loadNumberFromXmlElement("LineSpacingHeight", element).floatValue();
+		strokeColor = XmlManager.loadColorFromXmlElement("StrokeColor", element);
+		fillColor = XmlManager.loadColorFromXmlElement("FillColor", element);
 	}
 	
 	protected TextStyle(String fontName, double fontSize, Color strokeColor, Color fillColor, float lineSpacingHeight){
@@ -64,6 +75,10 @@ public class TextStyle implements Comparable<TextStyle>{
 	
 	protected TextStyle() {
 		this(defaultFontName, defaultFontSize, defaultStrokeColor, defaultFillColor, defaultLineSpacingHeight);
+	}
+
+	public TextStyle(Element element) {
+		loadFromXmlElement(element);
 	}
 
 	public String getFontName(){
@@ -114,5 +129,4 @@ public class TextStyle implements Comparable<TextStyle>{
 		String otherHash = TextStyleRepository.buildHash(o);
 		return hash.compareTo(otherHash);
 	}
-
 }

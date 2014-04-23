@@ -42,7 +42,13 @@ public class Vector2 implements Serializable, Vector<Vector2>, PersistentObject 
 	public float y;
 
 	@Override
-	public Node getXmlNode(Document doc) {
+	public void loadFromXmlElement(Element node) {
+		x = Float.parseFloat(node.getAttribute("X"));
+		y = Float.parseFloat(node.getAttribute("Y"));
+	}
+	
+	@Override
+	public Node saveToXmlNode(Document doc) {
 		Element vector2Element = doc.createElement("Vector2");
 		vector2Element.setAttribute("X", x + "");
 		vector2Element.setAttribute("Y", y + "");
@@ -405,12 +411,6 @@ public class Vector2 implements Serializable, Vector<Vector2>, PersistentObject 
 		this.x = this.x + xDiff;
 		this.y = this.y + yDiff;
 		return this;
-	}
-
-	@Override
-	public void loadFromXmlElement(Element node) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

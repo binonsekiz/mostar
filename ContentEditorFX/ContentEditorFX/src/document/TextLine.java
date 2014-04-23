@@ -8,6 +8,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import storage.XmlManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.style.TextStyle;
 
@@ -19,12 +20,17 @@ public class TextLine implements Comparable<TextLine>, PersistentObject {
 	private Paragraph parent;
 
 	@Override
-	public Node getXmlNode(Document doc) {
+	public Node saveToXmlNode(Document doc) {
 		Element textLineElement = doc.createElement("TextLine");
 		textLineElement.setAttribute("StartIndex" , startIndex.get() + "");
 		textLineElement.setAttribute("EndIndex", endIndex.get() + "");
-		textLineElement.setAttribute("ParagraphIndex", parent.getIndexInParent() + "");
 		return textLineElement;
+	}
+	
+	@Override
+	public void loadFromXmlElement(Element element) {
+		startIndex = new SimpleIntegerProperty(Integer.parseInt(element.getAttribute("StartIndex")));
+		endIndex = new SimpleIntegerProperty(Integer.parseInt(element.getAttribute("EndIndex")));
 	}
 	
 	public TextLine(Paragraph parent, int startIndex, int endIndex) {
@@ -106,11 +112,4 @@ public class TextLine implements Comparable<TextLine>, PersistentObject {
 	public Paragraph getParent() {
 		return parent;
 	}
-
-	@Override
-	public void loadFromXmlElement(Element node) {
-		throw new NotImplementedException();
-	}
-
-	
 }

@@ -15,11 +15,16 @@ public class ImageGalleryWidget extends Widget{
 	private Image[] images;
 	
 	@Override
-	public Element getXmlNode(Document doc) {
-		Element mediaWidgetElement = super.getXmlNode(doc);
+	public Element saveToXmlNode(Document doc) {
+		Element mediaWidgetElement = super.saveToXmlNode(doc);
 		XmlManager.insertStringElement(doc, mediaWidgetElement, "Type", WidgetType.MediaWidget.toString());
 		//TODO: insert image names
 		return mediaWidgetElement;
+	}
+	
+	@Override
+	public void loadFromXmlElement(Element node) {
+		throw new NotImplementedException();
 	}
 	
 	public ImageGalleryWidget(double x, double y, double width, double height){
@@ -47,9 +52,5 @@ public class ImageGalleryWidget extends Widget{
 		this.images[i] = image;
 	}
 
-	@Override
-	public void loadFromXmlElement(Element node) {
-		throw new NotImplementedException();
-	}
 
 }

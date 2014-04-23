@@ -58,6 +58,9 @@ public class FilePickerWrapper {
 			selectedFile = fileChooser.showSaveDialog(null);
 			if(selectedFile!= null){
 				LocalPersistentRepository localRepo = repositoryManager.getDefaultLocalRepository();
+				
+				System.out.println("guifacade.getDocument: " + guiFacade.getDocument());
+				
 				localRepo.saveDocument(guiFacade.getDocument(), selectedFile);
 			}
 		}
@@ -66,7 +69,7 @@ public class FilePickerWrapper {
 			selectedFile = fileChooser.showOpenDialog(null);
 			if(selectedFile!=null) {
 				LocalPersistentRepository localRepo = repositoryManager.getDefaultLocalRepository();
-				localRepo.loadDocument(selectedFile);
+				localRepo.loadDocument(selectedFile, guiFacade);
 			}
 		}
 		

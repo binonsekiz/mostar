@@ -40,7 +40,7 @@ public class Rectangle implements Serializable, PersistentObject{
 
 	}
 	
-	public Node getXmlNode(Document doc) {
+	public Node saveToXmlNode(Document doc) {
 		Element rectElement = doc.createElement("Rectangle");
 		
 		XmlManager.insertNumberElement(doc, rectElement, "X", x);
@@ -49,6 +49,14 @@ public class Rectangle implements Serializable, PersistentObject{
 		XmlManager.insertNumberElement(doc, rectElement, "Height", height);
 
 		return rectElement;
+	}
+	
+	@Override
+	public void loadFromXmlElement(Element element) {
+		x = XmlManager.loadNumberFromXmlElement("X", element).floatValue();
+		y = XmlManager.loadNumberFromXmlElement("Y", element).floatValue();
+		width = XmlManager.loadNumberFromXmlElement("Width", element).floatValue();
+		height = XmlManager.loadNumberFromXmlElement("Height", element).floatValue();
 	}
 
 	/** Constructs a new rectangle with the given corner point in the bottom left and dimensions.
@@ -360,11 +368,4 @@ public class Rectangle implements Serializable, PersistentObject{
 		this.y = floatValue;
 		return this;
 	}
-
-	@Override
-	public void loadFromXmlElement(Element node) {
-		throw new NotImplementedException();
-	}
-
-	
 }

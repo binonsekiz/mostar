@@ -5,7 +5,7 @@ import org.w3c.dom.Node;
 
 public interface PersistentObject {
 
-	public Node getXmlNode(org.w3c.dom.Document doc);
-	public void loadFromXmlElement(Element node);
+	public Node saveToXmlNode(org.w3c.dom.Document doc);
+	public void loadFromXmlElement(Element element);
 	
 }

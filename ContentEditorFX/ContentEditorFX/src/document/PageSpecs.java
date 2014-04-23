@@ -8,7 +8,7 @@ import storage.XmlManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
-public class PageSpecs implements PersistentObject{
+public class PageSpecs{
 
 	public static final Measurement A4 = new Measurement(210, 297);
 	public static final Measurement A4H = new Measurement(297, 210);
@@ -41,7 +41,7 @@ public class PageSpecs implements PersistentObject{
 			return height;
 		}
 
-		public Node getXmlNode(org.w3c.dom.Document doc) {
+		public Node saveToXmlNode(org.w3c.dom.Document doc) {
 			Element measurementElement = doc.createElement("Measurement");
 			XmlManager.insertNumberElement(doc, measurementElement, "Width", width);
 			XmlManager.insertNumberElement(doc, measurementElement, "Height", height);
@@ -50,17 +50,8 @@ public class PageSpecs implements PersistentObject{
 
 	//	@Override
 		public void loadFromXmlElement(Element element) {
-			throw new NotImplementedException();
+			width = XmlManager.loadNumberFromXmlElement("Width", element).floatValue();
+			height = XmlManager.loadNumberFromXmlElement("Height", element).floatValue();
 		}
-	}
-
-	@Override
-	public Node getXmlNode(Document doc) {
-		throw new NotImplementedException();
-	}
-
-	@Override
-	public void loadFromXmlElement(Element node) {
-		throw new NotImplementedException();
 	}
 }

@@ -14,6 +14,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import storage.XmlManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -28,11 +29,16 @@ public class ParagraphSpace implements PersistentObject{
 	private ParagraphSet paragraphSet;
 	private Column parent;
 
-	public Node getXmlNode(Document doc) {
+	public Node saveToXmlNode(Document doc) {
 		Element paragraphSpaceElement = doc.createElement("ParagraphSpace");
-		paragraphSpaceElement.appendChild(allowedShape.getXmlNode(doc));
+		paragraphSpaceElement.appendChild(allowedShape.saveToXmlNode(doc));
 		
 		return paragraphSpaceElement;
+	}
+
+	@Override
+	public void loadFromXmlElement(Element element) {
+		allowedShape = (Polygon) XmlManager.loadObjectFromXmlElement("Polygon", element);
 	}
 	
 	public ParagraphSpace(Column parent, Polygon shape) {
@@ -113,11 +119,4 @@ public class ParagraphSpace implements PersistentObject{
 	public String toString() {
 		return "Paragraph Space: " + allowedShape + ", paragraph count: " + paragraphs.size();
 	}
-
-	@Override
-	public void loadFromXmlElement(Element node) {
-		throw new NotImplementedException();
-	}
-	
-	
 }

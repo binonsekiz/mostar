@@ -51,26 +51,32 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>, Persisten
 	private ParagraphSet paragraphSet;
 	private boolean hasElements;
 	
-	public Node getXmlNode(org.w3c.dom.Document doc) {
+	public Node saveToXmlNode(org.w3c.dom.Document doc) {
 		//init paragraph
 		Element paragraphElement = doc.createElement("Paragraph");
 		paragraphElement.setAttribute("index", indexInParent + "");
 		
-		//add text style
-		paragraphElement.appendChild(style.getXmlNode(doc));
-		
-		//textBuffer
-		Element textElement = doc.createElement("Text");
-		textElement.appendChild(doc.createTextNode(textBuffer.toString()));
-		paragraphElement.appendChild(textElement);
-		
-		//text lines
+		XmlManager.insertSingleElement(doc, paragraphElement, style);
+		XmlManager.insertStringElement(doc, paragraphElement, "Text", textBuffer.toString());
 		XmlManager.insertArrayListElements(doc, paragraphElement, "TextLines", textLines);
-		
-		//line segments
 		XmlManager.insertArrayListElements(doc, paragraphElement, "LineSegments", lineSegments);
 		
 		return paragraphElement;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void loadFromXmlElement(Element element) {
+		indexInParent = Integer.parseInt(element.getAttribute("index"));
+		
+		style = (TextStyle) XmlManager.loadObjectFromXmlElement("TextStyle", element);
+		textBuffer = new StringBuffer(XmlManager.loadStringFromXmlElement("Text", element));
+		textLines = (ArrayList<TextLine>) XmlManager.loadArrayListFromXmlElement("TextLines", "TextLine", element);
+		for(int i = 0; i < textLines.size(); i++) {
+			textLines.get(i).setParent(this);
+		}
+		
+		lineSegments = (ArrayList<LineSegment>) XmlManager.loadArrayListFromXmlElement("LineSegments", "LineSegment", element);
 	}
 	
 	public Paragraph(DocumentText parent, int index){
@@ -477,13 +483,4 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>, Persisten
 	public int getPersistenceId() {
 		return indexInParent;
 	}
-
-	@Override
-	public void loadFromXmlElement(Element node) {
-		throw new NotImplementedException();
-	}
-
-	
-
-	
 }

@@ -23,6 +23,7 @@ import document.widget.Widget;
 public class Column implements PersistentObject{
 
 	public static Column debugInstance;
+	
 	private Measurement pageSize;
 	private SimpleObjectProperty<PageInsets> insets;
 	private ArrayList<Widget> widgets;	
@@ -33,15 +34,34 @@ public class Column implements PersistentObject{
 	
 	private LayoutMachine layoutMachine;
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public Node getXmlNode(Document doc) {
+	public void loadFromXmlElement(Element element) {
+		pageSize = (Measurement) XmlManager.loadObjectFromXmlElement("Measurement", element);
+		PageInsets insetsProp = (PageInsets) XmlManager.loadObjectFromXmlElement("PageInsets", element);
+		insets = new SimpleObjectProperty<PageInsets>(insetsProp);
+		
+		widgets = (ArrayList<Widget>) XmlManager.loadArrayListFromXmlElement("Widgets", "Widget", element);
+		columnShape = (Polygon) XmlManager.loadObjectFromXmlElement("Polygon", element);
+		ArrayList<Integer> paragraphSetIndexes = (ArrayList<Integer>) XmlManager.loadArrayListIdFromXmlElement("ParagraphSets", "ParagraphSet", element);
+		
+		paragraphSets = new ArrayList<ParagraphSet>();
+		for(int i = 0; i < paragraphSetIndexes.size(); i++) {
+			paragraphSets.add(DocumentText.instance.getParagraphSet(i));
+		}
+		
+		shapes = (ArrayList<Polygon>) XmlManager.loadArrayListFromXmlElement("Shapes", "Polygon", element);
+	}
+	
+	@Override
+	public Node saveToXmlNode(Document doc) {
 		Element columnElement = doc.createElement("Column");
 		
 		XmlManager.insertSingleElement(doc, columnElement, pageSize);
 		XmlManager.insertSingleElement(doc, columnElement, insets.get());
 		XmlManager.insertArrayListElements(doc, columnElement, "Widgets", widgets);
 		XmlManager.insertSingleElement(doc, columnElement, columnShape);
-		XmlManager.insertArrayListId(doc, columnElement, "ParagraphSets", paragraphSets);
+		XmlManager.insertArrayListId(doc, columnElement, "ParagraphSets", "ParagraphSet", paragraphSets);
 		XmlManager.insertArrayListElements(doc, columnElement, "Shapes", shapes);
 		
 		return columnElement;
@@ -49,11 +69,11 @@ public class Column implements PersistentObject{
 	
 	public Column(Measurement measurement, PageInsets newInsets){
 		System.out.println("Column initialized");
-		debugInstance = this;
 		this.pageSize = measurement;
 		widgets = new ArrayList<Widget>();
 		paragraphSets = new ArrayList<ParagraphSet>();
 		shapes = new ArrayList<Polygon>();
+		debugInstance = this;
 		
 		this.insets = new SimpleObjectProperty<PageInsets>();
 		this.insets.addListener(new ChangeListener<PageInsets>() {
@@ -68,7 +88,7 @@ public class Column implements PersistentObject{
 	}
 	
 	public Column(Element element) {
-		throw new NotImplementedException();
+		loadFromXmlElement(element);
 	}
 
 	protected void initialSetup() {
@@ -150,12 +170,6 @@ public class Column implements PersistentObject{
 		}
 		shapesAndWidgets.addAll(shapes);
 		return shapesAndWidgets;
-	}
-
-	@Override
-	public void loadFromXmlElement(Element node) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
