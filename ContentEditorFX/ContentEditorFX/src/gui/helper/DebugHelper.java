@@ -48,12 +48,12 @@ public class DebugHelper {
 		debugPolygon6 = GeometryHelper.getRegularPolygon(120, 350, 100, 64, 0);
 		
 		paragraphSpaces = new ArrayList<ParagraphSpace>();
-		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon1));
-		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon2));
-		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon3));
-		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon4));
-		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon5));
-		paragraphSpaces.add(new ParagraphSpace(Column.debugInstance, debugPolygon6));
+		paragraphSpaces.add(new ParagraphSpace(debugPolygon1));
+		paragraphSpaces.add(new ParagraphSpace(debugPolygon2));
+		paragraphSpaces.add(new ParagraphSpace(debugPolygon3));
+		paragraphSpaces.add(new ParagraphSpace(debugPolygon4));
+		paragraphSpaces.add(new ParagraphSpace(debugPolygon5));
+		paragraphSpaces.add(new ParagraphSpace(debugPolygon6));
 	}
 	
 	public static int mouseClickCount = 0;

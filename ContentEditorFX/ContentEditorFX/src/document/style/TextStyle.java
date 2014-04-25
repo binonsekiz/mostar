@@ -16,9 +16,10 @@ import storage.XmlManager;
 import com.sun.javafx.tk.FontMetrics;
 import com.sun.javafx.tk.Toolkit;
 
-import document.PersistentObject;
+import document.persistentproperties.TextStyleProperties;
+import document.persistentproperties.interfaces.PersistentObject;
 
-public class TextStyle implements Comparable<TextStyle>, PersistentObject{
+public class TextStyle extends TextStyleProperties implements Comparable<TextStyle> {
 
 	public static String defaultFontName = "Vera";
 	public static double defaultFontSize = 12;
@@ -27,32 +28,6 @@ public class TextStyle implements Comparable<TextStyle>, PersistentObject{
 	public static float defaultLineSpacingHeight = 20;
 	private static Color defaultSelectionColor = new Color(Color.DARKBLUE.getRed(), Color.DARKBLUE.getGreen(), Color.DARKBLUE.getBlue(), 1f);
 	public static final TextStyle defaultStyle = new TextStyle();
-	
-	private String fontName;
-	private double fontSize;
-	private float lineSpacingHeight;
-	private Color strokeColor;
-	private Color fillColor;
-	
-	public Node saveToXmlNode(Document doc) {
-		Element textStyleElement = doc.createElement("TextStyle");
-		XmlManager.insertStringAttributeElement(doc, textStyleElement, "FontName", fontName);
-		XmlManager.insertNumberElement(doc, textStyleElement, "FontSize", fontSize);
-		XmlManager.insertNumberElement(doc, textStyleElement, "LineSpacingHeight", lineSpacingHeight);
-		XmlManager.insertColorElement(doc, textStyleElement, "StrokeColor", strokeColor);
-		XmlManager.insertColorElement(doc, textStyleElement, "FillColor", fillColor);
-		
-		return textStyleElement;
-	}
-	
-	@Override
-	public void loadFromXmlElement(Element element) {
-		fontName = XmlManager.loadStringAttributeFromXmlElement("FontName", element);
-		fontSize = XmlManager.loadNumberFromXmlElement("FontSize", element).doubleValue();
-		lineSpacingHeight = XmlManager.loadNumberFromXmlElement("LineSpacingHeight", element).floatValue();
-		strokeColor = XmlManager.loadColorFromXmlElement("StrokeColor", element);
-		fillColor = XmlManager.loadColorFromXmlElement("FillColor", element);
-	}
 	
 	protected TextStyle(String fontName, double fontSize, Color strokeColor, Color fillColor, float lineSpacingHeight){
 		this.fontName = fontName;
@@ -78,7 +53,7 @@ public class TextStyle implements Comparable<TextStyle>, PersistentObject{
 	}
 
 	public TextStyle(Element element) {
-		loadFromXmlElement(element);
+		super(element);
 	}
 
 	public String getFontName(){

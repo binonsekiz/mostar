@@ -9,31 +9,14 @@ import org.w3c.dom.Node;
 
 import storage.XmlManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import document.persistentproperties.DocumentTextProperties;
+import document.persistentproperties.interfaces.PersistentObject;
 import document.style.TextStyle;
 
-public class DocumentText implements PersistentObject{
+public class DocumentText extends DocumentTextProperties{
 
 	public static DocumentText instance;
-	private ArrayList<Paragraph> globalText;
-	private ArrayList<ParagraphSet> paragraphSets;
-	private Document document;
-	
-	public Node saveToXmlNode(org.w3c.dom.Document doc) {
-		Element docTextElement = doc.createElement("DocumentText");
 		
-		XmlManager.insertArrayListElements(doc, docTextElement, "Paragraphs", globalText);
-		XmlManager.insertArrayListElements(doc, docTextElement, "ParagraphSets", paragraphSets);
-
-		return docTextElement;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public void loadFromXmlElement(Element element) {
-		paragraphSets = (ArrayList<ParagraphSet>) XmlManager.loadArrayListFromXmlElement("ParagraphSets", "ParagraphSet", element);
-		globalText = (ArrayList<Paragraph>) XmlManager.loadArrayListFromXmlElement("Paragraphs", "Paragraph", element);
-	}
-	
 	public DocumentText (Document document) {
 		System.out.println("DocumentText initialized");
 		instance = this;
@@ -43,7 +26,7 @@ public class DocumentText implements PersistentObject{
 		paragraphSets = new ArrayList<ParagraphSet>();
 		
 		//TODO: debug
-		ParagraphSet set1 = new ParagraphSet(this);
+		ParagraphSet set1 = new ParagraphSet();
 		set1.setColumn(document.getColumns().get(0));
 		set1.setParagraphSpace(DebugHelper.paragraphSpaces.get(3));
 		set1.setAngle(0);

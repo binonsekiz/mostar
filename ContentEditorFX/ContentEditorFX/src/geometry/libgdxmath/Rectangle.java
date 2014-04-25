@@ -20,7 +20,7 @@ import org.w3c.dom.Node;
 
 import storage.XmlManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import document.PersistentObject;
+import document.persistentproperties.interfaces.PersistentObject;
 
 /** Encapsulates a 2D rectangle defined by it's bottom corner point and its extends in x (width) and y (height).
  * @author badlogicgames@gmail.com */

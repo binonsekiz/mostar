@@ -12,7 +12,7 @@ import org.w3c.dom.NodeList;
 import settings.GlobalAppSettings;
 import storage.XmlManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import document.PersistentObject;
+import document.persistentproperties.interfaces.PersistentObject;
 
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.

@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import settings.GlobalAppSettings;
-import document.PersistentObject;
+import document.persistentproperties.interfaces.PersistentObject;
 
 /** Encapsulates a 2D vector. Allows chaining methods by returning a reference to itself
  * @author badlogicgames@gmail.com */

@@ -9,7 +9,7 @@ import org.w3c.dom.NodeList;
 
 import settings.GlobalAppSettings;
 import storage.XmlManager;
-import document.PersistentObject;
+import document.persistentproperties.interfaces.PersistentObject;
 
 public class LineSegment implements Comparable<LineSegment>, PersistentObject{
 	private Vector2 firstPoint;

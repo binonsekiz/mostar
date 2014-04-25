@@ -4,45 +4,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
-import storage.XmlManager;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.Paragraph.TextFillReturnValue;
 import document.layout.LayoutMachine;
+import document.persistentproperties.ParagraphSetProperties;
 
-public class ParagraphSet implements PersistentIndexedObject {
+public class ParagraphSet extends ParagraphSetProperties {
 
 	private ArrayList<Paragraph> paragraphs;
-	private ParagraphSpace paragraphSpace;
 	private Column column;
-	private float angle;
-	private int indexInDocument;
-	private DocumentText parent;
 	
-	public Node saveToXmlNode(org.w3c.dom.Document doc) {
-		Element paragraphSetElement = doc.createElement("ParagraphSet");
-		
-		XmlManager.insertSingleElement(doc, paragraphSetElement, paragraphSpace);
-		XmlManager.insertNumberElement(doc, paragraphSetElement, "Angle", angle);
-				
-		return paragraphSetElement;
-	}
-	
-	@Override
-	public void loadFromXmlElement(Element element) {
-		paragraphSpace = (ParagraphSpace) XmlManager.loadObjectFromXmlElement("ParagraphSpace", element);
-		angle = XmlManager.loadNumberFromXmlElement("Angle", element).floatValue();
-	}
-	
-	public ParagraphSet(DocumentText parent) {
+	public ParagraphSet() {
 		System.out.println("Paragraph set initialized");
-		this.parent = parent;
 		paragraphs = new ArrayList<Paragraph>();
 	}
 
 	public ParagraphSet(Element element) {
-		loadFromXmlElement(element);
+		super(element);
 	}
 
 	public String toString() {
@@ -147,9 +125,5 @@ public class ParagraphSet implements PersistentIndexedObject {
 	public void setIndexInDocument(int indexInDocument) {
 		this.indexInDocument = indexInDocument;
 	}
-	
-	@Override
-	public int getPersistenceId() {
-		return indexInDocument;
-	}
+
 }

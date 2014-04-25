@@ -1,4 +1,4 @@
-package document;
+package document.persistentproperties.interfaces;
 
 public enum PersistentObjectType {
 

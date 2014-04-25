@@ -8,38 +8,20 @@ import org.w3c.dom.Element;
 
 import storage.XmlManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import document.PersistentObject;
+import document.persistentproperties.WidgetProperties;
+import document.persistentproperties.interfaces.PersistentObject;
 
-public class Widget implements PersistentObject{
+public class Widget extends WidgetProperties{
 
-	private int pageNumber;
 	private Polygon shape;
 	private TextWrapType textWrap;
-	
-	public Element saveToXmlNode(Document doc) {
-		Element widgetElement = doc.createElement("Widget");
-		
-		XmlManager.insertNumberElement(doc, widgetElement, "PageNumber", pageNumber);
-		XmlManager.insertSingleElement(doc, widgetElement, shape);
-		XmlManager.insertStringElement(doc, widgetElement, "TextWrap", textWrap.toString());
-		
-		return widgetElement;
-	}
 	
 	public Widget(){
 		textWrap = TextWrapType.Inline;
 	}
 	
 	public Widget(Element element) {
-		loadFromXmlElement(element);
-	}
-
-	public int getPageNumber() {
-		return pageNumber;
-	}
-
-	public void setPageNumber(int pageNumber) {
-		this.pageNumber = pageNumber;
+		super(element);
 	}
 
 	public Rectangle getBorders() {
@@ -102,8 +84,4 @@ public class Widget implements PersistentObject{
 		Front
 	}
 
-	@Override
-	public void loadFromXmlElement(Element node) {
-		throw new NotImplementedException();
-	}
 }

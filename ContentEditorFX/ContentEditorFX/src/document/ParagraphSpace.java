@@ -10,39 +10,21 @@ import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
-import storage.XmlManager;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import document.persistentproperties.ParagraphSpaceProperties;
 
 /**
  * This is a small set of ParagraphWithStyle's bundled in a single shape.
  * @author sahin
  *
  */
-public class ParagraphSpace implements PersistentObject{
+public class ParagraphSpace extends ParagraphSpaceProperties{
 
 	private ArrayList<Paragraph> paragraphs;
-	private Polygon allowedShape;
 	private ParagraphSet paragraphSet;
-	private Column parent;
-
-	public Node saveToXmlNode(Document doc) {
-		Element paragraphSpaceElement = doc.createElement("ParagraphSpace");
-		paragraphSpaceElement.appendChild(allowedShape.saveToXmlNode(doc));
-		
-		return paragraphSpaceElement;
-	}
-
-	@Override
-	public void loadFromXmlElement(Element element) {
-		allowedShape = (Polygon) XmlManager.loadObjectFromXmlElement("Polygon", element);
-	}
 	
-	public ParagraphSpace(Column parent, Polygon shape) {
-		this.parent = parent;
+	public ParagraphSpace(Polygon shape) {
 		paragraphs = new ArrayList<Paragraph>();
 		this.allowedShape = shape;
 	}

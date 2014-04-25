@@ -13,14 +13,11 @@ import java.util.stream.IntStream;
 import javafx.beans.property.SimpleIntegerProperty;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import storage.XmlManager;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import com.sun.javafx.tk.FontMetrics;
 
 import document.layout.LayoutMachine;
+import document.persistentproperties.ParagraphProperties;
 import document.style.TextStyle;
 
 /**
@@ -28,56 +25,21 @@ import document.style.TextStyle;
  * @author sahin
  *
  */
-public class Paragraph implements CharSequence, Comparable<Paragraph>, PersistentIndexedObject{
+public class Paragraph extends ParagraphProperties implements CharSequence, Comparable<Paragraph>{
 
-	private TextStyle style;
-	private StringBuffer textBuffer;
 	private SimpleIntegerProperty startIndexInBigText;
-	
-	private ArrayList<TextLine> textLines;
-	private ArrayList<LineSegment> lineSegments;
-	
 	private int previousIndex = 0;
 	private float cummulativeTextSize = 0;
 	
 	private int startIndexSaveOnly;
-	private int endIndexSaveOnly;
 	
 	private ArrayList<Float> cummulativeWordSizes;
 	private HashMap<Integer, Integer> wordCountToStringIndex;
 	private DocumentText documentText;
-	private int indexInParent;
+
 	private ParagraphOnCanvas paragraphView;
 	private ParagraphSet paragraphSet;
 	private boolean hasElements;
-	
-	public Node saveToXmlNode(org.w3c.dom.Document doc) {
-		//init paragraph
-		Element paragraphElement = doc.createElement("Paragraph");
-		paragraphElement.setAttribute("index", indexInParent + "");
-		
-		XmlManager.insertSingleElement(doc, paragraphElement, style);
-		XmlManager.insertStringElement(doc, paragraphElement, "Text", textBuffer.toString());
-		XmlManager.insertArrayListElements(doc, paragraphElement, "TextLines", textLines);
-		XmlManager.insertArrayListElements(doc, paragraphElement, "LineSegments", lineSegments);
-		
-		return paragraphElement;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public void loadFromXmlElement(Element element) {
-		indexInParent = Integer.parseInt(element.getAttribute("index"));
-		
-		style = (TextStyle) XmlManager.loadObjectFromXmlElement("TextStyle", element);
-		textBuffer = new StringBuffer(XmlManager.loadStringFromXmlElement("Text", element));
-		textLines = (ArrayList<TextLine>) XmlManager.loadArrayListFromXmlElement("TextLines", "TextLine", element);
-		for(int i = 0; i < textLines.size(); i++) {
-			textLines.get(i).setParent(this);
-		}
-		
-		lineSegments = (ArrayList<LineSegment>) XmlManager.loadArrayListFromXmlElement("LineSegments", "LineSegment", element);
-	}
 	
 	public Paragraph(DocumentText parent, int index){
 		this(TextStyle.defaultStyle, "Testing text", parent, index);
@@ -98,7 +60,7 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>, Persisten
 	}
 	
 	public Paragraph(Element element) {
-		loadFromXmlElement(element);
+		super(element);
 	}
 
 	public void setParagraphOnCanvas(ParagraphOnCanvas view) {
@@ -251,7 +213,6 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>, Persisten
 		
 		String retVal = textBuffer.substring(previousIndex, wordStartIndex 	+ 1);
 		startIndexSaveOnly = previousIndex + indexOffset;
-		endIndexSaveOnly = wordStartIndex + indexOffset;
 		previousIndex = wordStartIndex + 1;
 		
 		inputLine.setStartIndex(startIndexSaveOnly);
@@ -479,8 +440,4 @@ public class Paragraph implements CharSequence, Comparable<Paragraph>, Persisten
 		paragraphSet.getColumn().getLayoutMachine().validateLineOnCanvases(this, columnView);
 	}
 
-	@Override
-	public int getPersistenceId() {
-		return indexInParent;
-	}
 }

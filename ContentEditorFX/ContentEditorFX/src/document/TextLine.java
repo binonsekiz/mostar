@@ -10,6 +10,7 @@ import org.w3c.dom.Node;
 
 import storage.XmlManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import document.persistentproperties.interfaces.PersistentObject;
 import document.style.TextStyle;
 
 public class TextLine implements Comparable<TextLine>, PersistentObject {

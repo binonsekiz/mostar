@@ -273,6 +273,9 @@ public class DocumentView extends Pane implements CanvasOwner{
 	}
 	
 	public void associateWithDocument(Document document) {
+		if(this.document != null) {
+			removeDocument();
+		}
 		this.document = document;
 		initialPopulate();
 	}
@@ -300,6 +303,11 @@ public class DocumentView extends Pane implements CanvasOwner{
 		gridStack.setMinHeight(gridStackHeight);
 		gridStack.setPrefHeight(gridStackHeight);
 		gridStack.setMaxHeight(gridStackHeight);
+	}
+	
+	private void removeDocument() {
+		columnViews.clear();
+		gridPane.getChildren().clear();
 	}
 	
 	private void initialPopulate() {

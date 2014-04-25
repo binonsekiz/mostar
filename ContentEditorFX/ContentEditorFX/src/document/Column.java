@@ -18,54 +18,14 @@ import storage.XmlManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.PageSpecs.Measurement;
 import document.layout.LayoutMachine;
+import document.persistentproperties.ColumnProperties;
 import document.widget.Widget;
 
-public class Column implements PersistentObject{
+public class Column extends ColumnProperties{
 
 	public static Column debugInstance;
 	
-	private Measurement pageSize;
-	private SimpleObjectProperty<PageInsets> insets;
-	private ArrayList<Widget> widgets;	
-	private Image background;
-	private Polygon columnShape;
-	private ArrayList<ParagraphSet> paragraphSets;
-	private ArrayList<Polygon> shapes;
-	
 	private LayoutMachine layoutMachine;
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public void loadFromXmlElement(Element element) {
-		pageSize = (Measurement) XmlManager.loadObjectFromXmlElement("Measurement", element);
-		PageInsets insetsProp = (PageInsets) XmlManager.loadObjectFromXmlElement("PageInsets", element);
-		insets = new SimpleObjectProperty<PageInsets>(insetsProp);
-		
-		widgets = (ArrayList<Widget>) XmlManager.loadArrayListFromXmlElement("Widgets", "Widget", element);
-		columnShape = (Polygon) XmlManager.loadObjectFromXmlElement("Polygon", element);
-		ArrayList<Integer> paragraphSetIndexes = (ArrayList<Integer>) XmlManager.loadArrayListIdFromXmlElement("ParagraphSets", "ParagraphSet", element);
-		
-		paragraphSets = new ArrayList<ParagraphSet>();
-		for(int i = 0; i < paragraphSetIndexes.size(); i++) {
-			paragraphSets.add(DocumentText.instance.getParagraphSet(i));
-		}
-		
-		shapes = (ArrayList<Polygon>) XmlManager.loadArrayListFromXmlElement("Shapes", "Polygon", element);
-	}
-	
-	@Override
-	public Node saveToXmlNode(Document doc) {
-		Element columnElement = doc.createElement("Column");
-		
-		XmlManager.insertSingleElement(doc, columnElement, pageSize);
-		XmlManager.insertSingleElement(doc, columnElement, insets.get());
-		XmlManager.insertArrayListElements(doc, columnElement, "Widgets", widgets);
-		XmlManager.insertSingleElement(doc, columnElement, columnShape);
-		XmlManager.insertArrayListId(doc, columnElement, "ParagraphSets", "ParagraphSet", paragraphSets);
-		XmlManager.insertArrayListElements(doc, columnElement, "Shapes", shapes);
-		
-		return columnElement;
-	}
 	
 	public Column(Measurement measurement, PageInsets newInsets){
 		System.out.println("Column initialized");
@@ -88,7 +48,7 @@ public class Column implements PersistentObject{
 	}
 	
 	public Column(Element element) {
-		loadFromXmlElement(element);
+		super(element);
 	}
 
 	protected void initialSetup() {
