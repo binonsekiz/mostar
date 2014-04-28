@@ -1,4 +1,4 @@
-package event;
+package document.project;
 
 import gui.columnview.DocumentView;
 import gui.columnview.DocumentView.ScrollMode;
@@ -17,6 +17,7 @@ import gui.widget.WidgetModifier;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.UUID;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -31,11 +32,17 @@ import control.ThreeDEventFacade;
 import control.WidgetModifyFacade;
 import document.Column;
 import document.Document;
+import document.DocumentText;
+import event.ShapeDrawFacade;
 import event.ShapeDrawFacade.ShapeDrawingMode;
 import event.input.KeyboardManager;
 
-public class DocModifyScreenGuiFacade {
-
+public class ProjectEnvironment {
+	
+	//Persistent properties
+	private UUID uuid;
+	private String projectName;
+	
 	private DocumentView documentView;
 	private DocWidgetToolbar docWidgetToolbar;
 	private DocOverview docOverview;
@@ -47,6 +54,7 @@ public class DocModifyScreenGuiFacade {
 	private DebugHelper debugHelper;
 	private FilePickerWrapper filePicker;
 	private RepositoryManager repositoryManager;
+	private ProjectRepository projectRepository;
 	
 	private TextModifyFacade textModifyFacade;
 	private WidgetModifyFacade widgetModifyFacade;
@@ -57,33 +65,33 @@ public class DocModifyScreenGuiFacade {
 	private Caret caret;
 	
 	private Document document;
+	private DocumentText documentText;
 	
-	public DocModifyScreenGuiFacade(DocModifyScreen docModifyScreen, DocumentView documentView, DocWidgetToolbar docWidgetToolbar, DocOverview docOverview, DocBottomToolbar docBottomToolbar, DocVersatilePane docVersatilePane, DocDebugView docDebugView) {
-		this.docModifyScreen = docModifyScreen;
-		this.documentView = documentView;
-		this.docWidgetToolbar = docWidgetToolbar;
-		this.docOverview = docOverview;
-		this.docBottomToolbar = docBottomToolbar;
-		this.docVersatilePane = docVersatilePane;
-		this.docDebugView = docDebugView;
+	public ProjectEnvironment() {
+		System.out.println("Project environment initialized");
+		
+		docModifyScreen = new DocModifyScreen();
+		this.documentView = docModifyScreen.getDocumentView();
+		this.docWidgetToolbar = docModifyScreen.getWidgetToolbar();
+		this.docOverview = docModifyScreen.getDocOverview();
+		this.docBottomToolbar = docModifyScreen.getDocBottomToolbar();
+		this.docVersatilePane = docModifyScreen.getDocVersatilePane();
+		this.docDebugView = docModifyScreen.getDocDebugView();
 		this.debugHelper = new DebugHelper();
 		
+		uuid = UUID.randomUUID();
+		
 		textModifyFacade = new TextModifyFacade();
-		widgetModifyFacade = new WidgetModifyFacade(this);
+		widgetModifyFacade = new WidgetModifyFacade();
 		styleModifyFacade = new StyleModifyFacade();
 		shapeDrawFacade = new ShapeDrawFacade();
 		threeDEventFacade = new ThreeDEventFacade();
 		repositoryManager = new RepositoryManager();
-		filePicker = new FilePickerWrapper(this, repositoryManager);
+		projectRepository = new ProjectRepository();
+		filePicker = new FilePickerWrapper(repositoryManager);
 		caret = new Caret(textModifyFacade);
 		textModifyFacade.setCaret(caret);
 		KeyboardManager.instance.setTextFacade(textModifyFacade);
-		
-		documentView.setGuiFacade(this);
-		docWidgetToolbar.setGuiFacade(this);
-		docOverview.setGuiFacade(this);
-		docVersatilePane.setGuiFacade(this);
-		docDebugView.setGuiFacade(this);
 		
 		widgetModifyFacade.setCaret(caret);
 		styleModifyFacade.setCaret(caret);
@@ -91,27 +99,27 @@ public class DocModifyScreenGuiFacade {
 		docWidgetToolbar.setStyleFacade(styleModifyFacade);
 	}
 	
-	public void createNewDocument(Document document){
-		this.document = document;
-		textModifyFacade.setDocumentAndView(document, documentView);
-		widgetModifyFacade.setDocumentAndView(document, documentView);
+	public void createNewProjectEnvironment() {
+		ProjectRepository.createNewProjectEnvironment();
+	}
+	
+	public void loadProjectEnvironment() {
+		
+	}
+	
+	public void saveProjectEnvironment() {
+		
+	}
+	
+ 	public void associateWithNewDocument(Document document){
+ 		this.document = document;
+ 		textModifyFacade.setDocumentAndView(document, documentView);
+ 		widgetModifyFacade.setDocumentAndView(document, documentView);
 		styleModifyFacade.setDocumentAndView(document, documentView);
 		threeDEventFacade.setDocumentAndView(document, documentView);
-		docBottomToolbar.setGuiFacade(this);
 		documentView.associateWithDocument(document);
 		docOverview.populateTreeView();
-		
-		Task<Void> task = new Task<Void>() {
-	         @Override protected Void call(){
-	        	for(int i = 0; i < 20; i++) {
-				//	addColumnPressed();
-				}
-				return null;
-	         }
-	     };
-	     
-	     task.run();
-	}
+ 	}
 	
 	public Document getDocument(){
 		return document;
@@ -279,6 +287,12 @@ public class DocModifyScreenGuiFacade {
 		shapeDrawFacade.changeShapeDrawingMode(ShapeDrawingMode.PolygonDrawing);
 		documentView.requestFocus();
 	}
+	
+	public void drawTextBoxButtonPressed() {
+		shapeDrawFacade.changeShapeDrawingMode(ShapeDrawingMode.TextboxDrawing);
+		documentView.requestFocus();
+	}
+
 
 	public ShapeDrawFacade getShapeDrawFacade() {
 		return shapeDrawFacade;
@@ -318,6 +332,15 @@ public class DocModifyScreenGuiFacade {
 		docModifyScreen.toggleVersatilePaneVisible(value);
 	}
 
-	
+	public UUID getUUID() {
+		return uuid;
+	}
 
+	public DocModifyScreen getDocModifyScreen() {
+		return docModifyScreen;
+	}
+
+	public DocumentText getDocumentText() {
+		return documentText;
+	}
 }

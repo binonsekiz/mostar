@@ -1,6 +1,6 @@
 package gui;
 
-import event.DocModifyScreenGuiFacade;
+import document.project.ProjectEnvironment;
 import gui.GFrame.WindowType;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -8,7 +8,6 @@ import javafx.scene.text.Text;
 public class TemplateModifyScreen extends Pane implements ScreenType{
 
 	private WindowType referrer;
-	private DocModifyScreenGuiFacade guiFacade;
 
 	public TemplateModifyScreen() {
 		initGui();
@@ -37,10 +36,6 @@ public class TemplateModifyScreen extends Pane implements ScreenType{
 	@Override
 	public void setReferrer(WindowType referrer) {
 		this.referrer = referrer;
-	}
-
-	public void setGuiFacade(DocModifyScreenGuiFacade facade) {
-		this.guiFacade = facade;
 	}
 
 }

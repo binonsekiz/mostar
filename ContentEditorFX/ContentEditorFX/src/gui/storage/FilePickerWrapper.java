@@ -2,22 +2,21 @@ package gui.storage;
 
 import java.io.File;
 
+import document.project.ProjectEnvironment;
+import document.project.ProjectRepository;
 import javafx.stage.FileChooser;
 import settings.Translator;
 import storage.LocalPersistentRepository;
 import storage.RepositoryManager;
-import event.DocModifyScreenGuiFacade;
 
 public class FilePickerWrapper {
 
 	private FileChooser fileChooser;
 	private FileChooser.ExtensionFilter extensionFilter;
-	private DocModifyScreenGuiFacade guiFacade;
 	private File fileChooserDirectory;
 	private RepositoryManager repositoryManager;
 	
-	public FilePickerWrapper(DocModifyScreenGuiFacade guiFacade, RepositoryManager repoManager) {
-		this.guiFacade = guiFacade;
+	public FilePickerWrapper(RepositoryManager repoManager) {
 		this.repositoryManager = repoManager;
 		initGui();
 		initEvents();
@@ -59,9 +58,7 @@ public class FilePickerWrapper {
 			if(selectedFile!= null){
 				LocalPersistentRepository localRepo = repositoryManager.getDefaultLocalRepository();
 				
-				System.out.println("guifacade.getDocument: " + guiFacade.getDocument());
-				
-				localRepo.saveDocument(guiFacade.getDocument(), selectedFile);
+				localRepo.saveDocument(ProjectRepository.getActiveProjectEnvironment().getDocument(), selectedFile);
 			}
 		}
 		else if(type == FilePickerType.OpenDocument) {
@@ -69,7 +66,7 @@ public class FilePickerWrapper {
 			selectedFile = fileChooser.showOpenDialog(null);
 			if(selectedFile!=null) {
 				LocalPersistentRepository localRepo = repositoryManager.getDefaultLocalRepository();
-				localRepo.loadDocument(selectedFile, guiFacade);
+				localRepo.loadDocument(selectedFile);
 			}
 		}
 		

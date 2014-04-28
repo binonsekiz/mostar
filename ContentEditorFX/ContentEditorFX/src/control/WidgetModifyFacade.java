@@ -2,8 +2,9 @@ package control;
 
 import java.util.ArrayList;
 
+import document.project.ProjectEnvironment;
+import document.project.ProjectRepository;
 import document.widget.Widget.TextWrapType;
-import event.DocModifyScreenGuiFacade;
 import gui.columnview.ColumnView;
 import gui.widget.ImageGalleryWidgetModifier;
 import gui.widget.MediaWidgetModifier;
@@ -14,13 +15,11 @@ import gui.widget.WidgetModifier;
 
 public class WidgetModifyFacade extends Facade{
 	
-	private DocModifyScreenGuiFacade guiFacade;
 	private Caret caret;
 	private WidgetFocusHandler widgetFocusHandler;
 	private ArrayList<WidgetModifier> widgetModifiers;
 	
-	public WidgetModifyFacade(DocModifyScreenGuiFacade guiFacade){
-		this.guiFacade = guiFacade;
+	public WidgetModifyFacade(){
 		this.widgetFocusHandler = new WidgetFocusHandler();
 	}
 
@@ -29,11 +28,11 @@ public class WidgetModifyFacade extends Facade{
 	}
 
 	public void changeVersatilePane(WidgetModifier widgetModifier) {
-		guiFacade.changeVersatilePane(widgetModifier);
+		ProjectRepository.getActiveProjectEnvironment().changeVersatilePane(widgetModifier);
 	}
 	
 	public double getZoomFactor() {
-		return guiFacade.getZoomFactor();
+		return ProjectRepository.getActiveProjectEnvironment().getZoomFactor();
 	}
 
 	public void addImageWidget() {
@@ -111,7 +110,7 @@ public class WidgetModifyFacade extends Facade{
 			for(WidgetModifier modifier: widgetModifiers){
 				modifier.loseFocus();
 			}
-			guiFacade.clearVersatilePane();
+			ProjectRepository.getActiveProjectEnvironment().clearVersatilePane();
 		}
 		
 		protected void refreshWidgetTextOrder(){

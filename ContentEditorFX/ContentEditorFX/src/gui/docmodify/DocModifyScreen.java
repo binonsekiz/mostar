@@ -1,6 +1,6 @@
 package gui.docmodify;
 
-import event.DocModifyScreenGuiFacade;
+import document.project.ProjectEnvironment;
 import gui.GFrame.WindowType;
 import gui.ScreenType;
 import gui.columnview.DocumentView;
@@ -17,8 +17,6 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 	private DocDebugView docDebugView;
 	
 	private WelcomePopup welcomePopup;
-	
-	private DocModifyScreenGuiFacade guiFacade;
 	private WindowType referrer;
 	
 	public DocModifyScreen(){
@@ -33,20 +31,15 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 		docBottomToolbar = new DocBottomToolbar();		
 		docVersatilePane = new DocVersatilePane();
 		docDebugView = new DocDebugView();
-		guiFacade = new DocModifyScreenGuiFacade(this, documentView, docWidgetToolbar, docOverview, docBottomToolbar, docVersatilePane, docDebugView);
 		
 		this.setTop(docWidgetToolbar);
 		this.setCenter(documentView);
 		this.setBottom(docBottomToolbar);
 		
-		welcomePopup = new WelcomePopup(guiFacade);
+		welcomePopup = new WelcomePopup();
 		welcomePopup.show();
 	}
 	
-	public DocModifyScreenGuiFacade getGuiFacade(){
-		return guiFacade;
-	}
-
 	@Override
 	public WindowType getType() {
 		return WindowType.DocModifyScreen;
@@ -73,5 +66,29 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 		else{
 			this.setRight(null);
 		}
+	}
+
+	public DocumentView getDocumentView() {
+		return documentView;
+	}
+
+	public DocWidgetToolbar getWidgetToolbar() {
+		return docWidgetToolbar;
+	}
+
+	public DocOverview getDocOverview() {
+		return docOverview;
+	}
+
+	public DocBottomToolbar getDocBottomToolbar() {
+		return docBottomToolbar;
+	}
+
+	public DocVersatilePane getDocVersatilePane() {
+		return docVersatilePane;
+	}
+
+	public DocDebugView getDocDebugView() {
+		return docDebugView;
 	}
 }

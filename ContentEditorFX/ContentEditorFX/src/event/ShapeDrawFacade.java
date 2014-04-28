@@ -6,6 +6,8 @@ import gui.columnview.ColumnView;
 
 import java.util.ArrayList;
 
+import document.ParagraphSet;
+import document.ParagraphSpace;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -43,7 +45,7 @@ public class ShapeDrawFacade {
 	}
 	
 	public enum ShapeDrawingMode{
-		Off, PolygonDrawing, PolylineDrawing
+		Off, PolygonDrawing, PolylineDrawing, TextboxDrawing
 	}
 
 	public ShapeDrawingMode getDrawingMode() {
@@ -60,11 +62,34 @@ public class ShapeDrawFacade {
 		}
 		Vector2 newVector = new Vector2((float) event.getX(), (float) event.getY());
 		if(isCloseToInitialPoint()) {
-			finalizePolygon();
+			if(mode == ShapeDrawingMode.PolygonDrawing) {
+				finalizePolygon();
+			}
+			else if(mode == ShapeDrawingMode.TextboxDrawing) {
+				finalizeTextBox();
+			}
 		}
 		else{
 			currentShapePoints.add(newVector);
 		}
+	}
+
+	private void finalizeTextBox() {
+		float[] vertices = new float[currentShapePoints.size() * 2];
+		for(int i = 0; i < currentShapePoints.size(); i++) {
+			vertices[2 * i] = currentShapePoints.get(i).x;
+			vertices[2 * i + 1] = currentShapePoints.get(i).y;
+		}
+		Polygon finalPolygon = new Polygon(vertices);
+		
+		ParagraphSet pSet = new ParagraphSet(finalPolygon);
+		caller.insertParagraphSet(pSet);
+		
+		System.out.println("\n\n00000000000\nADDING TBOX\n000000000\n\n " + finalPolygon + "\n\n00000000000\n\n");
+		mode = ShapeDrawingMode.Off;
+		caller.refresh();
+		caller = null;
+		isWaitingForCaller = false;
 	}
 
 	private void finalizePolygon() {

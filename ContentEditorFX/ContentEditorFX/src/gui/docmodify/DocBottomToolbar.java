@@ -1,5 +1,7 @@
 package gui.docmodify;
 
+import document.project.ProjectEnvironment;
+import document.project.ProjectRepository;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -9,7 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
-import event.DocModifyScreenGuiFacade;
 import gui.columnview.DocumentView.ScrollMode;
 
 public class DocBottomToolbar extends ToolBar{
@@ -26,8 +27,6 @@ public class DocBottomToolbar extends ToolBar{
 	private double zoomFactor;
 	private boolean isZoomChanged;
 	
-	private DocModifyScreenGuiFacade guiFacade;
-	
 	public DocBottomToolbar(){
 		this.setId("docwidget-toolbar");
 		initializeGui();
@@ -41,7 +40,7 @@ public class DocBottomToolbar extends ToolBar{
 				zoomFactor += 5;
 				zoomFactor = Math.floor(zoomFactor * 100) / 100;
 				zoomField.setText(zoomFactor + "");
-				guiFacade.documentPaneZoomChanged(zoomFactor);
+				ProjectRepository.getActiveProjectEnvironment().documentPaneZoomChanged(zoomFactor);
 			}
 		});
 		
@@ -51,21 +50,21 @@ public class DocBottomToolbar extends ToolBar{
 				zoomFactor = Math.max(zoomFactor - 5, 0.01);
 				zoomFactor = Math.floor(zoomFactor * 100) / 100;
 				zoomField.setText(zoomFactor + "");
-				guiFacade.documentPaneZoomChanged(zoomFactor);
+				ProjectRepository.getActiveProjectEnvironment().documentPaneZoomChanged(zoomFactor);
 			}
 		});
 		
 		leftDebugPanelToggle.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.toggleDebugPaneVisible(leftDebugPanelToggle.isSelected());
+				ProjectRepository.getActiveProjectEnvironment().toggleDebugPaneVisible(leftDebugPanelToggle.isSelected());
 			}
 		});
 		
 		rightDebugPanelToggle.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.toggleVersatilePaneVisible(rightDebugPanelToggle.isSelected());
+				ProjectRepository.getActiveProjectEnvironment().toggleVersatilePaneVisible(rightDebugPanelToggle.isSelected());
 			}
 		});
 		
@@ -103,7 +102,7 @@ public class DocBottomToolbar extends ToolBar{
 			@Override
 			public void handle(ActionEvent arg0) {
 				if(isZoomChanged){
-					guiFacade.documentPaneZoomChanged(zoomFactor);
+					ProjectRepository.getActiveProjectEnvironment().documentPaneZoomChanged(zoomFactor);
 					isZoomChanged = false;
 				}
 			}
@@ -112,14 +111,14 @@ public class DocBottomToolbar extends ToolBar{
 		continuousScroll.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.setDocumentViewScrollBehaviour(ScrollMode.Continuous);
+				ProjectRepository.getActiveProjectEnvironment().setDocumentViewScrollBehaviour(ScrollMode.Continuous);
 			}
 		});
 
 		discreteScroll.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.setDocumentViewScrollBehaviour(ScrollMode.Discrete);
+				ProjectRepository.getActiveProjectEnvironment().setDocumentViewScrollBehaviour(ScrollMode.Discrete);
 			}
 		});
 	}
@@ -156,10 +155,6 @@ public class DocBottomToolbar extends ToolBar{
 		hbox2.getChildren().addAll(continuousScroll, discreteScroll);
 
 		this.getItems().addAll(hbox1, hbox2, hbox3);
-	}
-	
-	public void setGuiFacade(DocModifyScreenGuiFacade guiFacade){
-		this.guiFacade = guiFacade;
 	}
 	
 }

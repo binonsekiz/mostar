@@ -1,5 +1,8 @@
 package document;
 
+import geometry.libgdxmath.Polygon;
+import gui.helper.DebugHelper;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -8,6 +11,7 @@ import org.w3c.dom.Element;
 import document.Paragraph.TextFillReturnValue;
 import document.layout.LayoutMachine;
 import document.persistentproperties.ParagraphSetProperties;
+import document.project.ProjectRepository;
 
 public class ParagraphSet extends ParagraphSetProperties {
 
@@ -21,6 +25,18 @@ public class ParagraphSet extends ParagraphSetProperties {
 
 	public ParagraphSet(Element element) {
 		super(element);
+	}
+
+	public ParagraphSet(Polygon finalPolygon) {
+		paragraphs = new ArrayList<Paragraph>();
+		setParagraphSpace(new ParagraphSpace(finalPolygon));
+	}
+	
+	private void setupInitialParagraph() {
+		Paragraph paragraph = new Paragraph(ProjectRepository.getActiveProjectEnvironment().getDocumentText(), 0);
+		paragraph.setText("");
+		addParagraph(paragraph);
+		paragraph.setStyle(DebugHelper.debugStyle1);
 	}
 
 	public String toString() {
@@ -99,6 +115,10 @@ public class ParagraphSet extends ParagraphSetProperties {
 		
 		this.column = column;
 		column.addParagraphSet(this);
+		
+		if(paragraphs.size() == 0) {
+			setupInitialParagraph();
+		}
 	}
 
 	public ParagraphSpace getParagraphSpace() {

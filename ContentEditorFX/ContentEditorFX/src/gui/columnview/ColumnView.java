@@ -21,7 +21,9 @@ import settings.GlobalAppSettings;
 import control.TextModifyFacade;
 import document.Column;
 import document.DocumentText;
+import document.ParagraphSet;
 import document.layout.LayoutMachine;
+import document.project.ProjectRepository;
 import document.widget.Widget;
 import event.ShapeDrawFacade;
 import event.ShapeDrawFacade.ShapeDrawingMode;
@@ -83,7 +85,13 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		this.getChildren().add(canvas);
 	}
 	
+	public void insertParagraphSet(ParagraphSet newSet) {
+		newSet.setColumn(column);
+		paragraphsOnCanvas.add(new ParagraphOnCanvas(this, newSet, textModifyFacade));
+	}
+	
 	private void populateParagraphViews() {
+		paragraphsOnCanvas.clear();
 		for(int i = 0; i < text.get().getParagraphSetsInColumn(this.column).size(); i++) {
 			paragraphsOnCanvas.add(new ParagraphOnCanvas(this, text.get().getParagraphSet(i), textModifyFacade));
 		}
@@ -253,8 +261,9 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 			drawWidgetGuidelines();
 		}
 		
-		if(parent.getShapeDrawFacade().getDrawingMode() != ShapeDrawingMode.Off && parent.getShapeDrawFacade().isCallerColumnView(this)) {
-			parent.getShapeDrawFacade().paintCurrentShape(overlayContext);
+		ShapeDrawFacade facade = ProjectRepository.getActiveProjectEnvironment().getShapeDrawFacade();
+		if(facade.getDrawingMode() != ShapeDrawingMode.Off && facade.isCallerColumnView(this)) {
+			facade.paintCurrentShape(overlayContext);
 		}
 		
 		if(selectedShapeIndex >= 0) {

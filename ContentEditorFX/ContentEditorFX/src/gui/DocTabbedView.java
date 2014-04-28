@@ -1,10 +1,11 @@
 package gui;
 
+import document.project.ProjectEnvironment;
+import document.project.ProjectRepository;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import settings.Translator;
-import event.DocModifyScreenGuiFacade;
 import gui.GFrame.WindowType;
 import gui.docmodify.DocModifyScreen;
 import gui.threed.ThreeDModifyScreen;
@@ -13,7 +14,6 @@ public class DocTabbedView extends BorderPane implements ScreenType{
 
 	private TabPane tabPane;
 	
-	private DocModifyScreenGuiFacade facade;
 	
 	private Tab docModifyTab;
 	private DocModifyScreen docModifyScreen;
@@ -34,28 +34,25 @@ public class DocTabbedView extends BorderPane implements ScreenType{
 			}
 		};
 		
-		docModifyScreen = new DocModifyScreen();
+		ProjectRepository.createNewProjectEnvironment();
+
+		docModifyScreen = ProjectRepository.getActiveProjectEnvironment().getDocModifyScreen();
 		docModifyTab = new Tab(Translator.get("Content Editor"));
 		docModifyTab.setContent(docModifyScreen);
 		docModifyTab.setClosable(false);
-		facade = docModifyScreen.getGuiFacade();
 		tabPane.getTabs().add(docModifyTab);
 		
 		threeDModifyScreen = new ThreeDModifyScreen();
 		threeDModifyTab = new Tab(Translator.get("3D Editor"));
 		threeDModifyTab.setContent(threeDModifyScreen);
 		threeDModifyTab.setClosable(false);
-		threeDModifyScreen.setGuiFacade(facade);
 		tabPane.getTabs().add(threeDModifyTab);
 		
 		templateModifyScreen = new TemplateModifyScreen();
 		templateTab = new Tab(Translator.get("Template Editor"));
 		templateTab.setContent(templateModifyScreen);
 		templateTab.setClosable(false);
-		templateModifyScreen.setGuiFacade(facade);
 		tabPane.getTabs().add(templateTab);
-		
-	//	tabPane.getSelectionModel().select(threeDModifyTab);
 		
 		this.setCenter(tabPane);
 	}

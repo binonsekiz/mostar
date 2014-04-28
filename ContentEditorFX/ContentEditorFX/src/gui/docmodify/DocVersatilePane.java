@@ -1,6 +1,6 @@
 package gui.docmodify;
 
-import event.DocModifyScreenGuiFacade;
+import document.project.ProjectEnvironment;
 import gui.docmodify.versatile.HtmlWidgetProperties;
 import gui.docmodify.versatile.ImageGalleryWidgetProperties;
 import gui.docmodify.versatile.MediaWidgetProperties;
@@ -30,7 +30,6 @@ public class DocVersatilePane extends StackPane {
 	private HtmlWidgetProperties htmlWidgetProperties;
 	
 	private ArrayList<Node> propertyControls;
-	private DocModifyScreenGuiFacade guiFacade;
 	
 	public DocVersatilePane(){
 		this.setId("versatile-pane");
@@ -94,9 +93,4 @@ public class DocVersatilePane extends StackPane {
 			node.setOpacity(0);
 		}
 	}
-
-	public void setGuiFacade(DocModifyScreenGuiFacade guiFacade) {
-		this.guiFacade = guiFacade;
-	}
-
 }

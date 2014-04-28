@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.ObjectOutputStream;
 
 import document.Document;
-import event.DocModifyScreenGuiFacade;
+import document.project.ProjectEnvironment;
+import document.project.ProjectRepository;
 
 public class LocalPersistentRepository implements DocumentRepository, TemplateRepository{
 	
@@ -30,11 +31,11 @@ public class LocalPersistentRepository implements DocumentRepository, TemplateRe
 		xmlManager = new XmlManager();
 	}
 
-	public void loadDocument(File selectedFile, DocModifyScreenGuiFacade facade) {
+	public void loadDocument(File selectedFile) {
 		if(xmlManager == null) {
 			initXmlManager();
 		}
-		facade.createNewDocument(XmlManager.loadDocument(selectedFile));
+		ProjectRepository.getActiveProjectEnvironment().associateWithNewDocument(XmlManager.loadDocument(selectedFile));
 	}
 	
 }

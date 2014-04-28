@@ -24,17 +24,6 @@ public class DocumentText extends DocumentTextProperties{
 		globalText = new ArrayList<Paragraph>();
 		
 		paragraphSets = new ArrayList<ParagraphSet>();
-		
-		//TODO: debug
-		ParagraphSet set1 = new ParagraphSet();
-		set1.setColumn(document.getColumns().get(0));
-		set1.setParagraphSpace(DebugHelper.paragraphSpaces.get(3));
-		set1.setAngle(0);
-		
-		Paragraph paragraph = new Paragraph(this, 0);
-		paragraph.setText("");
-		addParagraph(paragraph, set1);
-		paragraph.setStyle(DebugHelper.debugStyle1);
 	}
 	
 	public DocumentText(Element element) {

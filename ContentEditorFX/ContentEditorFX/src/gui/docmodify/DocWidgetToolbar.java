@@ -18,8 +18,9 @@ import javafx.scene.shape.Rectangle;
 import settings.Translator;
 import control.StyleModifyFacade;
 import document.Document;
+import document.project.ProjectEnvironment;
+import document.project.ProjectRepository;
 import document.style.TextStyle;
-import event.DocModifyScreenGuiFacade;
 import gui.helper.ColorGrid;
 
 public class DocWidgetToolbar extends FlowPane{
@@ -68,9 +69,9 @@ public class DocWidgetToolbar extends FlowPane{
 	private Button drawTableButton;
 	private Button drawSignButton;
 	private Button drawGraphicButton;
+	private Button drawTextBoxButton;
 	
 	private Button lineButton;
-	private DocModifyScreenGuiFacade guiFacade;
 	private StyleModifyFacade styleFacade;
 	
 	ObservableList<String> fontOptions;
@@ -116,6 +117,7 @@ public class DocWidgetToolbar extends FlowPane{
 		importFile.setDisable(true);
 		exportFile.setDisable(true);
 		drawShapeButton.setDisable(true);
+		drawTextBoxButton.setDisable(true);
 		drawTableButton.setDisable(true);
 		drawSignButton.setDisable(true);
 		drawGraphicButton.setDisable(true);
@@ -124,15 +126,16 @@ public class DocWidgetToolbar extends FlowPane{
 	private void initShapeContols() {
 		shapePane = new HBox();
 		
+		drawTextBoxButton = new Button(Translator.get("Draw Text Box"));
+		drawTextBoxButton.getStyleClass().add("first");
 		drawShapeButton = new Button(Translator.get("Draw Shape"));
-		drawShapeButton.getStyleClass().add("first");
 		drawTableButton = new Button(Translator.get("Draw Table"));
 		drawSignButton = new Button(Translator.get("Draw Sign"));
 		drawGraphicButton = new Button(Translator.get("Draw Graphic"));
 		drawGraphicButton.getStyleClass().add("last");
 		
 		shapePane.getStyleClass().add("segmented-button-bar-class");
-		shapePane.getChildren().addAll(drawShapeButton, drawTableButton, drawSignButton, drawGraphicButton);
+		shapePane.getChildren().addAll(drawTextBoxButton, drawShapeButton, drawTableButton, drawSignButton, drawGraphicButton);
 	}
 	
 	private void initSaveLoadControls() {
@@ -252,77 +255,77 @@ public class DocWidgetToolbar extends FlowPane{
 		newBookButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.createNewDocument(new Document());
+				ProjectRepository.getActiveProjectEnvironment().associateWithNewDocument(new Document());
 			}
 		});
 		
 		newSectionButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.addSectionPressed();
+				ProjectRepository.getActiveProjectEnvironment().addSectionPressed();
 			}
 		});
 		
 		newChapterButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.addChapterPressed();
+				ProjectRepository.getActiveProjectEnvironment().addChapterPressed();
 			}
 		});
 		
 		newPageButton.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.addColumnPressed();
+				ProjectRepository.getActiveProjectEnvironment().addColumnPressed();
 			}	
 		});
 		
 		imageButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.addImageWidgetPressed();
+				ProjectRepository.getActiveProjectEnvironment().addImageWidgetPressed();
 			}
 		});
 		
 		imageGalleryButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.addImageGalleryWidgetPressed();
+				ProjectRepository.getActiveProjectEnvironment().addImageGalleryWidgetPressed();
 			}
 		});
 		
 		mediaButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.addMediaWidgetPressed();
+				ProjectRepository.getActiveProjectEnvironment().addMediaWidgetPressed();
 			}
 		});
 		
 		htmlButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.addHtmlWidgetPressed();				
+				ProjectRepository.getActiveProjectEnvironment().addHtmlWidgetPressed();				
 			}
 		});
 		
 		textButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.addTextBoxPressed();
+				ProjectRepository.getActiveProjectEnvironment().addTextBoxPressed();
 			}
 		});
 		
 		backgroundButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.pageBackgroundPressed();
+				ProjectRepository.getActiveProjectEnvironment().pageBackgroundPressed();
 			}
 		});
 		
 		threeDButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.addThreeDWidgetPressed();
+				ProjectRepository.getActiveProjectEnvironment().addThreeDWidgetPressed();
 			}
 		});
 		
@@ -331,7 +334,7 @@ public class DocWidgetToolbar extends FlowPane{
 			public void changed(ObservableValue<? extends String> arg0,
 					String arg1, String arg2) {
 				if(styleChangeEventsDisabled) return;
-				guiFacade.changeFontName(arg2);
+				ProjectRepository.getActiveProjectEnvironment().changeFontName(arg2);
 			}
 		});
 		
@@ -340,41 +343,44 @@ public class DocWidgetToolbar extends FlowPane{
 			public void changed(ObservableValue<? extends String> arg0,
 					String arg1, String arg2) {
 				if(styleChangeEventsDisabled) return;
-				guiFacade.changeFontSize(arg2);
+				ProjectRepository.getActiveProjectEnvironment().changeFontSize(arg2);
 			}
 		});
 		
 		drawShapeButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.drawShapeButtonPressed();
+				ProjectRepository.getActiveProjectEnvironment().drawShapeButtonPressed();
+			}
+		});
+		
+		drawTextBoxButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				ProjectRepository.getActiveProjectEnvironment().drawTextBoxButtonPressed();
 			}
 		});
 		
 		newButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.newButtonPressed();
+				ProjectRepository.getActiveProjectEnvironment().newButtonPressed();
 			}
 		});
 		
 		saveButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.saveButtonPressed();
+				ProjectRepository.getActiveProjectEnvironment().saveButtonPressed();
 			}
 		});
 		
 		loadButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.loadButtonPressed();
+				ProjectRepository.getActiveProjectEnvironment().loadButtonPressed();
 			}
 		});
-	}
-
-	public void setGuiFacade(DocModifyScreenGuiFacade guiFacade) {
-		this.guiFacade = guiFacade;
 	}
 	
 	public void setStyleFacade(StyleModifyFacade styleFacade) {

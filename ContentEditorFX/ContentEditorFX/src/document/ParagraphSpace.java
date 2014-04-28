@@ -21,11 +21,9 @@ import document.persistentproperties.ParagraphSpaceProperties;
  */
 public class ParagraphSpace extends ParagraphSpaceProperties{
 
-	private ArrayList<Paragraph> paragraphs;
 	private ParagraphSet paragraphSet;
 	
 	public ParagraphSpace(Polygon shape) {
-		paragraphs = new ArrayList<Paragraph>();
 		this.allowedShape = shape;
 	}
 	
@@ -99,6 +97,6 @@ public class ParagraphSpace extends ParagraphSpaceProperties{
 	}
 	
 	public String toString() {
-		return "Paragraph Space: " + allowedShape + ", paragraph count: " + paragraphs.size();
+		return "Paragraph Space: " + allowedShape;
 	}
 }

@@ -15,13 +15,12 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import settings.GlobalAppSettings;
 import document.Document;
-import event.DocModifyScreenGuiFacade;
+import document.project.ProjectEnvironment;
+import document.project.ProjectRepository;
 
 public class DocDebugView extends VBox {
 
 	public static DocDebugView instance;
-	
-	private DocModifyScreenGuiFacade guiFacade;
 	
 	private Text debugLabel1;
 	private Text debugLabel2;
@@ -61,42 +60,42 @@ public class DocDebugView extends VBox {
 		overlayVisible.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.setOverlayCanvasVisible(overlayVisible.selectedProperty().get());
+				ProjectRepository.getActiveProjectEnvironment().setOverlayCanvasVisible(overlayVisible.selectedProperty().get());
 			}
 		});
 		
 		textCanvasVisible.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.setTextCanvasVisible(textCanvasVisible.selectedProperty().get());
+				ProjectRepository.getActiveProjectEnvironment().setTextCanvasVisible(textCanvasVisible.selectedProperty().get());
 			}
 		});
 		
 		debugCanvasVisible.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.setDebugCanvasVisible(debugCanvasVisible.selectedProperty().get());
+				ProjectRepository.getActiveProjectEnvironment().setDebugCanvasVisible(debugCanvasVisible.selectedProperty().get());
 			}
 		});
 		
 		refresh.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.requestDocumentViewRefresh();
+				ProjectRepository.getActiveProjectEnvironment().requestDocumentViewRefresh();
 			}
 		});
 		
 		linePolygonsVisible.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.setLinePolygonsVisible(linePolygonsVisible.selectedProperty().get());
+				ProjectRepository.getActiveProjectEnvironment().setLinePolygonsVisible(linePolygonsVisible.selectedProperty().get());
 			}
 		});
 		
 		insetVisible.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.setInsetVisible(insetVisible.selectedProperty().get());
+				ProjectRepository.getActiveProjectEnvironment().setInsetVisible(insetVisible.selectedProperty().get());
 			}
 		});
 		
@@ -118,7 +117,7 @@ public class DocDebugView extends VBox {
 		refreshTextIndices.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				guiFacade.debugResetTextIndices();
+				ProjectRepository.getActiveProjectEnvironment().debugResetTextIndices();
 			}
 		});
 		
@@ -169,10 +168,6 @@ public class DocDebugView extends VBox {
 		
 		this.getChildren().addAll(title, overlayVisible, debugCanvasVisible, textCanvasVisible, linePolygonsVisible, 
 				insetVisible, refresh, refreshTextIndices, collectGarbage, totalRefreshCount, debugLabel1, debugLabel2, debugLabel3, debugLabel4, totalDocument, memoryStats);
-	}
-
-	public void setGuiFacade(DocModifyScreenGuiFacade docModifyScreenGuiFacade) {
-		this.guiFacade = docModifyScreenGuiFacade;
 	}
 	
 	public void setDebugText(String text, int index){

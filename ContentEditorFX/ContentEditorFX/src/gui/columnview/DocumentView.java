@@ -28,7 +28,8 @@ import javafx.util.Duration;
 import settings.GlobalAppSettings;
 import document.Column;
 import document.Document;
-import event.DocModifyScreenGuiFacade;
+import document.project.ProjectEnvironment;
+import document.project.ProjectRepository;
 import event.ShapeDrawFacade;
 import event.input.OverlayCanvas;
 import event.modification.ModificationType;
@@ -41,8 +42,6 @@ import gui.ShapedPane;
  *
  */
 public class DocumentView extends Pane implements CanvasOwner{
-	
-	private DocModifyScreenGuiFacade guiFacade;
 	
 	private ScrollPane continuousScrollPane;
 	private BorderPane discreteScrollPane;
@@ -269,7 +268,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 	public void textSelectionSet(int lowerIndex, int higherIndex) {
 		LineOnCanvas.selectedStartIndex = lowerIndex;
 		LineOnCanvas.selectedEndIndex = higherIndex;
-		guiFacade.updateVisualStyleControls();
+		ProjectRepository.getActiveProjectEnvironment().updateVisualStyleControls();
 	}
 	
 	public void associateWithDocument(Document document) {
@@ -281,7 +280,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 	}
 
 	public void addColumn(Column c, int index) {
-		ColumnView newView = new ColumnView(this, guiFacade.getTextModifyFacade(), guiFacade.getShapeDrawFacade());
+		ColumnView newView = new ColumnView(this, ProjectRepository.getActiveProjectEnvironment().getTextModifyFacade(), ProjectRepository.getActiveProjectEnvironment().getShapeDrawFacade());
 		newView.associateWithColumn(c);
 		newView.setDocumentText(document.getDocumentText());
 		columnViews.add(index, newView);
@@ -313,7 +312,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 	private void initialPopulate() {
 		for(int i = 0; i < document.getColumns().size(); i++){
 			Column tempColumn = document.getColumns().get(i);
-			ColumnView tempColumnView = new ColumnView(this, guiFacade.getTextModifyFacade(), guiFacade.getShapeDrawFacade());
+			ColumnView tempColumnView = new ColumnView(this, ProjectRepository.getActiveProjectEnvironment().getTextModifyFacade(), ProjectRepository.getActiveProjectEnvironment().getShapeDrawFacade());
 			tempColumnView.associateWithColumn(tempColumn);
 			tempColumnView.setDocumentText(document.getDocumentText());
 			columnViews.add(tempColumnView);
@@ -342,7 +341,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 			columnViews.get(i).refresh();
 		}
 		
-		guiFacade.notifyRefreshHappened();
+		ProjectRepository.getActiveProjectEnvironment().notifyRefreshHappened();
 		fixCanvasSize();
 		overlayCanvas.toFront();
 		debugCanvas.toFront();
@@ -369,7 +368,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 			}
 		}
 		
-		guiFacade.notifyRefreshHappened();
+		ProjectRepository.getActiveProjectEnvironment().notifyRefreshHappened();
 		overlayCanvas.toFront();
 		debugCanvas.toFront();
 	}
@@ -449,10 +448,6 @@ public class DocumentView extends Pane implements CanvasOwner{
 	public double getZoomFactor() {
 		return zoomFactor;
 	}
-
-	public void setGuiFacade(DocModifyScreenGuiFacade docModifyScreenGuiFacade) {
-		this.guiFacade = docModifyScreenGuiFacade;
-	}
 	
 	@Override
 	public void notifyRepaintNeeded() {
@@ -526,10 +521,6 @@ public class DocumentView extends Pane implements CanvasOwner{
 
 	public ArrayList<ColumnView> getColumnViews() {
 		return columnViews;
-	}
-
-	public ShapeDrawFacade getShapeDrawFacade() {
-		return guiFacade.getShapeDrawFacade();
 	}
 
 	public int getActiveColumnIndex() {

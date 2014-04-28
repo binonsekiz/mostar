@@ -1,10 +1,10 @@
 package gui.docmodify;
 
+import document.project.ProjectEnvironment;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
 import settings.Translator;
-import event.DocModifyScreenGuiFacade;
 
 public class DocOverview extends StackPane{
 	
@@ -14,8 +14,6 @@ public class DocOverview extends StackPane{
 	private TreeItem treeRoot;
 	private int activeSection;
 
-	private DocModifyScreenGuiFacade guiFacade;
-	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public DocOverview(){
 		treeView = new TreeView<>();
@@ -82,10 +80,6 @@ public class DocOverview extends StackPane{
 	
 	public int getActivePage(){
 		return activeSection;
-	}
-
-	public void setGuiFacade(DocModifyScreenGuiFacade docModifyScreenGuiFacade) {
-		this.guiFacade = docModifyScreenGuiFacade;
 	}
 
 }

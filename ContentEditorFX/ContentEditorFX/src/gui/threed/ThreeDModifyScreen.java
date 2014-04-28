@@ -1,6 +1,5 @@
 package gui.threed;
 
-import event.DocModifyScreenGuiFacade;
 import gui.GFrame.WindowType;
 import gui.ScreenType;
 import javafx.event.ActionEvent;
@@ -14,11 +13,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import settings.Translator;
 import control.ThreeDEventFacade;
+import document.project.ProjectEnvironment;
 
 public class ThreeDModifyScreen extends BorderPane implements ScreenType{
 
 	private WindowType referrer;
-	private DocModifyScreenGuiFacade guiFacade;
 	private ThreeDEventFacade facade;
 	
 	private Pane leftPane;
@@ -113,11 +112,6 @@ public class ThreeDModifyScreen extends BorderPane implements ScreenType{
 	@Override
 	public void setReferrer(WindowType referrer) {
 		this.referrer = referrer;
-	}
-
-	public void setGuiFacade(DocModifyScreenGuiFacade facade) {
-		this.guiFacade = facade;
-		this.facade = guiFacade.getThreeDEventFacade();
 	}
 
 }
