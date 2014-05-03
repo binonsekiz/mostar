@@ -17,13 +17,14 @@ import document.PageInsets;
 import document.ParagraphSet;
 import document.PageSpecs.Measurement;
 import document.persistentproperties.interfaces.PersistentObject;
+import document.project.ProjectRepository;
 import document.widget.Widget;
 
 public abstract class ColumnProperties implements PersistentObject {
 
 	protected Measurement pageSize;
 	protected SimpleObjectProperty<PageInsets> insets;
-	protected ArrayList<Widget> widgets;	
+	protected ArrayList<Widget> widgets;
 	protected Image background;
 	protected Polygon columnShape;
 	protected ArrayList<ParagraphSet> paragraphSets;
@@ -50,7 +51,7 @@ public abstract class ColumnProperties implements PersistentObject {
 		
 		paragraphSets = new ArrayList<ParagraphSet>();
 		for(int i = 0; i < paragraphSetIndexes.size(); i++) {
-			paragraphSets.add(DocumentText.instance.getParagraphSet(i));
+			paragraphSets.add(ProjectRepository.getActiveProjectEnvironment().getDocumentText().getParagraphSet(i));
 		}
 		
 		shapes = (ArrayList<Polygon>) XmlManager.loadArrayListFromXmlElement("Shapes", "Polygon", element);

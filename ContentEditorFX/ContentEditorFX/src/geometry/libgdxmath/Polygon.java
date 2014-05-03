@@ -611,6 +611,14 @@ public class Polygon implements Serializable, PersistentObject{
 			
 			return retVal;
 		}
+
+		public int getLineCount() {
+			if(segment1 == null && segment2 == null)
+				return 0;
+			else if(segment2 == null)
+				return 1;
+			else return 2;
+		}
 	}
 
 	public void setPositionX(float floatValue) {

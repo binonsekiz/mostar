@@ -26,6 +26,12 @@ import document.ParagraphSet;
 import document.TextLine;
 import document.style.TextStyle;
 
+/**
+ * Here is how this works:
+ * 
+ * @author sahin
+ *
+ */
 public class LayoutMachine{
 	
 	private PageInsets insets;
@@ -39,6 +45,7 @@ public class LayoutMachine{
 	private Column parent;
 	
 	private TextModifyFacade facade;
+	private boolean isOutOfSpace;
 	
 	public LayoutMachine(Column parent){
 		this.parent = parent;
@@ -48,6 +55,7 @@ public class LayoutMachine{
 	
 	public void initialSetup() {
 		System.out.println("1.Initial Setup");
+		isOutOfSpace = false;
 		ArrayList<ParagraphSet> sets = parent.getParagraphSets();
 		for(int i = 0; i < sets.size(); i++) {
 			startTextDivision(sets.get(i));
@@ -114,6 +122,7 @@ public class LayoutMachine{
 		lineSegmentOffset = paragraphSet.getParagraphSpace().getTextDivisionStartPoint();
 		backupSegments.clear();
 		lastUsedSegment = null;
+		isOutOfSpace = false;
 		
 		//TODO: erase this line
 		DocumentView.getDebugContext().clearRect(0, 0, 2000, 2000);
@@ -121,6 +130,10 @@ public class LayoutMachine{
 
 	public LineSegment getDefaultSegment(TextStyle style) {
 		return getNextAvailableLineSegment(style);
+	}
+	
+	public boolean isOutOfSpace() {
+		return isOutOfSpace;
 	}
 	
 	public LineSegment getNextAvailableLineSegment(TextStyle style) {
@@ -157,12 +170,8 @@ public class LayoutMachine{
 		else {
 			System.out.println("\tOption A3");
 			float angle = paragraphSet.getAngle();
-			Vector2 endPoint = new Vector2(
-					(float) (lineSegmentOffset.x + insets.getPageWidth() * Math.cos(Math.toRadians(angle))), 
-					(float) (lineSegmentOffset.y + insets.getPageWidth() * Math.sin(Math.toRadians(angle))));
 			
-			LineSegment inputSegment = new LineSegment(
-					lineSegmentOffset, endPoint);
+			LineSegment inputSegment = new LineSegment(lineSegmentOffset, insets.getPageWidth(), angle);
 			
 			ArrayList<LineSegment> intersection = buildLineSegments(inputSegment, style.getLineSpacingHeight());
 			if(intersection.size() > 0) {
@@ -188,6 +197,11 @@ public class LayoutMachine{
 		angle = (angle + 90) % 360;
 		
 		lineSegmentOffset.moveWithGivenAngle(angle, backupStyle.getLineSpacingHeight());
+		
+		//if the offset is outside the ParagraphSpace, we are out of space.
+		if(!paragraphSet.getParagraphSpace().canContain(lineSegmentOffset, angle)) {
+			isOutOfSpace = true;
+		}
 	}
 
 	/**

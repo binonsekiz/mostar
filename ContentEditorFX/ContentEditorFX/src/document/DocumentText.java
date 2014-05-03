@@ -1,5 +1,6 @@
 package document;
 
+import geometry.libgdxmath.Polygon;
 import gui.helper.DebugHelper;
 
 import java.util.ArrayList;
@@ -14,20 +15,14 @@ import document.persistentproperties.interfaces.PersistentObject;
 import document.style.TextStyle;
 
 public class DocumentText extends DocumentTextProperties{
-
-	public static DocumentText instance;
 		
 	public DocumentText (Document document) {
 		System.out.println("DocumentText initialized");
-		instance = this;
-		this.document = document;
 		globalText = new ArrayList<Paragraph>();
-		
 		paragraphSets = new ArrayList<ParagraphSet>();
 	}
 	
 	public DocumentText(Element element) {
-		instance = this;
 		loadFromXmlElement(element);
 	}
 
@@ -50,9 +45,18 @@ public class DocumentText extends DocumentTextProperties{
 		}
 	}
 	
-	public void addParagraphSet(ParagraphSet paragraphSet) {
+	private void addParagraphSet(ParagraphSet paragraphSet) {
 		this.paragraphSets.add(paragraphSet);
 		paragraphSet.setIndexInDocument(this.paragraphSets.size() - 1);
+	}
+	
+	public ParagraphSet addBlankParagraphSet(Polygon finalPolygon) {
+		ParagraphSet pSet = new ParagraphSet(finalPolygon);
+		Paragraph paragraph = new Paragraph(0);
+		pSet.addParagraph(paragraph);
+		globalText.add(paragraph);
+		addParagraphSet(pSet);
+		return pSet;
 	}
 	
 	public TextStyle getStyleAt(int caretIndex) {
@@ -165,4 +169,6 @@ public class DocumentText extends DocumentTextProperties{
 		else
 			return paragraphSets.get(index);
 	}
+
+
 }

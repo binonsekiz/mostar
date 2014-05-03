@@ -18,6 +18,8 @@ import com.sun.javafx.tk.FontMetrics;
 
 import document.layout.LayoutMachine;
 import document.persistentproperties.ParagraphProperties;
+import document.project.ProjectEnvironment;
+import document.project.ProjectRepository;
 import document.style.TextStyle;
 
 /**
@@ -35,21 +37,19 @@ public class Paragraph extends ParagraphProperties implements CharSequence, Comp
 	
 	private ArrayList<Float> cummulativeWordSizes;
 	private HashMap<Integer, Integer> wordCountToStringIndex;
-	private DocumentText documentText;
 
 	private ParagraphOnCanvas paragraphView;
 	private ParagraphSet paragraphSet;
 	private boolean hasElements;
 	
-	public Paragraph(DocumentText parent, int index){
-		this(TextStyle.defaultStyle, "Testing text", parent, index);
+	public Paragraph(int index){
+		this(TextStyle.defaultStyle, "Testing text", index);
 	}
 	
-	public Paragraph(TextStyle style, String text, DocumentText parent, int index){
+	public Paragraph(TextStyle style, String text, int index){
 		this.indexInParent = index;
 		System.out.println("Paragraph initialized");
 		this.style = style;
-		this.documentText = parent;
 		cummulativeWordSizes = new ArrayList<Float>();
 		wordCountToStringIndex = new HashMap<Integer, Integer>();
 		startIndexInBigText = new SimpleIntegerProperty();
@@ -119,6 +119,12 @@ public class Paragraph extends ParagraphProperties implements CharSequence, Comp
 			//find out the available length for the current line segment
 			LineSegment segment = machine.getNextAvailableLineSegment(style);
 			if(segment == null) {
+				//if the machine is out of space, 
+				if(machine.isOutOfSpace()) {
+					System.out.println("MACHINE OUT OF SPACE");
+					break;
+				}
+				
 				//if there isn't a segment returned, notify layout machine so that 
 				//the last segment will not be used for the next call
 				machine.reportLastUsedWidth(0);
@@ -148,7 +154,7 @@ public class Paragraph extends ParagraphProperties implements CharSequence, Comp
 		if(textLines.size() == 0){
 			int indexOffset = 0;
 			if(indexInParent > 0) {
-				indexOffset = documentText.getParagraph(indexInParent - 1).getEndIndex();
+				indexOffset = ProjectRepository.getActiveProjectEnvironment().getDocumentText().getParagraph(indexInParent - 1).getEndIndex();
 				startIndexInBigText.set(indexOffset);
 			}
 			
@@ -176,7 +182,7 @@ public class Paragraph extends ParagraphProperties implements CharSequence, Comp
 		
 		int indexOffset = 0;
 		if(indexInParent > 0) {
-			indexOffset = documentText.getParagraph(indexInParent - 1).getEndIndex();
+			indexOffset = ProjectRepository.getActiveProjectEnvironment().getDocumentText().getParagraph(indexInParent - 1).getEndIndex();
 			startIndexInBigText.set(indexOffset);
 		}
 
@@ -322,9 +328,11 @@ public class Paragraph extends ParagraphProperties implements CharSequence, Comp
 	}
 
 	public Paragraph divideAtIndex(int divideIndex) {
+		DocumentText documentText = ProjectRepository.getActiveProjectEnvironment().getDocumentText();
+		
 		System.out.println("Paragraph::Divide at Index: " + divideIndex);
 		divideIndex = divideIndex - startIndexInBigText.get();
-		Paragraph newParagraph = new Paragraph(style, textBuffer.substring(divideIndex), documentText, this.indexInParent+1);
+		Paragraph newParagraph = new Paragraph(style, textBuffer.substring(divideIndex), this.indexInParent+1);
 		this.textBuffer = textBuffer.delete(divideIndex, textBuffer.length());
 		
 		documentText.addParagraph(newParagraph, paragraphSet);
@@ -340,7 +348,7 @@ public class Paragraph extends ParagraphProperties implements CharSequence, Comp
 	 */
 	public void mergeWith(Paragraph p2) {
 		this.textBuffer.append(p2.getTextBuffer());
-		documentText.removeParagraph(p2.getIndexInParent());
+		ProjectRepository.getActiveProjectEnvironment().getDocumentText().removeParagraph(p2.getIndexInParent());
 		paragraphSet.removeParagraph(p2);
 		updateTextLines();
 	}

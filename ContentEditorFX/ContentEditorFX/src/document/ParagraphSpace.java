@@ -2,6 +2,7 @@ package document;
 
 import geometry.libgdxmath.LineSegment;
 import geometry.libgdxmath.Polygon;
+import geometry.libgdxmath.Polygon.LineSegmentIntersection;
 import geometry.libgdxmath.Rectangle;
 import geometry.libgdxmath.Vector2;
 
@@ -13,6 +14,7 @@ import javafx.scene.paint.Color;
 import org.w3c.dom.Element;
 
 import document.persistentproperties.ParagraphSpaceProperties;
+import document.project.ProjectRepository;
 
 /**
  * This is a small set of ParagraphWithStyle's bundled in a single shape.
@@ -98,5 +100,14 @@ public class ParagraphSpace extends ParagraphSpaceProperties{
 	
 	public String toString() {
 		return "Paragraph Space: " + allowedShape;
+	}
+
+	public boolean canContain(Vector2 lineSegmentOffset, float angle) {
+		LineSegment lineSegment = new LineSegment(lineSegmentOffset, ProjectRepository.getActiveProjectEnvironment().getDocument().getPageInsets().getPageWidth(), angle);
+		LineSegmentIntersection intersection = allowedShape.intersect(lineSegment);
+		
+		if(intersection.getLineCount() == 0)
+			return false;
+		else return true;
 	}
 }

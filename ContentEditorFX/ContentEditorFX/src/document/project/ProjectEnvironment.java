@@ -1,5 +1,7 @@
 package document.project;
 
+import geometry.libgdxmath.Polygon;
+import gui.columnview.ColumnView;
 import gui.columnview.DocumentView;
 import gui.columnview.DocumentView.ScrollMode;
 import gui.docmodify.DocBottomToolbar;
@@ -33,6 +35,7 @@ import control.WidgetModifyFacade;
 import document.Column;
 import document.Document;
 import document.DocumentText;
+import document.ParagraphSet;
 import event.ShapeDrawFacade;
 import event.ShapeDrawFacade.ShapeDrawingMode;
 import event.input.KeyboardManager;
@@ -113,6 +116,7 @@ public class ProjectEnvironment {
 	
  	public void associateWithNewDocument(Document document){
  		this.document = document;
+ 		this.documentText = document.getDocumentText();
  		textModifyFacade.setDocumentAndView(document, documentView);
  		widgetModifyFacade.setDocumentAndView(document, documentView);
 		styleModifyFacade.setDocumentAndView(document, documentView);
@@ -120,7 +124,7 @@ public class ProjectEnvironment {
 		documentView.associateWithDocument(document);
 		docOverview.populateTreeView();
  	}
-	
+
 	public Document getDocument(){
 		return document;
 	}
@@ -342,5 +346,10 @@ public class ProjectEnvironment {
 
 	public DocumentText getDocumentText() {
 		return documentText;
+	}
+
+	public void addBlankParagraphSet(Polygon finalPolygon, ColumnView columnView) {
+		ParagraphSet set = documentText.addBlankParagraphSet(finalPolygon);
+		columnView.insertParagraphSet(set);
 	}
 }

@@ -88,6 +88,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 	public void insertParagraphSet(ParagraphSet newSet) {
 		newSet.setColumn(column);
 		paragraphsOnCanvas.add(new ParagraphOnCanvas(this, newSet, textModifyFacade));
+		column.getLayoutMachine().initialSetup();
 	}
 	
 	private void populateParagraphViews() {

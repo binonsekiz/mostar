@@ -28,12 +28,13 @@ public class ParagraphSet extends ParagraphSetProperties {
 	}
 
 	public ParagraphSet(Polygon finalPolygon) {
+		System.out.println("Paragraph set initialized");
 		paragraphs = new ArrayList<Paragraph>();
 		setParagraphSpace(new ParagraphSpace(finalPolygon));
 	}
 	
 	private void setupInitialParagraph() {
-		Paragraph paragraph = new Paragraph(ProjectRepository.getActiveProjectEnvironment().getDocumentText(), 0);
+		Paragraph paragraph = new Paragraph(0);
 		paragraph.setText("");
 		addParagraph(paragraph);
 		paragraph.setStyle(DebugHelper.debugStyle1);

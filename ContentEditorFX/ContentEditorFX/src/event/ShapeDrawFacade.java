@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import document.ParagraphSet;
 import document.ParagraphSpace;
+import document.project.ProjectRepository;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -82,10 +83,12 @@ public class ShapeDrawFacade {
 		}
 		Polygon finalPolygon = new Polygon(vertices);
 		
-		ParagraphSet pSet = new ParagraphSet(finalPolygon);
-		caller.insertParagraphSet(pSet);
+		//ParagraphSet pSet = new ParagraphSet(finalPolygon);
+		//caller.insertParagraphSet(pSet);
 		
-		System.out.println("\n\n00000000000\nADDING TBOX\n000000000\n\n " + finalPolygon + "\n\n00000000000\n\n");
+		
+		ProjectRepository.getActiveProjectEnvironment().addBlankParagraphSet(finalPolygon, caller);
+		
 		mode = ShapeDrawingMode.Off;
 		caller.refresh();
 		caller = null;
@@ -100,7 +103,6 @@ public class ShapeDrawFacade {
 		}
 		Polygon finalPolygon = new Polygon(vertices);
 		caller.getColumn().addShape(finalPolygon);
-		System.out.println("\n\n00000000000\nADDING SHAPE\n000000000\n\n " + finalPolygon + "\n\n00000000000\n\n");
 		mode = ShapeDrawingMode.Off;
 		caller.refresh();
 		caller = null;

@@ -49,6 +49,18 @@ public class LineSegment implements Comparable<LineSegment>, PersistentObject{
 	public LineSegment(Vector2 firstPoint, Vector2 secondPoint){
 		this.firstPoint = firstPoint;
 		this.secondPoint = secondPoint;
+		calculateNormal();
+	}
+	
+	public LineSegment(Vector2 startPoint, float width, float angle) {
+		this.firstPoint = startPoint;
+		this.secondPoint = new Vector2(
+				(float) (startPoint.x + width * Math.cos(Math.toRadians(angle))), 
+				(float) (startPoint.y + width * Math.sin(Math.toRadians(angle))));
+		calculateNormal();
+	}
+	
+	private void calculateNormal() {
 		normal = new Vector2(secondPoint).sub(firstPoint);
 		normal.rotate(90).nor();
 	}

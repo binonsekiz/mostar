@@ -10,6 +10,7 @@ import document.Column;
 import document.DocumentText;
 import document.PageInsets;
 import document.PageSpecs.Measurement;
+import document.persistentproperties.interfaces.PersistentIndexedObject;
 import document.persistentproperties.interfaces.PersistentObject;
 
 public class DocumentProperties implements PersistentObject{
@@ -28,6 +29,7 @@ public class DocumentProperties implements PersistentObject{
 		loadFromXmlElement(element);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void loadFromXmlElement(Element element) {
 		if(!element.getTagName().equals("PortisInteractiveDocument")) throw new RuntimeException("Malformed XML");

@@ -56,24 +56,11 @@ public class TextModifyFacade extends Facade{
 
 	public void insertString(String text) {
 		caret.insertString(text);
-//		caret.getActiveColumnView().refresh();
 	}
 	
 	public void addNewParagraphToEnd(TextStyle style) {
 		System.out.println("\n\n~~Adding new paragraph to end, style: " + style);
-		new Paragraph(style, "", documentText, documentText.getParagraphs().size());
-	}
-	
-	/**
-	 * Divide given paragraph into two parts, insert a new one in between.
-	 * @param style
-	 * @param caretIndex
-	 */
-	public void divideAtIndex(TextStyle style, int caretIndex) {
-		System.out.println("\n\n~~Dividing at index: " + caretIndex + ", style: " + style);
-		Paragraph paragraph = getParagraphWithIndex(caretIndex);
-		paragraph.divideAtIndex(caretIndex);
-		documentText.addParagraph(new Paragraph(style, "", documentText, paragraph.getIndexInParent() + 1), paragraph.getParagraphSet());
+		new Paragraph(style, "", documentText.getParagraphs().size());
 	}
 	
 	/**
@@ -188,4 +175,15 @@ public class TextModifyFacade extends Facade{
 	}
 
 	
+	/**
+	 * Divide given paragraph into two parts, insert a new one in between.
+	 * @param style
+	 * @param caretIndex
+	 */
+	/*public void divideAtIndex(TextStyle style, int caretIndex) {
+		System.out.println("\n\n~~Dividing at index: " + caretIndex + ", style: " + style);
+		Paragraph paragraph = getParagraphWithIndex(caretIndex);
+		paragraph.divideAtIndex(caretIndex);
+		documentText.addParagraph(new Paragraph(style, "", paragraph.getIndexInParent() + 1), paragraph.getParagraphSet());
+	}*/
 }

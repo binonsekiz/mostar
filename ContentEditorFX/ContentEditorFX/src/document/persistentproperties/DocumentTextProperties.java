@@ -15,7 +15,6 @@ public class DocumentTextProperties implements PersistentObject{
 
 	protected ArrayList<Paragraph> globalText;
 	protected ArrayList<ParagraphSet> paragraphSets;
-	protected Document document;
 	
 	public DocumentTextProperties() {
 		
@@ -39,7 +38,6 @@ public class DocumentTextProperties implements PersistentObject{
 	public void loadFromXmlElement(Element element) {
 		paragraphSets = (ArrayList<ParagraphSet>) XmlManager.loadArrayListFromXmlElement("ParagraphSets", "ParagraphSet", element);
 		globalText = (ArrayList<Paragraph>) XmlManager.loadArrayListFromXmlElement("Paragraphs", "Paragraph", element);
-
 	}
 		
 }
