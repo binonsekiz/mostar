@@ -10,7 +10,6 @@ import document.Column;
 import document.DocumentText;
 import document.PageInsets;
 import document.PageSpecs.Measurement;
-import document.persistentproperties.interfaces.PersistentIndexedObject;
 import document.persistentproperties.interfaces.PersistentObject;
 
 public class DocumentProperties implements PersistentObject{

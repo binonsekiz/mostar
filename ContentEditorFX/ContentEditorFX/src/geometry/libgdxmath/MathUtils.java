@@ -80,6 +80,7 @@ public class MathUtils {
 	static private final int ATAN2_BITS2 = ATAN2_BITS << 1;
 	static private final int ATAN2_MASK = ~(-1 << ATAN2_BITS2);
 	static private final int ATAN2_COUNT = ATAN2_MASK + 1;
+	@SuppressWarnings("ucd")
 	static final int ATAN2_DIM = (int)Math.sqrt(ATAN2_COUNT);
 	static private final float INV_ATAN2_DIM_MINUS_1 = 1.0f / (ATAN2_DIM - 1);
 
@@ -149,6 +150,7 @@ public class MathUtils {
 	}
 
 	/** Returns random number between 0.0 (inclusive) and 1.0 (exclusive). */
+	@SuppressWarnings("ucd")
 	static public final float random () {
 		return random.nextFloat();
 	}

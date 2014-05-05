@@ -23,12 +23,14 @@ public class MediaWidgetModifier extends WidgetModifier{
 
 	private Media media;
 	private MediaPlayer mediaPlayer;
+	@SuppressWarnings("unused")
 	private MediaView mediaView;
 	private PlayerPane playerPane;
 	
 //	private MediaControl mediaControl;
 	private Button playButton;
 	
+	@SuppressWarnings("unused")
 	private MediaWidgetModifier selfReference;
 	
 //TODO:demo	

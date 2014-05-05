@@ -18,6 +18,7 @@ package geometry.libgdxmath;
 
 
 /** @author Xoppa */
+@SuppressWarnings("ucd")
 public class CatmullRomSpline<T extends Vector<T>> implements Path<T> {
 	/** Calculates the catmullrom value for the given position (t).
 	 * @param out The Vector to set to the result.
@@ -64,6 +65,7 @@ public class CatmullRomSpline<T extends Vector<T>> implements Path<T> {
 		set(controlPoints, continuous);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public CatmullRomSpline set(final T[] controlPoints, final boolean continuous) {
 		if (tmp == null)
 			tmp = controlPoints[0].cpy();

@@ -1,22 +1,17 @@
 package document;
 
 import geometry.libgdxmath.Polygon;
-import gui.helper.DebugHelper;
 
 import java.util.ArrayList;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
-import storage.XmlManager;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.persistentproperties.DocumentTextProperties;
-import document.persistentproperties.interfaces.PersistentObject;
 import document.style.TextStyle;
 
 public class DocumentText extends DocumentTextProperties{
 		
-	public DocumentText (Document document) {
+	DocumentText (Document document) {
 		System.out.println("DocumentText initialized");
 		globalText = new ArrayList<Paragraph>();
 		paragraphSets = new ArrayList<ParagraphSet>();
@@ -26,7 +21,7 @@ public class DocumentText extends DocumentTextProperties{
 		loadFromXmlElement(element);
 	}
 
-	public void addParagraph(Paragraph paragraph, ParagraphSet paragraphSet) {
+	void addParagraph(Paragraph paragraph, ParagraphSet paragraphSet) {
 		if(!paragraphSets.contains(paragraphSet)){
 			paragraphSets.add(paragraphSet);
 		}
@@ -38,7 +33,7 @@ public class DocumentText extends DocumentTextProperties{
 		paragraphSet.addParagraph(paragraph);
 	}
 	
-	public void removeParagraph(int indexInParent) {
+	void removeParagraph(int indexInParent) {
 		globalText.remove(indexInParent);
 		for(int i = 0; i < globalText.size(); i++) {
 			globalText.get(i).setIndexInParent(i);
@@ -85,19 +80,6 @@ public class DocumentText extends DocumentTextProperties{
 		return globalText.get(index);
 	}
 
-	protected void updateIndexAfter(int indexInParent) {
-		System.out.println("\nUpdate after index: " + indexInParent);
-		
-		if(globalText.size() > indexInParent + 1) {
-			System.out.println("\tGot inside, setting start to: " + globalText.get(indexInParent).getEndIndex());
-			Paragraph paragraph = globalText.get(indexInParent + 1);
-			paragraph.setStartIndexInBigText(globalText.get(indexInParent).getEndIndex());
-		}
-		else{
-			System.out.println("Early out");
-		}
-	}
-
 	public int getEndIndex() {
 		return globalText.get(globalText.size() - 1).getEndIndex();
 	}
@@ -112,28 +94,6 @@ public class DocumentText extends DocumentTextProperties{
 			globalText.get(i).setStartIndexInBigText(value);
 			value = value + globalText.get(i).getText().length();
 		}
-	}
-	
-	/**
-	 * Counts the characters between caretIndex and the first space occurrence
-	 * Expected to return 0 or negative values. Will be used for ctrl+arrow
-	 * @param caretIndex
-	 * @return
-	 */
-	public int getRelativeWordStartIndexBefore(int caretIndex) {
-		//TODO: implement later
-		return caretIndex;
-	}
-	
-	/**
-	 * Counts the characters between caretIndex and the first space occurrence
-	 * Expected to return 0 or positive values. 
-	 * @param caretIndex
-	 * @return
-	 */
-	public int getRelativeWordStartIndexAfter(int caretIndex) {
-		//TODO: implement later
-		return caretIndex;
 	}
 
 	public ArrayList<ParagraphSet> getParagraphSets() {
@@ -160,15 +120,51 @@ public class DocumentText extends DocumentTextProperties{
 		}
 		return retVal;
 	}
-
-	public ParagraphSet getParagraphSetBefore(ParagraphSet paragraphSet) {
-		int index = paragraphSets.indexOf(paragraphSet);
-		index --;
-		if(index < 0)
-			return null;
-		else
-			return paragraphSets.get(index);
-	}
-
+	
+	
+// TODO Remove unused code found by UCDetector
+//	 	/**
+//	 	 * Counts the characters between caretIndex and the first space occurrence
+//	 	 * Expected to return 0 or negative values. Will be used for ctrl+arrow
+//	 	 * @param caretIndex
+//	 	 * @return
+//	 	 */
+//	 	public int getRelativeWordStartIndexBefore(int caretIndex) {
+//	 		//TODO: implement later
+//	 		return caretIndex;
+//	 	}
+// TODO Remove unused code found by UCDetector
+//	 	/**
+//	 	 * Counts the characters between caretIndex and the first space occurrence
+//	 	 * Expected to return 0 or positive values. 
+//	 	 * @param caretIndex
+//	 	 * @return
+//	 	 */
+//	 	public int getRelativeWordStartIndexAfter(int caretIndex) {
+//	 		//TODO: implement later
+//	 		return caretIndex;
+//	 	}
+// TODO Remove unused code found by UCDetector
+// 	public ParagraphSet getParagraphSetBefore(ParagraphSet paragraphSet) {
+// 		int index = paragraphSets.indexOf(paragraphSet);
+// 		index --;
+// 		if(index < 0)
+// 			return null;
+// 		else
+// 			return paragraphSets.get(index);
+// 	}
+// TODO Remove unused code found by UCDetector
+//	 	protected void updateIndexAfter(int indexInParent) {
+//	 		System.out.println("\nUpdate after index: " + indexInParent);
+//	 		
+//	 		if(globalText.size() > indexInParent + 1) {
+//	 			System.out.println("\tGot inside, setting start to: " + globalText.get(indexInParent).getEndIndex());
+//	 			Paragraph paragraph = globalText.get(indexInParent + 1);
+//	 			paragraph.setStartIndexInBigText(globalText.get(indexInParent).getEndIndex());
+//	 		}
+//	 		else{
+//	 			System.out.println("Early out");
+//	 		}
+//	 	}
 
 }

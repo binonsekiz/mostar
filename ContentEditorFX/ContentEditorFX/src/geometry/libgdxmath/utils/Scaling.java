@@ -48,6 +48,7 @@ public enum Scaling {
 
 	/** Returns the size of the source scaled to the target. Note the same Vector2 instance is always returned and should never be
 	 * cached. */
+	@SuppressWarnings("unused")
 	public Vector2 apply (float sourceWidth, float sourceHeight, float targetWidth, float targetHeight) {
 		switch (this) {
 		case fit: {

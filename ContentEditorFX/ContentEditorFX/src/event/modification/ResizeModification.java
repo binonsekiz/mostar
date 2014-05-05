@@ -1,7 +1,6 @@
 package event.modification;
 
 import geometry.libgdxmath.Polygon;
-import geometry.libgdxmath.Rectangle;
 import geometry.libgdxmath.Vector2;
 import gui.ShapedPane;
 import javafx.scene.input.MouseEvent;
@@ -57,8 +56,6 @@ public class ResizeModification extends ModificationInstance{
 		newShape.moveEdge(edgeIndex, diff);
 		pane.setResizeVector(diff);
 
-		Rectangle rect = newShape.getBoundingRectangle();
-		
 		pane.setShape(newShape);
 		lastMousePosition.set((float)event.getX(), (float)event.getY());
 	}

@@ -21,6 +21,7 @@ import java.util.Comparator;
  * Note that sorting primitive arrays with the Arrays.sort methods does not allocate memory (unless sorting large arrays of char,
  * short, or byte).
  * @author Nathan Sweet */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class Sort {
 	static private Sort instance;
 
@@ -41,6 +42,7 @@ public class Sort {
 		if (comparableTimSort == null) comparableTimSort = new ComparableTimSort();
 		comparableTimSort.doSort(a, fromIndex, toIndex);
 	}
+
 
 	public <T> void sort (Array<T> a, Comparator<T> c) {
 		if (timSort == null) timSort = new TimSort();

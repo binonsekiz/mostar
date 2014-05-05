@@ -7,11 +7,9 @@ import javafx.scene.canvas.GraphicsContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import settings.GlobalAppSettings;
 import storage.XmlManager;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.persistentproperties.interfaces.PersistentObject;
 
 /*******************************************************************************
@@ -122,6 +120,7 @@ public class Polygon implements Serializable, PersistentObject{
 		return indexList;
 	}
 	
+	@SuppressWarnings("ucd")
 	public LineSegment getLineSegment(int i){
 		i = i % getEdgeCount();
 		float[] transformedVertices = getTransformedVertices();
@@ -132,6 +131,7 @@ public class Polygon implements Serializable, PersistentObject{
 							transformedVertices[((i+1)*2+1) % getVerticeCount()]));
 	}
 	
+	@SuppressWarnings("ucd")
 	public LineSegment getEdge(int i){
 		return getLineSegment(i);
 	}
@@ -152,6 +152,7 @@ public class Polygon implements Serializable, PersistentObject{
 		calculateDoubleVertices();
 	}
 	
+	@SuppressWarnings("ucd")
 	public void moveVertex(int vertex, Vector2 amount){
 		localVertices[vertex*2] += amount.x;
 		localVertices[vertex*2 + 1] += amount.y;
@@ -188,6 +189,7 @@ public class Polygon implements Serializable, PersistentObject{
 	 * @return
 	 */
 	
+	@SuppressWarnings("unused")
 	public Vector2 snapToEdge(Vector2 point, double maxSnapDistance){
 		Vector2 closestPoint = null;
 		double closestDistance = Double.MAX_VALUE;
@@ -561,8 +563,8 @@ public class Polygon implements Serializable, PersistentObject{
 	}
 	
 	public class LineSegmentIntersection{
-		LineSegment segment1;
-		LineSegment segment2;
+		private LineSegment segment1;
+		private LineSegment segment2;
 	
 		public LineSegmentIntersection() {
 			segment1 = null;
@@ -585,7 +587,8 @@ public class Polygon implements Serializable, PersistentObject{
 			return "line segment 1: " + segment1 + ", segment 2: " + segment2;
 		}
 
-		public LineSegmentIntersection getProjection(LineSegmentIntersection lowerIntersection) {
+		@SuppressWarnings("ucd")
+		private LineSegmentIntersection getProjection(LineSegmentIntersection lowerIntersection) {
 			if(this.segment1 == null || lowerIntersection.segment1 == null)
 				return null;
 			LineSegmentIntersection retVal = new LineSegmentIntersection();

@@ -87,6 +87,7 @@ class TimSort<T> {
 	 * a command line flag. If you modify this class, please do test the asserts! */
 	private static final boolean DEBUG = false;
 
+	@SuppressWarnings("unchecked")
 	TimSort () {
 		tmp = (T[])new Object[INITIAL_TMP_STORAGE_LENGTH];
 		runBase = new int[40];
@@ -149,6 +150,7 @@ class TimSort<T> {
 	 * 
 	 * @param a the array to be sorted
 	 * @param c the comparator to determine the order of the sort */
+	@SuppressWarnings("unchecked")
 	private TimSort (T[] a, Comparator<? super T> c) {
 		this.a = a;
 		this.c = c;
@@ -179,6 +181,7 @@ class TimSort<T> {
 		sort(a, 0, a.length, c);
 	}
 
+	@SuppressWarnings("ucd")
 	static <T> void sort (T[] a, int lo, int hi, Comparator<? super T> c) {
 		if (c == null) {
 			Arrays.sort(a, lo, hi);
@@ -797,6 +800,7 @@ class TimSort<T> {
 	 * 
 	 * @param minCapacity the minimum required capacity of the tmp array
 	 * @return tmp, whether or not it grew */
+	@SuppressWarnings("unchecked")
 	private T[] ensureCapacity (int minCapacity) {
 		tmpCount = Math.max(tmpCount, minCapacity);
 		if (tmp.length < minCapacity) {

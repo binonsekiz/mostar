@@ -1,14 +1,13 @@
 package gui;
 
-import document.project.ProjectEnvironment;
-import document.project.ProjectRepository;
+import gui.GFrame.WindowType;
+import gui.docmodify.DocModifyScreen;
+import gui.threed.ThreeDModifyScreen;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import settings.Translator;
-import gui.GFrame.WindowType;
-import gui.docmodify.DocModifyScreen;
-import gui.threed.ThreeDModifyScreen;
+import document.project.ProjectRepository;
 
 public class DocTabbedView extends BorderPane implements ScreenType{
 
@@ -24,6 +23,7 @@ public class DocTabbedView extends BorderPane implements ScreenType{
 	private Tab templateTab;
 	private TemplateModifyScreen templateModifyScreen;
 	
+	@SuppressWarnings("unused")
 	private WindowType referrer;
 	
 	public DocTabbedView() {

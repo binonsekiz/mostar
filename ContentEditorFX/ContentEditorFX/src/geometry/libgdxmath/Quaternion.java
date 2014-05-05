@@ -24,6 +24,7 @@ import java.io.Serializable;
  * 
  * @author badlogicgames@gmail.com
  * @author vesuvio */
+@SuppressWarnings("ucd")
 public class Quaternion implements Serializable {
 	private static final long serialVersionUID = -7661875440774897168L;
 	private static final float NORMALIZATION_TOLERANCE = 0.00001f;
@@ -39,6 +40,8 @@ public class Quaternion implements Serializable {
 	 * @param x The x-component
 	 * @param y The y-component
 	 * @param z The z-component
+	 @SuppressWarnings("ucd")
+	 @SuppressWarnings("ucd")
 	 * @param w The w-component */
 	public Quaternion (float x, float y, float z, float w) {
 		this.set(x, y, z, w);
@@ -50,6 +53,8 @@ public class Quaternion implements Serializable {
 
 	/** Constructor, sets the quaternion components from the given quaternion.
 	 * 
+	 @SuppressWarnings("ucd")
+	 @SuppressWarnings("ucd")
 	 * @param quaternion The quaternion to copy. */
 	public Quaternion (Quaternion quaternion) {
 		this.set(quaternion);
@@ -68,6 +73,8 @@ public class Quaternion implements Serializable {
 	 * @param y The y-component
 	 * @param z The z-component
 	 * @param w The w-component
+	 @SuppressWarnings("ucd")
+	 @SuppressWarnings("ucd")
 	 * @return This quaternion for chaining */
 	public Quaternion set (float x, float y, float z, float w) {
 		this.x = x;
@@ -79,6 +86,8 @@ public class Quaternion implements Serializable {
 
 	/** Sets the quaternion components from the given quaternion.
 	 * @param quaternion The quaternion.
+	 @SuppressWarnings("ucd")
+	 @SuppressWarnings("ucd")
 	 * @return This quaternion for chaining. */
 	public Quaternion set (Quaternion quaternion) {
 		return this.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
@@ -138,12 +147,15 @@ public class Quaternion implements Serializable {
 		return this;
 	}
 
+	@SuppressWarnings("ucd")
 	/** @return the length of this quaternion without square root */
 	public float len2 () {
 		return x * x + y * y + z * z + w * w;
 	}
 
 	/** Normalizes this quaternion to unit length
+	 @SuppressWarnings("ucd")
+	 @SuppressWarnings("ucd")
 	 * @return the quaternion for chaining */
 	public Quaternion nor () {
 		float len = len2();
@@ -159,6 +171,8 @@ public class Quaternion implements Serializable {
 
 	/** Conjugate the quaternion.
 	 * 
+	 @SuppressWarnings("ucd")
+	 @SuppressWarnings("ucd")
 	 * @return This quaternion for chaining */
 	public Quaternion conjugate () {
 		x = -x;
@@ -201,6 +215,8 @@ public class Quaternion implements Serializable {
 	/** Multiplies this quaternion with another one in the form of q * this
 	 * 
 	 * @param q Quaternion to multiply with
+	 @SuppressWarnings("ucd")
+	 @SuppressWarnings("ucd")
 	 * @return This quaternion for chaining */
 	public Quaternion mulLeft (Quaternion q) {
 		final float newX = q.w * x + q.x * w + q.y * z - q.z * y;
@@ -249,6 +265,8 @@ public class Quaternion implements Serializable {
 	}
 
 	/** Sets the quaternion to an identity Quaternion
+	 @SuppressWarnings("ucd")
+	 @SuppressWarnings("ucd")
 	 * @return this quaternion for chaining */
 	public Quaternion idt () {
 		return this.set(0, 0, 0, 1);
@@ -310,6 +328,8 @@ public class Quaternion implements Serializable {
 	 * @param yz y-axis z-coordinate
 	 * @param zx z-axis x-coordinate
 	 * @param zy z-axis y-coordinate
+	 @SuppressWarnings("ucd")
+	 @SuppressWarnings("ucd")
 	 * @param zz z-axis z-coordinate */
 	public Quaternion setFromAxes (float xx, float xy, float xz, float yx, float yy, float yz, float zx, float zy, float zz) {
 		// the trace is the sum of the diagonal elements; see
@@ -432,6 +452,8 @@ public class Quaternion implements Serializable {
 
 	/** Dot product between this and the other quaternion.
 	 * @param other the other quaternion.
+	 @SuppressWarnings("ucd")
+	 @SuppressWarnings("ucd")
 	 * @return this quaternion for chaining. */
 	public float dot (Quaternion other) {
 		return x * other.x + y * other.y + z * other.z + w * other.w;

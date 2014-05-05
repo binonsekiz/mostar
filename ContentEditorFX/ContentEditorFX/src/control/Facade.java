@@ -4,7 +4,7 @@ import gui.columnview.DocumentView;
 import document.Document;
 import document.DocumentText;
 
-public abstract class Facade {
+abstract class Facade {
 
 	protected Document document;
 	protected DocumentView documentView;

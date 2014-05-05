@@ -45,11 +45,11 @@ public abstract class ShapedPane extends Pane implements VisualView {
 	protected int resizeIndex;
 	private boolean isRelocatable;
 	private boolean isRelocateHappening;
-	private boolean isInitialShapeAssigned;
 	
 	private ShapedPane selfReference;
 	private CanvasOwner canvasOwner;
 
+	@SuppressWarnings("unused")
 	private boolean isResizeEventsDisabled;
 	private Vector2 resizeVector;
 
@@ -89,7 +89,6 @@ public abstract class ShapedPane extends Pane implements VisualView {
 		isResizable = true;
 		isResizeHappening = false;
 		isResizeEventsDisabled = false;
-		isInitialShapeAssigned = false;
 		
 		setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);		
@@ -420,6 +419,22 @@ public abstract class ShapedPane extends Pane implements VisualView {
 	 */
 	public void setResizeVector(Vector2 resizeVector){
 		this.resizeVector = resizeVector;
+	}
+
+	public boolean isMousePositionVisible() {
+		return isMousePositionVisible;
+	}
+
+	public void setMousePositionVisible(boolean isMousePositionVisible) {
+		this.isMousePositionVisible = isMousePositionVisible;
+	}
+
+	public boolean isSnapPositionVisible() {
+		return isSnapPositionVisible;
+	}
+
+	public void setSnapPositionVisible(boolean isSnapPositionVisible) {
+		this.isSnapPositionVisible = isSnapPositionVisible;
 	}
 	
 	

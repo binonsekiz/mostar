@@ -6,7 +6,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import storage.XmlManager;
-import document.Document;
 import document.Paragraph;
 import document.ParagraphSet;
 import document.persistentproperties.interfaces.PersistentObject;

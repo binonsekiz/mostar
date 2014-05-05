@@ -19,10 +19,12 @@ package geometry.libgdxmath.utils;
 /** Stores a map of {@link ReflectionPool}s by type for convenient static access.
  * @author Nathan Sweet */
 public class Pools {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	static private final ObjectMap<Class, ReflectionPool> typePools = new ObjectMap();
 
 	/** Returns a new or existing pool for the specified type, stored in a a Class to {@link ReflectionPool} map. The max size of
 	 * the pool used is 100. */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	static public <T> Pool<T> get (Class<T> type) {
 		ReflectionPool pool = typePools.get(type);
 		if (pool == null) {
@@ -38,6 +40,7 @@ public class Pools {
 	}
 
 	/** Frees an object from the {@link #get(Class) pool}. */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	static public void free (Object object) {
 		if (object == null) throw new IllegalArgumentException("object cannot be null.");
 		ReflectionPool pool = typePools.get(object.getClass());
@@ -46,6 +49,7 @@ public class Pools {
 	}
 
 	/** Frees the specified objects from the {@link #get(Class) pool}. */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	static public void freeAll (Array objects) {
 		if (objects == null) throw new IllegalArgumentException("objects cannot be null.");
 		for (int i = 0, n = objects.size; i < n; i++) {

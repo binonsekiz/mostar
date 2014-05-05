@@ -37,8 +37,11 @@ public class ArrayMap<K, V> {
 	public int size;
 	public boolean ordered;
 
+	@SuppressWarnings("rawtypes")
 	private Entries entries1, entries2;
+	@SuppressWarnings("rawtypes")
 	private Values valuesIter1, valuesIter2;
+	@SuppressWarnings("rawtypes")
 	private Keys keysIter1, keysIter2;
 
 	/** Creates an ordered map with a capacity of 16. */
@@ -54,6 +57,7 @@ public class ArrayMap<K, V> {
 	/** @param ordered If false, methods that remove elements may change the order of other elements in the arrays, which avoids a
 	 *           memory copy.
 	 * @param capacity Any elements added beyond this will cause the backing arrays to be grown. */
+	@SuppressWarnings("unchecked")
 	public ArrayMap (boolean ordered, int capacity) {
 		this.ordered = ordered;
 		keys = (K[])new Object[capacity];
@@ -64,6 +68,7 @@ public class ArrayMap<K, V> {
 	 * @param ordered If false, methods that remove elements may change the order of other elements in the arrays, which avoids a
 	 *           memory copy.
 	 * @param capacity Any elements added beyond this will cause the backing arrays to be grown. */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ArrayMap (boolean ordered, int capacity, Class keyArrayType, Class valueArrayType) {
 		this.ordered = ordered;
 		keys = (K[])ArrayReflection.newInstance(keyArrayType, capacity);
@@ -71,6 +76,7 @@ public class ArrayMap<K, V> {
 	}
 
 	/** Creates an ordered map with {@link #keys} and {@link #values} of the specified type and a capacity of 16. */
+	@SuppressWarnings("rawtypes")
 	public ArrayMap (Class keyArrayType, Class valueArrayType) {
 		this(false, 16, keyArrayType, valueArrayType);
 	}
@@ -78,6 +84,7 @@ public class ArrayMap<K, V> {
 	/** Creates a new map containing the elements in the specified map. The new map will have the same type of backing arrays and
 	 * will be ordered if the specified map is ordered. The capacity is set to the number of elements, so any subsequent elements
 	 * added will cause the backing arrays to be grown. */
+	@SuppressWarnings("rawtypes")
 	public ArrayMap (ArrayMap array) {
 		this(array.ordered, array.size, array.keys.getClass().getComponentType(), array.values.getClass().getComponentType());
 		size = array.size;
@@ -104,10 +111,12 @@ public class ArrayMap<K, V> {
 		size++;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void putAll (ArrayMap map) {
 		putAll(map, 0, map.size);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void putAll (ArrayMap map, int offset, int length) {
 		if (offset + length > map.size)
 			throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + map.size);
@@ -347,6 +356,7 @@ public class ArrayMap<K, V> {
 		if (sizeNeeded >= keys.length) resize(Math.max(8, sizeNeeded));
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void resize (int newSize) {
 		K[] newKeys = (K[])ArrayReflection.newInstance(keys.getClass().getComponentType(), newSize);
 		System.arraycopy(keys, 0, newKeys, 0, Math.min(size, newKeys.length));
@@ -415,6 +425,7 @@ public class ArrayMap<K, V> {
 
 	/** Returns an iterator for the entries in the map. Remove is supported. Note that the same iterator instance is returned each
 	 * time this method is called. Use the {@link Entries} constructor for nested or multithreaded iteration. */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Entries<K, V> entries () {
 		if (entries1 == null) {
 			entries1 = new Entries(this);
@@ -434,6 +445,7 @@ public class ArrayMap<K, V> {
 
 	/** Returns an iterator for the values in the map. Remove is supported. Note that the same iterator instance is returned each
 	 * time this method is called. Use the {@link Entries} constructor for nested or multithreaded iteration. */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Values<V> values () {
 		if (valuesIter1 == null) {
 			valuesIter1 = new Values(this);
@@ -453,6 +465,7 @@ public class ArrayMap<K, V> {
 
 	/** Returns an iterator for the keys in the map. Remove is supported. Note that the same iterator instance is returned each time
 	 * this method is called. Use the {@link Entries} constructor for nested or multithreaded iteration. */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Keys<K> keys () {
 		if (keysIter1 == null) {
 			keysIter1 = new Keys(this);
@@ -472,6 +485,7 @@ public class ArrayMap<K, V> {
 
 	static public class Entries<K, V> implements Iterable<Entry<K, V>>, Iterator<Entry<K, V>> {
 		private final ArrayMap<K, V> map;
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		Entry<K, V> entry = new Entry();
 		int index;
 		boolean valid = true;
@@ -556,6 +570,7 @@ public class ArrayMap<K, V> {
 			index = 0;
 		}
 
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Array<V> toArray () {
 			return new Array(true, map.values, index, map.size - index);
 		}
@@ -611,6 +626,7 @@ public class ArrayMap<K, V> {
 			index = 0;
 		}
 
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public Array<K> toArray () {
 			return new Array(true, map.keys, index, map.size - index);
 		}

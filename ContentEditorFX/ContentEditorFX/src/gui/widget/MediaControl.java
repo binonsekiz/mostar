@@ -198,7 +198,8 @@ public class MediaControl extends BorderPane {
     protected void updateValues() {
         if (playTime != null && timeSlider != null && volumeSlider != null) {
             Platform.runLater(new Runnable() {
-                public void run() {
+                @SuppressWarnings("deprecation")
+				public void run() {
                     Duration currentTime = mp.getCurrentTime();
                     playTime.setText(formatTime(currentTime, duration));
                     timeSlider.setDisable(duration.isUnknown());

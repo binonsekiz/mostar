@@ -21,10 +21,13 @@ package geometry.libgdxmath;
  * in case a new sample is added.
  * 
  * @author badlogicgames@gmail.com */
+@SuppressWarnings("ucd")
 public final class WindowedMean {
 	float values[];
+	@SuppressWarnings("ucd")
 	int added_values = 0;
 	int last_value;
+	@SuppressWarnings("ucd")
 	float mean = 0;
 	boolean dirty = true;
 

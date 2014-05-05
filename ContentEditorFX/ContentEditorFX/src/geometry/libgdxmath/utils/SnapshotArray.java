@@ -44,10 +44,12 @@ public class SnapshotArray<T> extends Array<T> {
 		super();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SnapshotArray (Array array) {
 		super(array);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public SnapshotArray (boolean ordered, int capacity, Class arrayType) {
 		super(ordered, capacity, arrayType);
 	}
@@ -60,6 +62,7 @@ public class SnapshotArray<T> extends Array<T> {
 		super(ordered, array, startIndex, count);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public SnapshotArray (Class arrayType) {
 		super(arrayType);
 	}

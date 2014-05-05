@@ -1,7 +1,6 @@
 package gui.docmodify;
 
-import document.project.ProjectEnvironment;
-import document.project.ProjectRepository;
+import gui.columnview.DocumentView.ScrollMode;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -11,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
-import gui.columnview.DocumentView.ScrollMode;
+import document.project.ProjectRepository;
 
 public class DocBottomToolbar extends ToolBar{
 	private Button zoomIncreaseButton;

@@ -12,10 +12,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import storage.XmlManager;
-import document.DocumentText;
 import document.PageInsets;
-import document.ParagraphSet;
 import document.PageSpecs.Measurement;
+import document.ParagraphSet;
 import document.persistentproperties.interfaces.PersistentObject;
 import document.project.ProjectRepository;
 import document.widget.Widget;

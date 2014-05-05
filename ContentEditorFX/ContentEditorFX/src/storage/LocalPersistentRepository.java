@@ -1,16 +1,13 @@
 package storage;
 
 import java.io.File;
-import java.io.ObjectOutputStream;
 
 import document.Document;
-import document.project.ProjectEnvironment;
 import document.project.ProjectRepository;
 
 public class LocalPersistentRepository implements DocumentRepository, TemplateRepository{
 	
 	private XmlManager xmlManager;
-	private ObjectOutputStream oos;
 	
 	public LocalPersistentRepository() {
 		

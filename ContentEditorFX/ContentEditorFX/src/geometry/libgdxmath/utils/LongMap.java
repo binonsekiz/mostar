@@ -30,18 +30,25 @@ import java.util.function.Consumer;
  * depending on hash collisions. Load factors greater than 0.91 greatly increase the chances the map will have to rehash to the
  * next higher POT size.
  * @author Nathan Sweet */
+@SuppressWarnings("ucd")
 public class LongMap<V> {
+	@SuppressWarnings("unused")
 	private static final int PRIME1 = 0xbe1f14b1;
 	private static final int PRIME2 = 0xb4b82e39;
 	private static final int PRIME3 = 0xced1c241;
+	@SuppressWarnings("ucd")
 	private static final int EMPTY = 0;
 
 	public int size;
 
+	@SuppressWarnings("ucd")
 	long[] keyTable;
+	@SuppressWarnings("ucd")
 	V[] valueTable;
+	@SuppressWarnings("ucd")
 	int capacity, stashSize;
 	V zeroValue;
+	@SuppressWarnings("ucd")
 	boolean hasZeroValue;
 
 	private float loadFactor;
@@ -49,7 +56,9 @@ public class LongMap<V> {
 	private int stashCapacity;
 	private int pushIterations;
 
+	@SuppressWarnings("rawtypes")
 	private Entries entries1, entries2;
+	@SuppressWarnings("rawtypes")
 	private Values values1, values2;
 	private Keys keys1, keys2;
 
@@ -61,12 +70,14 @@ public class LongMap<V> {
 
 	/** Creates a new map with a load factor of 0.8. This map will hold initialCapacity * 0.8 items before growing the backing
 	 * table. */
+	@SuppressWarnings("ucd")
 	public LongMap (int initialCapacity) {
 		this(initialCapacity, 0.8f);
 	}
 
 	/** Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity * loadFactor items
 	 * before growing the backing table. */
+	@SuppressWarnings("unchecked")
 	public LongMap (int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0) throw new IllegalArgumentException("initialCapacity must be >= 0: " + initialCapacity);
 		if (initialCapacity > 1 << 30) throw new IllegalArgumentException("initialCapacity is too large: " + initialCapacity);
@@ -85,6 +96,7 @@ public class LongMap<V> {
 		valueTable = (V[])new Object[keyTable.length];
 	}
 
+	@SuppressWarnings("ucd")
 	public V put (long key, V value) {
 		if (key == 0) {
 			V oldValue = zeroValue;
@@ -158,6 +170,7 @@ public class LongMap<V> {
 		return null;
 	}
 
+	@SuppressWarnings("ucd")
 	public void putAll (LongMap<V> map) {
 		for (Entry<V> entry : map.entries())
 			put(entry.key, entry.value);
@@ -286,6 +299,7 @@ public class LongMap<V> {
 		size++;
 	}
 
+	@SuppressWarnings("ucd")
 	public V get (long key) {
 		if (key == 0) {
 			if (!hasZeroValue) return null;
@@ -302,6 +316,7 @@ public class LongMap<V> {
 		return valueTable[index];
 	}
 
+	@SuppressWarnings("ucd")
 	public V get (long key, V defaultValue) {
 		if (key == 0) {
 			if (!hasZeroValue) return defaultValue;
@@ -325,6 +340,7 @@ public class LongMap<V> {
 		return defaultValue;
 	}
 
+	@SuppressWarnings("ucd")
 	public V remove (long key) {
 		if (key == 0) {
 			if (!hasZeroValue) return null;
@@ -365,6 +381,7 @@ public class LongMap<V> {
 		return removeStash(key);
 	}
 
+	@SuppressWarnings("ucd")
 	V removeStash (long key) {
 		long[] keyTable = this.keyTable;
 		for (int i = capacity, n = i + stashSize; i < n; i++) {
@@ -378,6 +395,7 @@ public class LongMap<V> {
 		return null;
 	}
 
+	@SuppressWarnings("ucd")
 	void removeStashIndex (int index) {
 		// If the removed location was not last, move the last tuple to the removed location.
 		stashSize--;
@@ -392,6 +410,7 @@ public class LongMap<V> {
 
 	/** Reduces the size of the backing arrays to be the specified capacity or less. If the capacity is already less, nothing is
 	 * done. If the map contains more items than the specified capacity, the next highest power of two capacity is used instead. */
+	@SuppressWarnings("ucd")
 	public void shrink (int maximumCapacity) {
 		if (maximumCapacity < 0) throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
 		if (size > maximumCapacity) maximumCapacity = size;
@@ -401,6 +420,7 @@ public class LongMap<V> {
 	}
 
 	/** Clears the map and reduces the size of the backing arrays to be the specified capacity if they are larger. */
+	@SuppressWarnings("ucd")
 	public void clear (int maximumCapacity) {
 		if (capacity <= maximumCapacity) {
 			clear();
@@ -412,6 +432,7 @@ public class LongMap<V> {
 		resize(maximumCapacity);
 	}
 
+	@SuppressWarnings("ucd")
 	public void clear () {
 		long[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
@@ -427,6 +448,7 @@ public class LongMap<V> {
 
 	/** Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may be
 	 * an expensive operation. */
+	@SuppressWarnings("ucd")
 	public boolean containsValue (Object value, boolean identity) {
 		V[] valueTable = this.valueTable;
 		if (value == null) {
@@ -446,6 +468,7 @@ public class LongMap<V> {
 		return false;
 	}
 
+	@SuppressWarnings("ucd")
 	public boolean containsKey (long key) {
 		if (key == 0) return hasZeroValue;
 		int index = (int)(key & mask);
@@ -470,6 +493,7 @@ public class LongMap<V> {
 	 * and compares every value, which may be an expensive operation.
 	 * @param identity If true, uses == to compare the specified value with values in the map. If false, uses
 	 *           {@link #equals(Object)}. */
+	@SuppressWarnings("ucd")
 	public long findKey (Object value, boolean identity, long notFound) {
 		V[] valueTable = this.valueTable;
 		if (value == null) {
@@ -491,11 +515,13 @@ public class LongMap<V> {
 
 	/** Increases the size of the backing array to acommodate the specified number of additional items. Useful before adding many
 	 * items to avoid multiple backing array resizes. */
+	@SuppressWarnings("ucd")
 	public void ensureCapacity (int additionalCapacity) {
 		int sizeNeeded = size + additionalCapacity;
 		if (sizeNeeded >= threshold) resize(MathUtils.nextPowerOfTwo((int)(sizeNeeded / loadFactor)));
 	}
 
+	@SuppressWarnings("unchecked")
 	private void resize (int newSize) {
 		int oldEndIndex = capacity + stashSize;
 
@@ -562,6 +588,7 @@ public class LongMap<V> {
 
 	/** Returns an iterator for the entries in the map. Remove is supported. Note that the same iterator instance is returned each
 	 * time this method is called. Use the {@link Entries} constructor for nested or multithreaded iteration. */
+	@SuppressWarnings({ "ucd", "rawtypes", "unchecked" })
 	public Entries<V> entries () {
 		if (entries1 == null) {
 			entries1 = new Entries(this);
@@ -581,6 +608,7 @@ public class LongMap<V> {
 
 	/** Returns an iterator for the values in the map. Remove is supported. Note that the same iterator instance is returned each
 	 * time this method is called. Use the {@link Entries} constructor for nested or multithreaded iteration. */
+	@SuppressWarnings({ "ucd", "rawtypes", "unchecked" })
 	public Values<V> values () {
 		if (values1 == null) {
 			values1 = new Values(this);
@@ -600,6 +628,7 @@ public class LongMap<V> {
 
 	/** Returns an iterator for the keys in the map. Remove is supported. Note that the same iterator instance is returned each time
 	 * this method is called. Use the {@link Entries} constructor for nested or multithreaded iteration. */
+	@SuppressWarnings({ "ucd", "unchecked" })
 	public Keys keys () {
 		if (keys1 == null) {
 			keys1 = new Keys(this);
@@ -617,8 +646,11 @@ public class LongMap<V> {
 		return keys2;
 	}
 
+	@SuppressWarnings("ucd")
 	static public class Entry<V> {
+		@SuppressWarnings("ucd")
 		public long key;
+		@SuppressWarnings("ucd")
 		public V value;
 
 		public String toString () {
@@ -678,9 +710,12 @@ public class LongMap<V> {
 		}
 	}
 
+	@SuppressWarnings("ucd")
 	static public class Entries<V> extends MapIterator<V> implements Iterable<Entry<V>>, Iterator<Entry<V>> {
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		private Entry<V> entry = new Entry();
 
+		@SuppressWarnings({ "ucd", "rawtypes", "unchecked" })
 		public Entries (LongMap map) {
 			super(map);
 		}
@@ -729,7 +764,9 @@ public class LongMap<V> {
 		}
 	}
 
+	@SuppressWarnings("ucd")
 	static public class Values<V> extends MapIterator<V> implements Iterable<V>, Iterator<V> {
+		@SuppressWarnings("ucd")
 		public Values (LongMap<V> map) {
 			super(map);
 		}
@@ -756,6 +793,7 @@ public class LongMap<V> {
 		}
 
 		/** Returns a new array containing the remaining values. */
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public Array<V> toArray () {
 			Array array = new Array(true, map.size);
 			while (hasNext)
@@ -782,11 +820,14 @@ public class LongMap<V> {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	static public class Keys extends MapIterator {
+		@SuppressWarnings("unchecked")
 		public Keys (LongMap map) {
 			super(map);
 		}
 
+		@SuppressWarnings({"unchecked", "ucd"})
 		public long next () {
 			if (!hasNext) throw new NoSuchElementException();
 			if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
@@ -797,6 +838,7 @@ public class LongMap<V> {
 		}
 
 		/** Returns a new array containing the remaining values. */
+		@SuppressWarnings("ucd")
 		public LongArray toArray () {
 			LongArray array = new LongArray(true, map.size);
 			while (hasNext)

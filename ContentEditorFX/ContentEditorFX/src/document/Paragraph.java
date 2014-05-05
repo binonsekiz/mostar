@@ -18,7 +18,6 @@ import com.sun.javafx.tk.FontMetrics;
 
 import document.layout.LayoutMachine;
 import document.persistentproperties.ParagraphProperties;
-import document.project.ProjectEnvironment;
 import document.project.ProjectRepository;
 import document.style.TextStyle;
 

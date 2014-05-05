@@ -31,6 +31,7 @@ import java.util.function.Consumer;
  * next higher POT size.
  * @author Nathan Sweet */
 public class ObjectMap<K, V> {
+	@SuppressWarnings("unused")
 	private static final int PRIME1 = 0xbe1f14b1;
 	private static final int PRIME2 = 0xb4b82e39;
 	private static final int PRIME3 = 0xced1c241;
@@ -46,8 +47,11 @@ public class ObjectMap<K, V> {
 	private int stashCapacity;
 	private int pushIterations;
 
+	@SuppressWarnings("rawtypes")
 	private Entries entries1, entries2;
+	@SuppressWarnings("rawtypes")
 	private Values values1, values2;
+	@SuppressWarnings("rawtypes")
 	private Keys keys1, keys2;
 
 	/** Creates a new map with an initial capacity of 32 and a load factor of 0.8. This map will hold 25 items before growing the
@@ -64,6 +68,7 @@ public class ObjectMap<K, V> {
 
 	/** Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity * loadFactor items
 	 * before growing the backing table. */
+	@SuppressWarnings("unchecked")
 	public ObjectMap (int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0) throw new IllegalArgumentException("initialCapacity must be >= 0: " + initialCapacity);
 		if (initialCapacity > 1 << 30) throw new IllegalArgumentException("initialCapacity is too large: " + initialCapacity);
@@ -473,6 +478,7 @@ public class ObjectMap<K, V> {
 		if (sizeNeeded >= threshold) resize(MathUtils.nextPowerOfTwo((int)(sizeNeeded / loadFactor)));
 	}
 
+	@SuppressWarnings("unchecked")
 	private void resize (int newSize) {
 		int oldEndIndex = capacity + stashSize;
 
@@ -539,6 +545,7 @@ public class ObjectMap<K, V> {
 
 	/** Returns an iterator for the entries in the map. Remove is supported. Note that the same iterator instance is returned each
 	 * time this method is called. Use the {@link Entries} constructor for nested or multithreaded iteration. */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Entries<K, V> entries () {
 		if (entries1 == null) {
 			entries1 = new Entries(this);
@@ -558,6 +565,7 @@ public class ObjectMap<K, V> {
 
 	/** Returns an iterator for the values in the map. Remove is supported. Note that the same iterator instance is returned each
 	 * time this method is called. Use the {@link Entries} constructor for nested or multithreaded iteration. */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Values<V> values () {
 		if (values1 == null) {
 			values1 = new Values(this);
@@ -577,6 +585,7 @@ public class ObjectMap<K, V> {
 
 	/** Returns an iterator for the keys in the map. Remove is supported. Note that the same iterator instance is returned each time
 	 * this method is called. Use the {@link Entries} constructor for nested or multithreaded iteration. */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Keys<K> keys () {
 		if (keys1 == null) {
 			keys1 = new Keys(this);
@@ -646,6 +655,7 @@ public class ObjectMap<K, V> {
 	}
 
 	static public class Entries<K, V> extends MapIterator<K, V> implements Iterable<Entry<K, V>>, Iterator<Entry<K, V>> {
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		Entry<K, V> entry = new Entry();
 
 		public Entries (ObjectMap<K, V> map) {
@@ -692,6 +702,7 @@ public class ObjectMap<K, V> {
 	}
 
 	static public class Values<V> extends MapIterator<Object, V> implements Iterable<V>, Iterator<V> {
+		@SuppressWarnings("unchecked")
 		public Values (ObjectMap<?, V> map) {
 			super((ObjectMap<Object, V>)map);
 		}
@@ -714,6 +725,7 @@ public class ObjectMap<K, V> {
 		}
 
 		/** Returns a new array containing the remaining values. */
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Array<V> toArray () {
 			Array array = new Array(true, map.size);
 			while (hasNext)
@@ -747,6 +759,7 @@ public class ObjectMap<K, V> {
 	}
 
 	static public class Keys<K> extends MapIterator<K, Object> implements Iterable<K>, Iterator<K> {
+		@SuppressWarnings("unchecked")
 		public Keys (ObjectMap<K, ?> map) {
 			super((ObjectMap<K, Object>)map);
 		}
@@ -769,6 +782,7 @@ public class ObjectMap<K, V> {
 		}
 
 		/** Returns a new array containing the remaining keys. */
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Array<K> toArray () {
 			Array array = new Array(true, map.size);
 			while (hasNext)

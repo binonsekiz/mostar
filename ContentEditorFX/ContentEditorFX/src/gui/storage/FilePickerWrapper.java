@@ -2,12 +2,11 @@ package gui.storage;
 
 import java.io.File;
 
-import document.project.ProjectEnvironment;
-import document.project.ProjectRepository;
 import javafx.stage.FileChooser;
 import settings.Translator;
 import storage.LocalPersistentRepository;
 import storage.RepositoryManager;
+import document.project.ProjectRepository;
 
 public class FilePickerWrapper {
 
@@ -31,6 +30,7 @@ public class FilePickerWrapper {
 	private void initGui() {
 		fileChooser = new FileChooser();
 		extensionFilter = new FileChooser.ExtensionFilter(Translator.get("Portis "), ".prts");
+		fileChooser.getExtensionFilters().add(extensionFilter);
 	}
 
 	private void initEvents() {

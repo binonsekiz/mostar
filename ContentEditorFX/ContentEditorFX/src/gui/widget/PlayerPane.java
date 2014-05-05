@@ -29,258 +29,137 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+@SuppressWarnings("deprecation")
 public class PlayerPane extends Region {
 
 	 private MediaPlayer mp;
-
      private MediaView mediaView;
-
      private final boolean repeat = false;
-
      private boolean stopRequested = false;
-
-     private boolean atEndOfMedia = false;
-
+     @SuppressWarnings("unused")
+	 private boolean atEndOfMedia = false;
      private Duration duration;
-
      private Slider timeSlider;
-
      private Label playTime;
-
      private Slider volumeSlider;
-
      private ToolBar topBar = new ToolBar();
-
      private ToolBar bottomBar = new ToolBar();
-
      private HBox mediaTopBar;
-
      private HBox mediaBottomBar;
-
      private ParallelTransition transition = null;
-
      final double mediaWidth = 320;  
-
      final double mediaHeight = 180;  
 
-      
-
-     private ChangeListener layoutListener = new ChangeListener() {
-
+     @SuppressWarnings({ "rawtypes", "unused" })
+	private ChangeListener layoutListener = new ChangeListener() {
          @Override public void changed(ObservableValue ov, Object t, Object t1) {
-
              requestLayout();
-
          }
-
      };
 
-
-
      @Override protected void layoutChildren() {
-
          final double controlHeight = 40;
-
          final double controlOffset = 115;
-
          mediaView.relocate(0, 0);  
-
          mediaView.setFitWidth(mediaWidth);
-
          mediaView.setFitHeight(mediaHeight);
-
          topBar.resizeRelocate(0, 0, mediaWidth, controlHeight);  
-
          bottomBar.resizeRelocate(controlOffset, mediaHeight - controlHeight, mediaWidth, controlHeight);  
-
      }
-
-
 
      @Override protected double computeMinWidth(double height) {
-
          return mediaBottomBar.prefWidth(-1);
-
      }
-
-
 
      @Override protected double computeMinHeight(double width) {
-
          return 135;
-
      }
-
-
 
      @Override protected double computePrefWidth(double height) {
-
          return Math.max(mp.getMedia().getWidth(), mediaBottomBar.prefWidth(height));
-
      }
-
-
 
      @Override protected double computePrefHeight(double width) {
-
          return mp.getMedia().getHeight() + mediaBottomBar.prefHeight(width);
-
      }
-
-
 
      @Override protected double computeMaxWidth(double height) { return Double.MAX_VALUE; }
 
-
-
      @Override protected double computeMaxHeight(double width) { return Double.MAX_VALUE; }
 
-
-
-     public PlayerPane(final MediaPlayer mp) {
-
+     @SuppressWarnings("unused")
+	public PlayerPane(final MediaPlayer mp) {
          this.mp = mp;
-
          setId("player-pane");
-
-
 
          mediaView = new MediaView(mp);
 
-
-
          mediaTopBar = HBoxBuilder.create()
-
                  .padding(new Insets(5, 10, 5, 10))
-
                  .alignment(Pos.CENTER)
-
                  .opacity(1.0)
-
                  .build();
-
           
-
          mediaBottomBar = HBoxBuilder.create()
-
                  .padding(new Insets(5, 10, 5, 10))
-
                  .alignment(Pos.CENTER)
-
                  .opacity(1.0)
-
                  .build();
-
                       
-
          topBar.setStyle("-fx-background-color: rgb(0,0,0.0,0.0);");
-
          bottomBar.setStyle("-fx-background-color: rgb(0,0,0.0,0.0);");
-
           
-
          setOnMouseEntered(new EventHandler<MouseEvent>() {
-
              @Override public void handle(MouseEvent t) {
-
                  if (transition != null) transition.stop();
-
                  transition = ParallelTransitionBuilder.create()
-
                      .children(
-
                          FadeTransitionBuilder.create()
-
                              .node(topBar)
-
                              .toValue(1.0)
-
                              .duration(Duration.millis(200))
-
                              .interpolator(Interpolator.EASE_OUT)
-
                              .build(),
-
                          FadeTransitionBuilder.create()
-
                              .node(bottomBar)
-
                              .toValue(1.0)
-
                              .duration(Duration.millis(200))
-
                              .interpolator(Interpolator.EASE_OUT)
-
                              .build()
-
                      )
-
                      .build();
-
                  transition.play();
-
              }
-
          });
-
          setOnMouseExited(new EventHandler<MouseEvent>() {
-
              @Override public void handle(MouseEvent t) {
-
                  if (transition != null) transition.stop();
-
                  transition = ParallelTransitionBuilder.create()
-
                      .children(
-
                          FadeTransitionBuilder.create()
-
                              .node(topBar)
-
                              .toValue(0.0)
-
                              .duration(Duration.millis(800))
-
                              .interpolator(Interpolator.EASE_OUT)
-
                              .build(),
-
                          FadeTransitionBuilder.create()
-
                              .node(bottomBar)
-
                              .toValue(0.0)
-
                              .duration(Duration.millis(800))
-
                              .interpolator(Interpolator.EASE_OUT)
-
                              .build()
-
                      )
-
                      .build();
-
                  transition.play();
-
              }
-
          });
-
-
 
          mp.currentTimeProperty().addListener(new ChangeListener<Duration>() {
-
              @Override
-
              public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-
                  updateValues();
-
              }
-
          });
-
          mp.setOnPlaying(new Runnable() {
 
              public void run() {
@@ -623,7 +502,8 @@ public class PlayerPane extends Region {
 
 
 
-     private static String formatTime(Duration elapsed, Duration duration) {
+     @SuppressWarnings("unused")
+	private static String formatTime(Duration elapsed, Duration duration) {
 
          int intElapsed = (int)Math.floor(elapsed.toSeconds());
 

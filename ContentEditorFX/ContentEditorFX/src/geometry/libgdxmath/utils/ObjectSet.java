@@ -31,6 +31,7 @@ import java.util.function.Consumer;
  * size.
  * @author Nathan Sweet */
 public class ObjectSet<T> implements Iterable<T> {
+	@SuppressWarnings("unused")
 	private static final int PRIME1 = 0xbe1f14b1;
 	private static final int PRIME2 = 0xb4b82e39;
 	private static final int PRIME3 = 0xced1c241;
@@ -45,6 +46,7 @@ public class ObjectSet<T> implements Iterable<T> {
 	private int stashCapacity;
 	private int pushIterations;
 
+	@SuppressWarnings("rawtypes")
 	private SetIterator iterator1, iterator2;
 
 	/** Creates a new set with an initial capacity of 32 and a load factor of 0.8. This set will hold 25 items before growing the
@@ -61,6 +63,7 @@ public class ObjectSet<T> implements Iterable<T> {
 
 	/** Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity * loadFactor items
 	 * before growing the backing table. */
+	@SuppressWarnings("unchecked")
 	public ObjectSet (int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0) throw new IllegalArgumentException("initialCapacity must be >= 0: " + initialCapacity);
 		if (initialCapacity > 1 << 30) throw new IllegalArgumentException("initialCapacity is too large: " + initialCapacity);
@@ -340,6 +343,7 @@ public class ObjectSet<T> implements Iterable<T> {
 		if (sizeNeeded >= threshold) resize(MathUtils.nextPowerOfTwo((int)(sizeNeeded / loadFactor)));
 	}
 
+	@SuppressWarnings("unchecked")
 	private void resize (int newSize) {
 		int oldEndIndex = capacity + stashSize;
 
@@ -401,6 +405,7 @@ public class ObjectSet<T> implements Iterable<T> {
 
 	/** Returns an iterator for the keys in the set. Remove is supported. Note that the same iterator instance is returned each time
 	 * this method is called. Use the {@link SetIterator} constructor for nested or multithreaded iteration. */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SetIterator<T> iterator () {
 		if (iterator1 == null) {
 			iterator1 = new SetIterator(this);
@@ -476,6 +481,7 @@ public class ObjectSet<T> implements Iterable<T> {
 		}
 
 		/** Returns a new array containing the remaining keys. */
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public Array<K> toArray () {
 			Array array = new Array(true, set.size);
 			while (hasNext)

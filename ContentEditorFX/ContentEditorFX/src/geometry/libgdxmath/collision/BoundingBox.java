@@ -28,10 +28,13 @@ import java.util.List;
  * @author badlogicgames@gmail.com */
 public class BoundingBox implements Serializable {
 	private static final long serialVersionUID = -1286036817192127343L;
+	@SuppressWarnings("ucd")
 	final Vector3 crn[] = new Vector3[8];
 	public final Vector3 min = new Vector3();
 	public final Vector3 max = new Vector3();
+	@SuppressWarnings("ucd")
 	final Vector3 cnt = new Vector3();
+	@SuppressWarnings("ucd")
 	final Vector3 dim = new Vector3();
 	boolean crn_dirty = true;
 
@@ -107,6 +110,7 @@ public class BoundingBox implements Serializable {
 	/** Sets the given bounding box.
 	 * 
 	 * @param bounds The bounds.
+	 @SuppressWarnings("ucd")
 	 * @return This bounding box for chaining. */
 	public BoundingBox set (BoundingBox bounds) {
 		crn_dirty = true;
@@ -117,6 +121,7 @@ public class BoundingBox implements Serializable {
 	 * 
 	 * @param minimum The minimum vector
 	 * @param maximum The maximum vector
+	 @SuppressWarnings("ucd")
 	 * @return This bounding box for chaining. */
 	public BoundingBox set (Vector3 minimum, Vector3 maximum) {
 		min.set(minimum.x < maximum.x ? minimum.x : maximum.x, minimum.y < maximum.y ? minimum.y : maximum.y,
@@ -155,6 +160,7 @@ public class BoundingBox implements Serializable {
 
 	/** Sets the minimum and maximum vector to positive and negative infinity.
 	 * 
+	 @SuppressWarnings("ucd")
 	 * @return This bounding box for chaining. */
 	public BoundingBox inf () {
 		min.set(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
@@ -168,6 +174,7 @@ public class BoundingBox implements Serializable {
 	/** Extends the bounding box to incorporate the given {@link Vector3}.
 	 * 
 	 * @param point The vector
+	 @SuppressWarnings("ucd")
 	 * @return This bounding box for chaining. */
 	public BoundingBox ext (Vector3 point) {
 		crn_dirty = true;
@@ -177,6 +184,7 @@ public class BoundingBox implements Serializable {
 
 	/** Sets the minimum and maximum vector to zeros
 	 * 
+	 @SuppressWarnings("ucd")
 	 * @return This bounding box for chaining. */
 	public BoundingBox clr () {
 		crn_dirty = true;

@@ -11,7 +11,6 @@ import org.w3c.dom.Element;
 import document.Paragraph.TextFillReturnValue;
 import document.layout.LayoutMachine;
 import document.persistentproperties.ParagraphSetProperties;
-import document.project.ProjectRepository;
 
 public class ParagraphSet extends ParagraphSetProperties {
 

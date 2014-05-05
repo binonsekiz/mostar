@@ -1,6 +1,5 @@
 package gui.threed;
 
-import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
@@ -27,6 +26,7 @@ public class SimpleThreeDModelViewer extends Pane{
 	private TDModelNode cameraXForm3;
 	private double cameraDistance;
 	private TDModelNode moleculeGroup;
+	/*
 	private Timeline timeline;
 	private boolean timelinePlaying = false;
 	private double ONE_FRAME = 1.0 / 24.0;
@@ -34,6 +34,7 @@ public class SimpleThreeDModelViewer extends Pane{
 	private double CONTROL_MULTIPLIER = 0.1;
 	private double SHIFT_MULTIPLIER = 0.1;
 	private double ALT_MULTIPLIER = 0.5;
+	*/
 	private double mousePosX;
     private double mousePosY;
     private double mouseOldX;

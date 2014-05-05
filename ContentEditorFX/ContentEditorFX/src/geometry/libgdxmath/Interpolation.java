@@ -121,6 +121,7 @@ public abstract class Interpolation {
 	//
 
 	static public class Pow extends Interpolation {
+		@SuppressWarnings("ucd")
 		final int power;
 
 		public Pow (int power) {
@@ -133,6 +134,7 @@ public abstract class Interpolation {
 		}
 	}
 
+	@SuppressWarnings("ucd")
 	static public class PowIn extends Pow {
 		public PowIn (int power) {
 			super(power);
@@ -143,6 +145,7 @@ public abstract class Interpolation {
 		}
 	}
 
+	@SuppressWarnings("ucd")
 	static public class PowOut extends Pow {
 		public PowOut (int power) {
 			super(power);
@@ -156,6 +159,7 @@ public abstract class Interpolation {
 	//
 
 	static public class Exp extends Interpolation {
+		@SuppressWarnings("ucd")
 		final float value, power, min, scale;
 
 		public Exp (float value, float power) {
@@ -171,6 +175,7 @@ public abstract class Interpolation {
 		}
 	};
 
+	@SuppressWarnings("ucd")
 	static public class ExpIn extends Exp {
 		public ExpIn (float value, float power) {
 			super(value, power);
@@ -181,6 +186,7 @@ public abstract class Interpolation {
 		}
 	}
 
+	@SuppressWarnings("ucd")
 	static public class ExpOut extends Exp {
 		public ExpOut (float value, float power) {
 			super(value, power);
@@ -194,6 +200,7 @@ public abstract class Interpolation {
 	//
 
 	static public class Elastic extends Interpolation {
+		@SuppressWarnings("ucd")
 		final float value, power;
 
 		public Elastic (float value, float power) {
@@ -257,6 +264,7 @@ public abstract class Interpolation {
 	}
 
 	static public class BounceOut extends Interpolation {
+		@SuppressWarnings("ucd")
 		final float[] widths, heights;
 
 		public BounceOut (float[] widths, float[] heights) {
@@ -342,6 +350,7 @@ public abstract class Interpolation {
 	//
 
 	static public class Swing extends Interpolation {
+		@SuppressWarnings("ucd")
 		private final float scale;
 
 		public Swing (float scale) {
@@ -360,6 +369,7 @@ public abstract class Interpolation {
 	}
 
 	static public class SwingOut extends Interpolation {
+		@SuppressWarnings("ucd")
 		private final float scale;
 
 		public SwingOut (float scale) {
@@ -373,6 +383,7 @@ public abstract class Interpolation {
 	}
 
 	static public class SwingIn extends Interpolation {
+		@SuppressWarnings("ucd")
 		private final float scale;
 
 		public SwingIn (float scale) {

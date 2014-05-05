@@ -1,6 +1,5 @@
 package gui.docmodify;
 
-import document.project.ProjectEnvironment;
 import gui.docmodify.versatile.HtmlWidgetProperties;
 import gui.docmodify.versatile.ImageGalleryWidgetProperties;
 import gui.docmodify.versatile.MediaWidgetProperties;

@@ -6,18 +6,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import settings.GlobalAppSettings;
-import storage.XmlManager;
 
 import com.sun.javafx.tk.FontMetrics;
 import com.sun.javafx.tk.Toolkit;
 
 import document.persistentproperties.TextStyleProperties;
-import document.persistentproperties.interfaces.PersistentObject;
 
 public class TextStyle extends TextStyleProperties implements Comparable<TextStyle> {
 

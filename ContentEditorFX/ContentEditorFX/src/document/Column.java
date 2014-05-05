@@ -10,12 +10,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
-import storage.XmlManager;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.PageSpecs.Measurement;
 import document.layout.LayoutMachine;
 import document.persistentproperties.ColumnProperties;

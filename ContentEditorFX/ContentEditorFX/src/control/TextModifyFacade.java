@@ -35,6 +35,7 @@ public class TextModifyFacade extends Facade{
 		return caret;
 	}
 
+	@SuppressWarnings("ucd")
 	public Paragraph getParagraphWithIndex(int caretIndex) {
 		ArrayList<Paragraph> paragraphs =  documentText.getParagraphs();
 		for(int i = 0; i < paragraphs.size(); i++) {
@@ -44,10 +45,12 @@ public class TextModifyFacade extends Facade{
 		return paragraphs.get(paragraphs.size() - 1);
 	}
 
+	@SuppressWarnings("ucd")
 	public LineOnCanvas getLineViewWithIndex(int index) {
 		return documentView.getLineThatIncludesIndex(index);
 	}
 
+	@SuppressWarnings("ucd")
 	public void textSelectionSet(int caretIndex, int anchor) {
 		int lowerIndex = Math.min(caretIndex, anchor);
 		int higherIndex = Math.max(caretIndex, anchor); 
@@ -58,6 +61,7 @@ public class TextModifyFacade extends Facade{
 		caret.insertString(text);
 	}
 	
+	@SuppressWarnings("ucd")
 	public void addNewParagraphToEnd(TextStyle style) {
 		System.out.println("\n\n~~Adding new paragraph to end, style: " + style);
 		new Paragraph(style, "", documentText.getParagraphs().size());
@@ -69,6 +73,7 @@ public class TextModifyFacade extends Facade{
 	 * @param caretIndex
 	 * @param anchor
 	 */
+	@SuppressWarnings("ucd")
 	public void setStyleAtInterval(TextStyle style, int caretIndex, int anchor) {
 		System.out.println("\n\n~~Setting style in interval: " + caretIndex + "-" + anchor + " style: " + style);
 		int lowerIndex = Math.min(caretIndex, anchor);
@@ -160,14 +165,17 @@ public class TextModifyFacade extends Facade{
 		}
 	}
 
+	@SuppressWarnings("ucd")
 	public void enter() {
 			
 	}
 
+	@SuppressWarnings("ucd")
 	public void changeMousePointer(Cursor cursorType) {
 		documentView.setCursor(cursorType);
 	}
 
+	@SuppressWarnings("ucd")
 	public void startTextDivisionForAll() {
 		for(int i = 0; i < documentText.getParagraphs().size(); i++) {
 			documentText.getParagraph(i).startTextDivision();

@@ -1,11 +1,12 @@
 package document.persistentproperties;
 
+import geometry.libgdxmath.Polygon;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import storage.XmlManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import geometry.libgdxmath.Polygon;
 import document.persistentproperties.interfaces.PersistentObject;
 import document.widget.Widget.TextWrapType;
 

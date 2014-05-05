@@ -29,6 +29,7 @@ import java.util.List;
  * @author badlogicgames@gmail.com
  * @author jan.stria
  * @author Nathan Sweet */
+@SuppressWarnings("ucd")
 public final class Intersector {
 	private final static Vector3 v0 = new Vector3();
 	private final static Vector3 v1 = new Vector3();
@@ -42,6 +43,7 @@ public final class Intersector {
 	 * @param t2 the second vertex of the triangle
 	 * @param t3 the third vertex of the triangle
 	 * @return whether the point is in the triangle */
+	@SuppressWarnings("ucd")
 	public static boolean isPointInTriangle (Vector3 point, Vector3 t1, Vector3 t2, Vector3 t3) {
 		v0.set(t1).sub(point);
 		v1.set(t2).sub(point);
@@ -59,6 +61,7 @@ public final class Intersector {
 	}
 
 	/** Returns true if the given point is inside the triangle. */
+	@SuppressWarnings("ucd")
 	public static boolean isPointInTriangle (Vector2 p, Vector2 a, Vector2 b, Vector2 c) {
 		float px1 = p.x - a.x;
 		float py1 = p.y - a.y;
@@ -69,6 +72,7 @@ public final class Intersector {
 	}
 
 	/** Returns true if the given point is inside the triangle. */
+	@SuppressWarnings("ucd")
 	public static boolean isPointInTriangle (float px, float py, float ax, float ay, float bx, float by, float cx, float cy) {
 		float px1 = px - ax;
 		float py1 = py - ay;
@@ -78,6 +82,7 @@ public final class Intersector {
 		return true;
 	}
 
+	@SuppressWarnings({ "ucd", "deprecation" })
 	public static boolean intersectSegmentPlane (Vector3 start, Vector3 end, Plane plane, Vector3 intersection) {
 		Vector3 dir = end.tmp().sub(start);
 		float denom = dir.dot(plane.getNormal());
@@ -91,11 +96,13 @@ public final class Intersector {
 	/** Determines on which side of the given line the point is. Returns -1 if the point is on the left side of the line, 0 if the
 	 * point is on the line and 1 if the point is on the right side of the line. Left and right are relative to the lines direction
 	 * which is linePoint1 to linePoint2. */
+	@SuppressWarnings("ucd")
 	public static int pointLineSide (Vector2 linePoint1, Vector2 linePoint2, Vector2 point) {
 		return (int)Math.signum((linePoint2.x - linePoint1.x) * (point.y - linePoint1.y) - (linePoint2.y - linePoint1.y)
 			* (point.x - linePoint1.x));
 	}
 
+	@SuppressWarnings("ucd")
 	public static int pointLineSide (float linePoint1X, float linePoint1Y, float linePoint2X, float linePoint2Y, float pointX,
 		float pointY) {
 		return (int)Math.signum((linePoint2X - linePoint1X) * (pointY - linePoint1Y) - (linePoint2Y - linePoint1Y)
@@ -106,6 +113,7 @@ public final class Intersector {
 	 * @param polygon The polygon vertices passed as an array
 	 * @param point The point
 	 * @return true if the point is in the polygon */
+	@SuppressWarnings("ucd")
 	public static boolean isPointInPolygon (Array<Vector2> polygon, Vector2 point) {
 		Vector2 lastVertice = polygon.peek();
 		boolean oddNodes = false;
@@ -126,6 +134,7 @@ public final class Intersector {
 	 * @param polygon The polygon vertices passed as an array
 	 * @param point The point
 	 * @return true if the point is in the polygon */
+	@SuppressWarnings("ucd")
 	public static boolean isPointInPolygon (float[] polygon, Vector2 point) {
 		float lastVerticex = polygon[polygon.length -2];
 		float lastVerticey = polygon[polygon.length -1];
@@ -146,6 +155,7 @@ public final class Intersector {
 	
 	
 	/** Returns true if the specified point is in the polygon. */
+	@SuppressWarnings("ucd")
 	public static boolean isPointInPolygon (float[] polygon, int offset, int count, float x, float y) {
 		boolean oddNodes = false;
 		int j = offset + count - 2;
@@ -168,6 +178,7 @@ public final class Intersector {
 	 * @param point The point
 	 * 
 	 * @return The distance between the line segment and the point. */
+	@SuppressWarnings("ucd")
 	public static float distanceLinePoint (Vector2 start, Vector2 end, Vector2 point) {
 		tmp.set(end.x, end.y, 0);
 		float l2 = tmp.sub(start.x, start.y, 0).len2();
@@ -189,6 +200,7 @@ public final class Intersector {
 		return tmp2.set(point.x, point.y, 0).dst(tmp);
 	}
 	
+	@SuppressWarnings("ucd")
 	public static LineSegment projectOnLineSegment(LineSegment base, LineSegment other) {
 		if(base == null) return null;
 		if(other == null) return null;
@@ -204,6 +216,7 @@ public final class Intersector {
 	 * @param point The point
 	 * 
 	 * @return The distance between the line segment and the point. */
+	@SuppressWarnings("ucd")
 	public static Vector2 closestPointOnLineSegment (LineSegment segment, Vector2 point) {
 		Vector2 start = segment.getFirstPoint();
 		Vector2 end = segment.getSecondPoint();
@@ -228,22 +241,26 @@ public final class Intersector {
 	}
 
 	/** Returns the distance between the given line and point. Note the specified line is not a line segment. */
+	@SuppressWarnings("ucd")
 	public static float distanceLinePoint (float startX, float startY, float endX, float endY, float pointX, float pointY) {
 		float normalLength = (float)Math.sqrt((endX - startX) * (endX - startX) + (endY - startY) * (endY - startY));
 		return Math.abs((pointX - startX) * (endY - startY) - (pointY - startY) * (endX - startX)) / normalLength;
 	}
 
 	/** Returns the distance between the given segment and point. */
+	@SuppressWarnings("ucd")
 	public static float distanceSegmentPoint (float startX, float startY, float endX, float endY, float pointX, float pointY) {
 		return nearestSegmentPoint(startX, startY, endX, endY, pointX, pointY, v2tmp).dst(pointX, pointY);
 	}
 
 	/** Returns the distance between the given segment and point. */
+	@SuppressWarnings("ucd")
 	public static float distanceSegmentPoint (Vector2 start, Vector2 end, Vector2 point) {
 		return nearestSegmentPoint(start, end, point, v2tmp).dst(point);
 	}
 
 	/** Returns a point on the segment nearest to the specified point. */
+	@SuppressWarnings("ucd")
 	public static Vector2 nearestSegmentPoint (Vector2 start, Vector2 end, Vector2 point, Vector2 nearest) {
 		float length2 = start.dst2(end);
 		if (length2 == 0) return nearest.set(start);
@@ -254,6 +271,7 @@ public final class Intersector {
 	}
 
 	/** Returns a point on the segment nearest to the specified point. */
+	@SuppressWarnings("ucd")
 	public static Vector2 nearestSegmentPoint (float startX, float startY, float endX, float endY, float pointX, float pointY,
 		Vector2 nearest) {
 		final float xDiff = endX - startX;
@@ -272,6 +290,7 @@ public final class Intersector {
 	 * @param center The center of the circle
 	 * @param squareRadius The squared radius of the circle
 	 * @return Whether the line segment and the circle intersect */
+	@SuppressWarnings("ucd")
 	public static boolean intersectSegmentCircle (Vector2 start, Vector2 end, Vector2 center, float squareRadius) {
 		tmp.set(end.x - start.x, end.y - start.y, 0);
 		tmp1.set(center.x - start.x, center.y - start.y, 0);
@@ -301,6 +320,7 @@ public final class Intersector {
 	 * @param radius The radius of the circle
 	 * @param displacement The displacement vector set by the method having unit length
 	 * @return The displacement or Float.POSITIVE_INFINITY if no intersection is present */
+	@SuppressWarnings("ucd")
 	public static float intersectSegmentCircleDisplace (Vector2 start, Vector2 end, Vector2 point, float radius,
 		Vector2 displacement) {
 		float u = (point.x - start.x) * (end.x - start.x) + (point.y - start.y) * (end.y - start.y);
@@ -324,6 +344,7 @@ public final class Intersector {
 	 * @param plane The plane
 	 * @param intersection The vector the intersection point is written to (optional)
 	 * @return Whether an intersection is present. */
+	@SuppressWarnings({ "ucd", "deprecation" })
 	public static boolean intersectRayPlane (Ray ray, Plane plane, Vector3 intersection) {
 		float denom = ray.direction.dot(plane.getNormal());
 		if (denom != 0) {
@@ -349,6 +370,7 @@ public final class Intersector {
 	 * @param y2
 	 * @param z2
 	 * @param plane */
+	@SuppressWarnings("ucd")
 	public static float intersectLinePlane (float x, float y, float z, float x2, float y2, float z2, Plane plane,
 		Vector3 intersection) {
 		Vector3 direction = tmp.set(x2, y2, z2).sub(x, y, z);
@@ -377,6 +399,7 @@ public final class Intersector {
 	 * @param t3 The third vertex of the triangle
 	 * @param intersection The intersection point (optional)
 	 * @return True in case an intersection is present. */
+	@SuppressWarnings("ucd")
 	public static boolean intersectRayTriangle (Ray ray, Vector3 t1, Vector3 t2, Vector3 t3, Vector3 intersection) {
 		p.set(t1, t2, t3);
 		System.out.println("++Intersect Ray Triangle");
@@ -419,6 +442,7 @@ public final class Intersector {
 	 * @param radius The radius of the sphere
 	 * @param intersection The intersection point (optional)
 	 * @return Whether an intersection is present. */
+	@SuppressWarnings({ "ucd", "deprecation" })
 	public static boolean intersectRaySphere (Ray ray, Vector3 center, float radius, Vector3 intersection) {
 		dir.set(ray.direction).nor();
 		start.set(ray.origin);
@@ -470,6 +494,7 @@ public final class Intersector {
 	 * @param box The box
 	 * @param intersection The intersection point (optional)
 	 * @return Whether an intersection is present. */
+	@SuppressWarnings({ "ucd", "deprecation" })
 	public static boolean intersectRayBounds (Ray ray, BoundingBox box, Vector3 intersection) {
 		Vector3.tmp.set(ray.origin);
 		Vector3.tmp2.set(ray.origin);
@@ -565,6 +590,7 @@ public final class Intersector {
 	 * @param ray The ray
 	 * @param box The bounding box
 	 * @return Whether the ray and the bounding box intersect. */
+	@SuppressWarnings("ucd")
 	static public boolean intersectRayBoundsFast (Ray ray, BoundingBox box) {
 		float a, b;
 		float min, max;
@@ -607,13 +633,20 @@ public final class Intersector {
 		return max >= 0 && max >= min;
 	}
 
+	@SuppressWarnings("ucd")
 	static Vector3 best = new Vector3();
+	@SuppressWarnings("ucd")
 	static Vector3 tmp = new Vector3();
+	@SuppressWarnings("ucd")
 	static Vector3 tmp1 = new Vector3();
+	@SuppressWarnings("ucd")
 	static Vector3 tmp2 = new Vector3();
+	@SuppressWarnings("ucd")
 	static Vector3 tmp3 = new Vector3();
+	@SuppressWarnings("ucd")
 	static Vector2 v2tmp = new Vector2();
 
+	@SuppressWarnings({ "ucd", "deprecation" })
 	/** Intersects the given ray with list of triangles. Returns the nearest intersection point in intersection
 	 * 
 	 * @param ray The ray
@@ -657,6 +690,7 @@ public final class Intersector {
 	 * @param vertexSize the size of a vertex in floats
 	 * @param intersection The nearest intersection point (optional)
 	 * @return Whether the ray and the triangles intersect. */
+	@SuppressWarnings({ "ucd", "deprecation" })
 	public static boolean intersectRayTriangles (Ray ray, float[] vertices, short[] indices, int vertexSize, Vector3 intersection) {
 		float min_dist = Float.MAX_VALUE;
 		boolean hit = false;
@@ -722,6 +756,7 @@ public final class Intersector {
 	 * @param triangles The triangles
 	 * @param intersection The nearest intersection point (optional)
 	 * @return Whether the ray and the triangles intersect. */
+	@SuppressWarnings("ucd")
 	public static boolean intersectRayTriangles (Ray ray, List<Vector3> triangles, Vector3 intersection) {
 		float min_dist = Float.MAX_VALUE;
 		boolean hit = false;
@@ -732,6 +767,7 @@ public final class Intersector {
 			boolean result = intersectRayTriangle(ray, triangles.get(i), triangles.get(i + 1), triangles.get(i + 2), tmp);
 
 			if (result == true) {
+				@SuppressWarnings("deprecation")
 				float dist = ray.origin.tmp().sub(tmp).len2();
 				if (dist < min_dist) {
 					min_dist = dist;
@@ -756,6 +792,7 @@ public final class Intersector {
 	 * @param p3 The first point of the second line
 	 * @param p4 The second point of the second line
 	 * @param intersection The intersection point
+	 @SuppressWarnings("ucd")
 	 * @return Whether the two lines intersect */
 	public static boolean intersectLines (Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, Vector2 intersection) {
 		float x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y, x3 = p3.x, y3 = p3.y, x4 = p4.x, y4 = p4.y;
@@ -772,6 +809,7 @@ public final class Intersector {
 	/** Intersects the two lines and returns the intersection point in intersection.
 	 * @param intersection The intersection point, or null.
 	 * @return Whether the two lines intersect */
+	@SuppressWarnings("ucd")
 	public static boolean intersectLines (float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4,
 		Vector2 intersection) {
 		float d = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
@@ -815,6 +853,7 @@ public final class Intersector {
 	 * @param p1 The first point of the segment
 	 * @param p2 The second point of the segment
 	 * @return Whether polygon and line intersects */
+	@SuppressWarnings("ucd")
 	public static boolean intersectSegmentPolygon (Vector2 p1, Vector2 p2, Polygon polygon) {
 		float[] vertices = polygon.getTransformedVertices();
 		float x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y;
@@ -846,6 +885,7 @@ public final class Intersector {
 	 * @param p4 The second point of the second line segment
 	 * @param intersection The intersection point (optional)
 	 * @return Whether the two line segments intersect */
+	@SuppressWarnings("ucd")
 	public static boolean intersectSegments (Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, Vector2 intersection) {
 		float x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y, x3 = p3.x, y3 = p3.y, x4 = p4.x, y4 = p4.y;
 
@@ -862,22 +902,27 @@ public final class Intersector {
 		return true;
 	}
 
+	@SuppressWarnings("ucd")
 	static float det (float a, float b, float c, float d) {
 		return a * d - b * c;
 	}
 
+	@SuppressWarnings("ucd")
 	static double detd (double a, double b, double c, double d) {
 		return a * d - b * c;
 	}
 
+	@SuppressWarnings("ucd")
 	public static boolean overlaps (Circle c1, Circle c2) {
 		return c1.overlaps(c2);
 	}
 
+	@SuppressWarnings("ucd")
 	public static boolean overlaps (Rectangle r1, Rectangle r2) {
 		return r1.overlaps(r2);
 	}
 
+	@SuppressWarnings("ucd")
 	public static boolean overlaps (Circle c, Rectangle r) {
 		float closestX = c.x;
 		float closestY = c.y;
@@ -907,6 +952,7 @@ public final class Intersector {
 	 * @param p1 The first polygon.
 	 * @param p2 The second polygon.
 	 * @return Whether polygons overlap. */
+	@SuppressWarnings("ucd")
 	public static boolean overlapConvexPolygons (Polygon p1, Polygon p2) {
 		return overlapConvexPolygons(p1, p2, null);
 	}
@@ -918,6 +964,7 @@ public final class Intersector {
 	 * @param p2 The second polygon.
 	 * @param mtv A Minimum Translation Vector to fill in the case of a collision, or null (optional).
 	 * @return Whether polygons overlap. */
+	@SuppressWarnings("ucd")
 	public static boolean overlapConvexPolygons (Polygon p1, Polygon p2, MinimumTranslationVector mtv) {
 		return overlapConvexPolygons(p1.getTransformedVertices(), p2.getTransformedVertices(), mtv);
 	}
@@ -929,6 +976,7 @@ public final class Intersector {
 	 * @param verts2 Vertices of the second polygon.
 	 * @param mtv A Minimum Translation Vector to fill in the case of a collision, or null (optional).
 	 * @return Whether polygons overlap. */
+	@SuppressWarnings("ucd")
 	public static boolean overlapConvexPolygons (float[] verts1, float[] verts2, MinimumTranslationVector mtv) {
 		float overlap = Float.MAX_VALUE;
 		float smallestAxisX = 0;
@@ -1091,6 +1139,7 @@ public final class Intersector {
 	 * @param triangle
 	 * @param plane
 	 * @param split output SplitTriangle */
+	@SuppressWarnings("ucd")
 	public static void splitTriangle (float[] triangle, Plane plane, SplitTriangle split) {
 		int stride = triangle.length / 3;
 		boolean r1 = plane.testPoint(triangle[0], triangle[1], triangle[2]) == PlaneSide.Back;
@@ -1189,6 +1238,7 @@ public final class Intersector {
 		}
 	}
 
+	@SuppressWarnings("ucd")
 	static Vector3 intersection = new Vector3();
 
 	private static void splitEdge (float[] vertices, int s, int e, int stride, Plane plane, float[] split, int offset) {
@@ -1248,19 +1298,30 @@ public final class Intersector {
 		// Note, in stage the bottom and left sides are inclusive while the right and top sides are exclusive.
 	}
 
+	@SuppressWarnings("ucd")
 	public static class SplitTriangle {
+		@SuppressWarnings("ucd")
 		public float[] front;
+		@SuppressWarnings("ucd")
 		public float[] back;
+		@SuppressWarnings("ucd")
 		float[] edgeSplit;
+		@SuppressWarnings("ucd")
 		public int numFront;
+		@SuppressWarnings("ucd")
 		public int numBack;
+		@SuppressWarnings("ucd")
 		public int total;
+		@SuppressWarnings("ucd")
 		boolean frontCurrent = false;
+		@SuppressWarnings("ucd")
 		int frontOffset = 0;
+		@SuppressWarnings("ucd")
 		int backOffset = 0;
 
 		/** Creates a new instance, assuming numAttributes attributes per triangle vertex.
 		 * @param numAttributes must be >= 3 */
+		@SuppressWarnings("ucd")
 		public SplitTriangle (int numAttributes) {
 			front = new float[numAttributes * 3 * 2];
 			back = new float[numAttributes * 3 * 2];
@@ -1273,14 +1334,17 @@ public final class Intersector {
 				+ ", numBack=" + numBack + ", total=" + total + "]";
 		}
 
+		@SuppressWarnings("ucd")
 		void setSide (boolean front) {
 			frontCurrent = front;
 		}
 
+		@SuppressWarnings("ucd")
 		boolean getSide () {
 			return frontCurrent;
 		}
 
+		@SuppressWarnings("ucd")
 		void add (float[] vertex, int offset, int stride) {
 			if (frontCurrent) {
 				System.arraycopy(vertex, offset, front, frontOffset, stride);
@@ -1291,6 +1355,7 @@ public final class Intersector {
 			}
 		}
 
+		@SuppressWarnings("ucd")
 		void reset () {
 			frontCurrent = false;
 			frontOffset = 0;
@@ -1301,8 +1366,11 @@ public final class Intersector {
 		}
 	}
 
+	@SuppressWarnings("ucd")
 	public static class MinimumTranslationVector {
+		@SuppressWarnings("ucd")
 		public Vector2 normal = new Vector2();
+		@SuppressWarnings("ucd")
 		public float depth = 0;
 	}
 }

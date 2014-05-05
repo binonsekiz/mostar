@@ -27,6 +27,7 @@ public class TitleScreen extends Stage{
 
 	private Text title;
 	private Text subTitle;
+	@SuppressWarnings("unused")
 	private WindowType referrer;
 	private GaussianBlur titleBlur;
 	private double blurFractionValue;

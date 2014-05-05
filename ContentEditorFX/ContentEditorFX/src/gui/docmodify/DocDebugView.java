@@ -15,7 +15,6 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import settings.GlobalAppSettings;
 import document.Document;
-import document.project.ProjectEnvironment;
 import document.project.ProjectRepository;
 
 public class DocDebugView extends VBox {

@@ -1,5 +1,7 @@
 package gui.docmodify;
 
+import gui.helper.ColorGrid;
+
 import java.util.Collections;
 
 import javafx.beans.value.ChangeListener;
@@ -18,10 +20,8 @@ import javafx.scene.shape.Rectangle;
 import settings.Translator;
 import control.StyleModifyFacade;
 import document.Document;
-import document.project.ProjectEnvironment;
 import document.project.ProjectRepository;
 import document.style.TextStyle;
-import gui.helper.ColorGrid;
 
 public class DocWidgetToolbar extends FlowPane{
 
@@ -71,7 +71,6 @@ public class DocWidgetToolbar extends FlowPane{
 	private Button drawGraphicButton;
 	private Button drawTextBoxButton;
 	
-	private Button lineButton;
 	private StyleModifyFacade styleFacade;
 	
 	ObservableList<String> fontOptions;
@@ -96,8 +95,6 @@ public class DocWidgetToolbar extends FlowPane{
 		
 	//	deactivateControls();
 		
-		lineButton = new Button(Translator.get("Line"));
-		
 		this.setVgap(GAP_CONST);
 		this.setHgap(GAP_CONST);
 		
@@ -107,6 +104,7 @@ public class DocWidgetToolbar extends FlowPane{
 		this.getChildren().addAll(saveLoadPane, pagePane, widgetPane, fontPane, colorPane, importPane, shapePane);
 	}
 
+	@SuppressWarnings("unused")
 	private void deactivateControls() {
 		fontBox.setDisable(true);
 		fontSizeBox.setDisable(true);

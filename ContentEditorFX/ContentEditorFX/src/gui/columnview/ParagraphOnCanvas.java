@@ -1,13 +1,10 @@
 package gui.columnview;
 
-import gui.docmodify.DocDebugView;
-
 import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import control.TextModifyFacade;
-import document.Document;
 import document.Paragraph;
 import document.ParagraphSet;
 import document.ParagraphSpace;

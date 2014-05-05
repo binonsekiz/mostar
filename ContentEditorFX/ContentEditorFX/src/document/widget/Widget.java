@@ -3,13 +3,9 @@ package document.widget;
 import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Rectangle;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import storage.XmlManager;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.persistentproperties.WidgetProperties;
-import document.persistentproperties.interfaces.PersistentObject;
 
 public class Widget extends WidgetProperties{
 

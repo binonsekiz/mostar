@@ -32,6 +32,7 @@ import java.util.function.Consumer;
  * next higher POT size.
  * @author Nathan Sweet */
 public class IntFloatMap {
+	@SuppressWarnings("unused")
 	private static final int PRIME1 = 0xbe1f14b1;
 	private static final int PRIME2 = 0xb4b82e39;
 	private static final int PRIME3 = 0xced1c241;
@@ -153,6 +154,7 @@ public class IntFloatMap {
 		push(key, value, index1, key1, index2, key2, index3, key3);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void putAll (IntFloatMap map) {
 		for (Entry entry : map.entries())
 			put(entry.key, entry.value);
@@ -559,6 +561,7 @@ public class IntFloatMap {
 
 	/** Returns an iterator for the entries in the map. Remove is supported. Note that the same iterator instance is returned each
 	 * time this method is called. Use the {@link Entries} constructor for nested or multithreaded iteration. */
+	@SuppressWarnings("unchecked")
 	public Entries entries () {
 		if (entries1 == null) {
 			entries1 = new Entries(this);
@@ -597,6 +600,7 @@ public class IntFloatMap {
 
 	/** Returns an iterator for the keys in the map. Remove is supported. Note that the same iterator instance is returned each time
 	 * this method is called. Use the {@link Entries} constructor for nested or multithreaded iteration. */
+	@SuppressWarnings("unchecked")
 	public Keys keys () {
 		if (keys1 == null) {
 			keys1 = new Keys(this);
@@ -673,6 +677,7 @@ public class IntFloatMap {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	static public class Entries extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
 		private Entry entry = new Entry();
 
@@ -681,6 +686,7 @@ public class IntFloatMap {
 		}
 
 		/** Note the same entry instance is returned each time this method is called. */
+		@SuppressWarnings("unchecked")
 		public Entry next () {
 			if (!hasNext) throw new NoSuchElementException();
 			if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
@@ -755,6 +761,7 @@ public class IntFloatMap {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	static public class Keys extends MapIterator {
 		public Keys (IntFloatMap map) {
 			super(map);
@@ -764,6 +771,7 @@ public class IntFloatMap {
 			return hasNext;
 		}
 
+		@SuppressWarnings("unchecked")
 		public int next () {
 			if (!hasNext) throw new NoSuchElementException();
 			if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");

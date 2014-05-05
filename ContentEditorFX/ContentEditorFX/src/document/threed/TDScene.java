@@ -8,8 +8,11 @@ import javafx.scene.paint.PhongMaterial;
 
 public class TDScene extends Group{
 
+	@SuppressWarnings("unused")
 	private TDModelNode root;
+	@SuppressWarnings("unused")
 	private ArrayList<PerspectiveCamera> cameras;
+	@SuppressWarnings("unused")
 	private ArrayList<PhongMaterial> materials;
 	
 	public TDScene() {

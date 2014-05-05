@@ -217,6 +217,7 @@ public class Vector3 implements Serializable, Vector<Vector3> {
 	 * @param vy Y value
 	 * @param vz Z value
 	 * @return This vector for chaining */
+	@SuppressWarnings("ucd")
 	public Vector3 scl (float vx, float vy, float vz) {
 		return this.set(this.x * vx, this.y * vy, this.z * vz);
 	}
@@ -442,6 +443,7 @@ public class Vector3 implements Serializable, Vector<Vector3> {
 		return isUnit(0.000000001f);
 	}
 	
+	@SuppressWarnings("ucd")
 	/** @return Whether this vector is a unit length vector within the given margin */
 	public boolean isUnit(final float margin) {
 		return Math.abs(len2() - 1f) < margin * margin;

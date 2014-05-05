@@ -172,6 +172,7 @@ public class Vector2 implements Serializable, Vector<Vector2>, PersistentObject 
 
 	/** Multiplies this vector by a scalar
 	 * @return This vector for chaining */
+	@SuppressWarnings("ucd")
 	public Vector2 scl (float x, float y) {
 		this.x *= x;
 		this.y *= y;

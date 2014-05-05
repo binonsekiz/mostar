@@ -1,10 +1,5 @@
 package control;
 
-import java.util.ArrayList;
-
-import document.project.ProjectEnvironment;
-import document.project.ProjectRepository;
-import document.widget.Widget.TextWrapType;
 import gui.columnview.ColumnView;
 import gui.widget.ImageGalleryWidgetModifier;
 import gui.widget.MediaWidgetModifier;
@@ -12,6 +7,11 @@ import gui.widget.SingleImageWidgetModifier;
 import gui.widget.ThreeDViewerWidgetModifier;
 import gui.widget.WebViewWidgetModifier;
 import gui.widget.WidgetModifier;
+
+import java.util.ArrayList;
+
+import document.project.ProjectRepository;
+import document.widget.Widget.TextWrapType;
 
 public class WidgetModifyFacade extends Facade{
 	

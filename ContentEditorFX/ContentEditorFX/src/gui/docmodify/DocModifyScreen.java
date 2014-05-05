@@ -1,6 +1,6 @@
 package gui.docmodify;
 
-import document.project.ProjectEnvironment;
+import document.project.ProjectRepository;
 import gui.GFrame.WindowType;
 import gui.ScreenType;
 import gui.columnview.DocumentView;
@@ -11,21 +11,21 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 
 	private DocumentView documentView;
 	private DocWidgetToolbar docWidgetToolbar;
-	private DocOverview docOverview;
 	private DocBottomToolbar docBottomToolbar;
 	private DocVersatilePane docVersatilePane;
 	private DocDebugView docDebugView;
 	
 	private WelcomePopup welcomePopup;
+	@SuppressWarnings("unused")
 	private WindowType referrer;
 	
 	public DocModifyScreen(){
+		new ProjectRepository();
 		initGui();
 	}
 	
 	private void initGui(){
 		docWidgetToolbar = new DocWidgetToolbar();
-		docOverview = new DocOverview();
 		
 		documentView = new DocumentView();
 		docBottomToolbar = new DocBottomToolbar();		
@@ -74,10 +74,6 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 
 	public DocWidgetToolbar getWidgetToolbar() {
 		return docWidgetToolbar;
-	}
-
-	public DocOverview getDocOverview() {
-		return docOverview;
 	}
 
 	public DocBottomToolbar getDocBottomToolbar() {

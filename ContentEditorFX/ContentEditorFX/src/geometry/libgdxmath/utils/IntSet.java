@@ -28,6 +28,7 @@ import java.util.NoSuchElementException;
  * size.
  * @author Nathan Sweet */
 public class IntSet {
+	@SuppressWarnings("unused")
 	private static final int PRIME1 = 0xbe1f14b1;
 	private static final int PRIME2 = 0xb4b82e39;
 	private static final int PRIME3 = 0xced1c241;

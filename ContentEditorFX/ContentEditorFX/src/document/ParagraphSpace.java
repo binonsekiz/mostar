@@ -5,9 +5,6 @@ import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Polygon.LineSegmentIntersection;
 import geometry.libgdxmath.Rectangle;
 import geometry.libgdxmath.Vector2;
-
-import java.util.ArrayList;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 

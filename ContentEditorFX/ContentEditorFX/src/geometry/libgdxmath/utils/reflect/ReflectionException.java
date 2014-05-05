@@ -6,6 +6,11 @@ package geometry.libgdxmath.utils.reflect;
  */
 public class ReflectionException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1535296903639873309L;
+
 	public ReflectionException () {
 		super();
 	}

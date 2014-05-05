@@ -17,8 +17,15 @@ import java.io.Serializable;
 
 /** A convenient 2D circle class.
  * @author mzechner */
+@SuppressWarnings("ucd")
 public class Circle implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2505408913525346547L;
+	@SuppressWarnings("ucd")
 	public float x, y;
+	@SuppressWarnings("ucd")
 	public float radius;
 
 	/** Constructs a new circle with all values set to zero */
@@ -26,30 +33,35 @@ public class Circle implements Serializable {
 
 	}
 
+	@SuppressWarnings("ucd")
 	public Circle (float x, float y, float radius) {
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
 	}
 
+	@SuppressWarnings("ucd")
 	public Circle (Vector2 position, float radius) {
 		this.x = position.x;
 		this.y = position.y;
 		this.radius = radius;
 	}
 
+	@SuppressWarnings("ucd")
 	public Circle (Circle circle) {
 		this.x = circle.x;
 		this.y = circle.y;
 		this.radius = circle.radius;
 	}
 
+	@SuppressWarnings("ucd")
 	public void set (float x, float y, float radius) {
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
 	}
 
+	@SuppressWarnings("ucd")
 	public void set (Circle circle) { 
 		x = circle.x;
 		y = circle.y;
@@ -66,6 +78,7 @@ public class Circle implements Serializable {
 	/** Sets the x and y-coordinates of circle center
 	 * @param x The x-coordinate
 	 * @param y The y-coordinate */
+	@SuppressWarnings("ucd")
 	public void setPosition (float x, float y) {
 		this.x = x;
 		this.y = y;
@@ -89,12 +102,14 @@ public class Circle implements Serializable {
 		this.radius = radius;
 	}
 
+	@SuppressWarnings("ucd")
 	public boolean contains (float x, float y) {
 		x = this.x - x;
 		y = this.y - y;
 		return x * x + y * y <= radius * radius;
 	}
 
+	@SuppressWarnings("ucd")
 	public boolean contains (Vector2 point) {
 		float dx = x - point.x;
 		float dy = y - point.y;
@@ -103,6 +118,7 @@ public class Circle implements Serializable {
 
 	/** @param c the other {@link Circle}
 	 * @return whether this circle contains the other circle. */
+	@SuppressWarnings("ucd")
 	public boolean contains (Circle c) {
 		float dx = x - c.x;
 		float dy = y - c.y;
@@ -115,6 +131,7 @@ public class Circle implements Serializable {
 
 	/** @param c the other {@link Circle}
 	 * @return whether this circle overlaps the other circle. */
+	@SuppressWarnings("ucd")
 	public boolean overlaps (Circle c) {
 		float dx = x - c.x;
 		float dy = y - c.y;

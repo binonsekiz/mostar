@@ -23,16 +23,19 @@ package geometry.libgdxmath.utils;
 public class OrderedMap<K, V> extends ObjectMap<K, V> {
 	final Array<K> keys;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public OrderedMap () {
 		super();
 		keys = new Array();
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public OrderedMap (int initialCapacity) {
 		super(initialCapacity);
 		keys = new Array(initialCapacity);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public OrderedMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		keys = new Array(initialCapacity);
@@ -62,6 +65,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> {
 		return keys;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Entries<K, V> entries () {
 		return new Entries(this) {
 			void advance () {
@@ -82,6 +86,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> {
 		};
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Keys<K> keys () {
 		return new Keys(this) {
 			void advance () {
@@ -101,6 +106,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> {
 		};
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Values<V> values () {
 		return new Values(this) {
 			void advance () {

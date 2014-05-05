@@ -18,6 +18,7 @@ package geometry.libgdxmath.utils;
 
 /** Indicates an error during serialization due to misconfiguration or during deserialization due to invalid input data.
  * @author Nathan Sweet */
+@SuppressWarnings({"serial", "rawtypes", "unchecked"})
 public class SerializationException extends RuntimeException {
 	private StringBuffer trace;
 

@@ -1,12 +1,12 @@
 package gui;
 
-import document.project.ProjectEnvironment;
 import gui.GFrame.WindowType;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 public class TemplateModifyScreen extends Pane implements ScreenType{
 
+	@SuppressWarnings("unused")
 	private WindowType referrer;
 
 	public TemplateModifyScreen() {

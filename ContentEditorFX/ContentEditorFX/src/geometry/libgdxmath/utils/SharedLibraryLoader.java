@@ -32,6 +32,7 @@ import java.util.zip.ZipFile;
  * 
  * @author mzechner
  * @author Nathan Sweet */
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class SharedLibraryLoader {
 	static public boolean isWindows = System.getProperty("os.name").contains("Windows");
 	static public boolean isLinux = System.getProperty("os.name").contains("Linux");
@@ -53,6 +54,7 @@ public class SharedLibraryLoader {
 			is64Bit = false;
 		}
 	}
+
 
 	static private HashSet<String> loadedLibraries = new HashSet();
 
@@ -113,6 +115,7 @@ public class SharedLibraryLoader {
 		loadedLibraries.add(libraryName);
 	}
 
+	@SuppressWarnings("resource")
 	private InputStream readFile (String path) {
 		if (nativesJar == null) {
 			InputStream input = SharedLibraryLoader.class.getResourceAsStream("/" + path);

@@ -28,6 +28,7 @@ import java.util.function.Consumer;
 /** A resizable, ordered or unordered array of objects. If unordered, this class avoids a memory copy when removing elements (the
  * last element is moved to the removed element's position).
  * @author Nathan Sweet */
+@SuppressWarnings("all")
 public class Array<T> implements Iterable<T> {
 	/** Provides direct access to the underlying array. If the Array's generic type is not Object, this field may only be accessed
 	 * if the {@link Array#Array(boolean, int, Class)} constructor was used. */
@@ -36,6 +37,7 @@ public class Array<T> implements Iterable<T> {
 	public int size;
 	public boolean ordered;
 
+	
 	private ArrayIterable iterable;
 	private Predicate.PredicateIterable<T> predicateIterable;
 
@@ -52,6 +54,8 @@ public class Array<T> implements Iterable<T> {
 	/** @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
 	 *           memory copy.
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown. */
+	@SuppressWarnings("ucd")
+	
 	public Array (boolean ordered, int capacity) {
 		this.ordered = ordered;
 		items = (T[])new Object[capacity];
@@ -60,6 +64,7 @@ public class Array<T> implements Iterable<T> {
 	/** Creates a new array with {@link #items} of the specified type.
 	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
 	 *           memory copy.
+	 @SuppressWarnings("ucd")
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown. */
 	public Array (boolean ordered, int capacity, Class arrayType) {
 		this.ordered = ordered;
@@ -434,6 +439,7 @@ public class Array<T> implements Iterable<T> {
 	public boolean equals (Object object) {
 		if (object == this) return true;
 		if (!(object instanceof Array)) return false;
+		@SuppressWarnings("rawtypes")
 		Array array = (Array)object;
 		int n = size;
 		if (n != array.size) return false;

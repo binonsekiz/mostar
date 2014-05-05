@@ -19,7 +19,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import storage.XmlManager;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import document.persistentproperties.interfaces.PersistentObject;
 
 /** Encapsulates a 2D rectangle defined by it's bottom corner point and its extends in x (width) and y (height).
@@ -174,6 +173,7 @@ public class Rectangle implements Serializable, PersistentObject{
 	 * @param x The x-coordinate
 	 * @param y The y-coordinate 
 	 * @return this rectangle for chaining */
+	@SuppressWarnings("ucd")
 	public Rectangle setPosition (float x, float y) {
 		this.x = x;
 		this.y = y;
@@ -185,6 +185,7 @@ public class Rectangle implements Serializable, PersistentObject{
 	 * @param width The width
 	 * @param height The height 
 	 * @return this rectangle for chaining */
+	@SuppressWarnings("ucd")
 	public Rectangle setSize (float width, float height) {
 		this.width = width;
 		this.height = height;

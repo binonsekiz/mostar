@@ -3,12 +3,9 @@ package document;
 import java.util.ArrayList;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
-import storage.XmlManager;
 import document.PageSpecs.Measurement;
 import document.persistentproperties.DocumentProperties;
-import document.persistentproperties.interfaces.PersistentObject;
 
 public class Document extends DocumentProperties{
 

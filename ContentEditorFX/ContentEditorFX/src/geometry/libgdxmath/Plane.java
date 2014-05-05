@@ -21,6 +21,7 @@ import java.io.Serializable;
 /** A plane defined via a unit length normal and the distance from the origin, as you learned in your math class.
  * 
  * @author badlogicgames@gmail.com */
+@SuppressWarnings("ucd")
 public class Plane implements Serializable {
 	private static final long serialVersionUID = -1240652082930747866L;
 
@@ -69,6 +70,7 @@ public class Plane implements Serializable {
 	 * @param point1
 	 * @param point2
 	 * @param point3 */
+	@SuppressWarnings("deprecation")
 	public void set (Vector3 point1, Vector3 point2, Vector3 point3) {
 		Vector3 l = point1.tmp().sub(point2);
 		Vector3 r = point2.tmp2().sub(point3);

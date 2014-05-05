@@ -19,6 +19,7 @@ package geometry.libgdxmath.utils;
 public class GdxNativesLoader {
 	static public boolean disableNativesLoading = false;
 
+	@SuppressWarnings("unused")
 	static private boolean nativesLoaded;
 
 	/** Loads the libgdx native libraries if they have not already been loaded. */

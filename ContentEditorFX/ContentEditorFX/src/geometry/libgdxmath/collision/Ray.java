@@ -33,6 +33,7 @@ public class Ray implements Serializable {
 	 * 
 	 * @param origin The starting position
 	 * @param direction The direction */
+	@SuppressWarnings("ucd")
 	public Ray (Vector3 origin, Vector3 direction) {
 		this.origin.set(origin);
 		this.direction.set(direction).nor();
@@ -55,10 +56,12 @@ public class Ray implements Serializable {
 	 * @param out The vector to set to the result
 	 * @param distance The distance from the end point to the start point.
 	 * @return The out param */
+	@SuppressWarnings("ucd")
 	public Vector3 getEndPoint(final Vector3 out, final float distance) {
 		return out.set(direction).scl(distance).add(origin);
 	}
 
+	@SuppressWarnings("ucd")
 	static Vector3 tmp = new Vector3();
 
 	/** Multiplies the ray by the given matrix. Use this to transform a ray into another coordinate system.

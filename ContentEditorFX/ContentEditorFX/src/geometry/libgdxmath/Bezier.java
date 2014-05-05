@@ -22,6 +22,7 @@ import geometry.libgdxmath.utils.GdxRuntimeException;
 
 /** Implementation of the Bezier curve.
  * @author Xoppa */
+@SuppressWarnings("ucd")
 public class Bezier<T extends Vector<T>> implements Path<T> {
 	// TODO implement Serializable
 	
@@ -69,6 +70,7 @@ public class Bezier<T extends Vector<T>> implements Path<T> {
 	private T tmp;
 	
 	public Bezier() {	}
+	@SuppressWarnings("unchecked")
 	public Bezier(final T... points) {
 		set(points);
 	}
@@ -79,9 +81,11 @@ public class Bezier<T extends Vector<T>> implements Path<T> {
 		set(points, offset, length);
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Bezier set(final T... points) {
 		return set(points, 0, points.length);
 	}
+	@SuppressWarnings("rawtypes")
 	public Bezier set(final T[] points, final int offset, final int length) {
 		if (length < 2 || length > 4)
 			throw new GdxRuntimeException("Only first, second and third degree Bezier curves are supported.");
@@ -91,6 +95,7 @@ public class Bezier<T extends Vector<T>> implements Path<T> {
 		this.points.addAll(points, offset, length);
 		return this;
 	}
+	@SuppressWarnings("rawtypes")
 	public Bezier set(final Array<T> points, final int offset, final int length) {
 		if (length < 2 || length > 4)
 			throw new GdxRuntimeException("Only first, second and third degree Bezier curves are supported.");

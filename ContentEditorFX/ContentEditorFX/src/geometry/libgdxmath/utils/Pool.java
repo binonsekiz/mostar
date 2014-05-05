@@ -37,6 +37,7 @@ abstract public class Pool<T> {
 	}
 
 	/** @param max The maximum number of free objects to store in this pool. */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Pool (int initialCapacity, int max) {
 		freeObjects = new Array(false, initialCapacity);
 		this.max = max;

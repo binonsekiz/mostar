@@ -28,9 +28,7 @@ import javafx.util.Duration;
 import settings.GlobalAppSettings;
 import document.Column;
 import document.Document;
-import document.project.ProjectEnvironment;
 import document.project.ProjectRepository;
-import event.ShapeDrawFacade;
 import event.input.OverlayCanvas;
 import event.modification.ModificationType;
 import gui.ShapedPane;
@@ -122,13 +120,13 @@ public class DocumentView extends Pane implements CanvasOwner{
 		gridStack.getChildren().add(gridPane);
 		gridStack.setAlignment(Pos.CENTER_LEFT);
 				
-		overlayCanvas = new OverlayCanvas(this);
+		overlayCanvas = new OverlayCanvas();
 		overlayContext = overlayCanvas.getGraphicsContext2D();
 		overlayCanvas.setLayoutX(0);
 		overlayCanvas.setLayoutY(0);
 		overlayCanvas.setId("scenechange-pane");
 		
-		debugCanvas = new OverlayCanvas(this);
+		debugCanvas = new OverlayCanvas();
 		debugContext = debugCanvas.getGraphicsContext2D();
 		debugCanvas.setLayoutX(0);
 		debugCanvas.setLayoutY(0);

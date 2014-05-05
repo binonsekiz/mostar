@@ -19,7 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import document.threed.TDCamera;
 import document.threed.TDModelNode;
 
@@ -33,6 +32,7 @@ public class ThreeDModifyPane extends Pane{
 	private Group root;
 	private TDCamera camera;
 	private Font fontSmall;
+	@SuppressWarnings("unused")
 	private Font fontLarge;
 	
 	private Vector2 mousePos;
@@ -196,8 +196,6 @@ public class ThreeDModifyPane extends Pane{
         final Box zAxis = new Box(0.3, 0.3, 1000.0);
 
         Label xText = new Label("+X");
-        Text yText = new Text("+Y");
-        Text zText = new Text("+Z");
         
         xzPlane = new Box(1000,1,1000);
         xzPlane.setTranslateY(-0.5);

@@ -31,6 +31,7 @@ public class Caret{
 	 
 	//this is absolute caret index.
 	private int anchor;
+	@SuppressWarnings("unused")
 	private Paragraph anchorParagraph;
 	
 	//visual positions

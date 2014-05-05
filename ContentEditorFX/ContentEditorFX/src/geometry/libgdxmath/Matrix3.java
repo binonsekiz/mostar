@@ -23,17 +23,27 @@ import java.io.Serializable;
 /** A 3x3 <a href="http://en.wikipedia.org/wiki/Row-major_order#Column-major_order">column major</a> matrix; useful for 2D transforms.
  *
  * @author mzechner */
+@SuppressWarnings("ucd")
 public class Matrix3 implements Serializable {
 	private static final long serialVersionUID = 7907569533774959788L;
 	private final static float DEGREE_TO_RAD = (float)Math.PI / 180;
+	@SuppressWarnings("ucd")
 	public static final int M00 = 0;
+	@SuppressWarnings("ucd")
 	public static final int M01 = 3;
+	@SuppressWarnings("ucd")
 	public static final int M02 = 6;
+	@SuppressWarnings("ucd")
 	public static final int M10 = 1;
+	@SuppressWarnings("ucd")
 	public static final int M11 = 4;
+	@SuppressWarnings("ucd")
 	public static final int M12 = 7;
+	@SuppressWarnings("ucd")
 	public static final int M20 = 2;
+	@SuppressWarnings("ucd")
 	public static final int M21 = 5;
+	@SuppressWarnings("ucd")
 	public static final int M22 = 8;
 	public float[] val = new float[9];
 	private float[] tmp = new float[9];
@@ -48,6 +58,7 @@ public class Matrix3 implements Serializable {
 
 	/** Sets this matrix to the identity matrix
 	 * @return This matrix for the purpose of chaining operations. */
+	@SuppressWarnings("ucd")
 	public Matrix3 idt () {
 		val[M00] = 1;
 		val[M10] = 0;
@@ -180,6 +191,7 @@ public class Matrix3 implements Serializable {
 	}
 
 	/** @return The determinant of this matrix */
+	@SuppressWarnings("ucd")
 	public float det () {
 		return val[M00] * val[M11] * val[M22] + val[M01] * val[M12] * val[M20] + val[M02] * val[M10] * val[M21] - val[M00]
 			* val[M12] * val[M21] - val[M01] * val[M10] * val[M22] - val[M02] * val[M11] * val[M20];
@@ -220,6 +232,7 @@ public class Matrix3 implements Serializable {
 	/** Copies the values from the provided matrix to this matrix.
 	 * @param mat The matrix to copy.
 	 * @return This matrix for the purposes of chaining. */
+	@SuppressWarnings("ucd")
 	public Matrix3 set (Matrix3 mat) {
 		System.arraycopy(mat.val, 0, val, 0, val.length);
 		return this;

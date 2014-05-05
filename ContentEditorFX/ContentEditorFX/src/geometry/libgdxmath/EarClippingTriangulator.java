@@ -37,6 +37,7 @@ import geometry.libgdxmath.utils.ShortArray;
  * @author Nathan Sweet (rewrite, return indices, no allocation, optimizations) */
 public class EarClippingTriangulator {
 	static private final int CONCAVE = -1;
+	@SuppressWarnings("unused")
 	static private final int TANGENTIAL = 0;
 	static private final int CONVEX = 1;
 

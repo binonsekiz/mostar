@@ -33,6 +33,7 @@ public class AtomicQueue<T> {
 	private final AtomicInteger readIndex = new AtomicInteger();
 	private final AtomicReferenceArray<T> queue;
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public AtomicQueue (int capacity) {
 		queue = new AtomicReferenceArray(capacity);
 	}

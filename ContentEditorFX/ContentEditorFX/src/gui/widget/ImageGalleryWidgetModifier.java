@@ -15,9 +15,11 @@ import control.WidgetModifyFacade;
 import document.Column;
 import document.widget.ImageGalleryWidget;
 
+@SuppressWarnings("deprecation")
 public class ImageGalleryWidgetModifier extends WidgetModifier {
 	
 	private Pagination pagination;
+	@SuppressWarnings("unused")
 	private ImageGalleryWidgetModifier selfReference;
 		
 	public ImageGalleryWidgetModifier(WidgetModifyFacade widgetFacade, Column parent, ColumnView parentPane){

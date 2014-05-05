@@ -33,10 +33,12 @@ public class DelayedRemovalArray<T> extends Array<T> {
 		super();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public DelayedRemovalArray (Array array) {
 		super(array);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public DelayedRemovalArray (boolean ordered, int capacity, Class arrayType) {
 		super(ordered, capacity, arrayType);
 	}
@@ -49,6 +51,7 @@ public class DelayedRemovalArray<T> extends Array<T> {
 		super(ordered, array, startIndex, count);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public DelayedRemovalArray (Class arrayType) {
 		super(arrayType);
 	}

@@ -40,7 +40,6 @@ import document.ParagraphSpace;
 import document.TextLine;
 import document.persistentproperties.interfaces.PersistentIndexedObject;
 import document.persistentproperties.interfaces.PersistentObject;
-import document.persistentproperties.interfaces.PersistentObjectType;
 import document.style.TextStyle;
 import document.widget.ImageGalleryWidget;
 import document.widget.MediaWidget;

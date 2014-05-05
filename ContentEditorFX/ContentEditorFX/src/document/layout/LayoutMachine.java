@@ -310,6 +310,7 @@ public class LayoutMachine{
 		Collections.sort(segments);
 	}
 
+	@SuppressWarnings("unused")
 	private void debugPaintPolygon(Polygon polygon) {
 		GraphicsContext context = DocumentView.getDebugContext();
 		context.save();

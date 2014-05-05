@@ -13,10 +13,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import settings.Translator;
 import control.ThreeDEventFacade;
-import document.project.ProjectEnvironment;
 
 public class ThreeDModifyScreen extends BorderPane implements ScreenType{
 
+	@SuppressWarnings("unused")
 	private WindowType referrer;
 	private ThreeDEventFacade facade;
 	

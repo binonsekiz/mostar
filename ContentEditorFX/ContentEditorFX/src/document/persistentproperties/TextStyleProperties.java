@@ -1,12 +1,13 @@
 package document.persistentproperties;
 
+import javafx.scene.paint.Color;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import document.persistentproperties.interfaces.PersistentObject;
 import storage.XmlManager;
-import javafx.scene.paint.Color;
+import document.persistentproperties.interfaces.PersistentObject;
 
 public class TextStyleProperties implements PersistentObject{
 

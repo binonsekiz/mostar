@@ -6,13 +6,11 @@ import gui.columnview.ColumnView;
 
 import java.util.ArrayList;
 
-import document.ParagraphSet;
-import document.ParagraphSpace;
-import document.project.ProjectRepository;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import settings.GlobalAppSettings;
+import document.project.ProjectRepository;
 
 public class ShapeDrawFacade {
 

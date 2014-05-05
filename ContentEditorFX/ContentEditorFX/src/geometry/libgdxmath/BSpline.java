@@ -19,6 +19,7 @@ package geometry.libgdxmath;
 import geometry.libgdxmath.utils.Array;
 
 /** @author Xoppa */
+@SuppressWarnings("ucd")
 public class BSpline<T extends Vector<T>> implements Path<T> {
 	private final static float d6 = 1f / 6f;
 	
@@ -101,6 +102,7 @@ public class BSpline<T extends Vector<T>> implements Path<T> {
 		set(controlPoints, degree, continuous);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public BSpline set(final T[] controlPoints, final int degree, final boolean continuous) {
 		if (tmp == null)
 			tmp = controlPoints[0].cpy();

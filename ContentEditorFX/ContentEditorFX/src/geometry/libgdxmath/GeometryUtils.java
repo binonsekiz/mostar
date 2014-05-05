@@ -2,6 +2,7 @@
 package geometry.libgdxmath;
 
 /** @author Nathan Sweet */
+@SuppressWarnings("ucd")
 public class GeometryUtils {
 	static private final Vector2 tmp1 = new Vector2(), tmp2 = new Vector2(), tmp3 = new Vector2();
 
@@ -18,6 +19,7 @@ public class GeometryUtils {
 	 * float y = u * aa.y + barycentric.x * bb.y + barycentric.y * cc.y;
 	 * </pre>
 	 * @return barycentricOut */
+	@SuppressWarnings("ucd")
 	static public Vector2 barycentric (Vector2 p, Vector2 a, Vector2 b, Vector2 c, Vector2 barycentricOut) {
 		Vector2 v0 = tmp1.set(b).sub(a);
 		Vector2 v1 = tmp2.set(c).sub(a);
@@ -39,6 +41,7 @@ public class GeometryUtils {
 	 * @param b the second coefficient of the quadric equation
 	 * @param c the third coefficient of the quadric equation
 	 * @return the lowest positive root or Float.Nan */
+	@SuppressWarnings("ucd")
 	static public float lowestPositiveRoot (float a, float b, float c) {
 		float det = b * b - 4 * a * c;
 		if (det < 0) return Float.NaN;
@@ -59,12 +62,14 @@ public class GeometryUtils {
 		return Float.NaN;
 	}
 
+	@SuppressWarnings("ucd")
 	public static Vector2 triangleCentroid (float x1, float y1, float x2, float y2, float x3, float y3, Vector2 centroid) {
 		centroid.x = (x1 + x2 + x3) / 3;
 		centroid.y = (y1 + y2 + y3) / 3;
 		return centroid;
 	}
 
+	@SuppressWarnings("ucd")
 	public static Vector2 quadrilateralCentroid (float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4,
 		Vector2 centroid) {
 		float avgX1 = (x1 + x2 + x3) / 3;
@@ -77,6 +82,7 @@ public class GeometryUtils {
 	}
 
 	/** Returns the centroid for the specified non-self-intersecting polygon. */
+	@SuppressWarnings("ucd")
 	public static Vector2 polygonCentroid (float[] polygon, int offset, int count, Vector2 centroid) {
 		if (polygon.length < 6) throw new IllegalArgumentException("A polygon must have 3 or more coordinate pairs.");
 		float x = 0, y = 0;

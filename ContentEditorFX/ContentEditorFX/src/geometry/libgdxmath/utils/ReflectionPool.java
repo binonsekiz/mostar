@@ -38,6 +38,7 @@ public class ReflectionPool<T> extends Pool<T> {
 		this.type = type;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected T newObject () {
 		try {
 			return type.newInstance();

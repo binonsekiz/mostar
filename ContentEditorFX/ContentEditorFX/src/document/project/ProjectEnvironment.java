@@ -1,5 +1,12 @@
 package document.project;
 
+import document.Column;
+import document.Document;
+import document.DocumentText;
+import document.ParagraphSet;
+import event.ShapeDrawFacade;
+import event.ShapeDrawFacade.ShapeDrawingMode;
+import event.input.KeyboardManager;
 import geometry.libgdxmath.Polygon;
 import gui.columnview.ColumnView;
 import gui.columnview.DocumentView;
@@ -7,7 +14,6 @@ import gui.columnview.DocumentView.ScrollMode;
 import gui.docmodify.DocBottomToolbar;
 import gui.docmodify.DocDebugView;
 import gui.docmodify.DocModifyScreen;
-import gui.docmodify.DocOverview;
 import gui.docmodify.DocVersatilePane;
 import gui.docmodify.DocWidgetToolbar;
 import gui.helper.DebugHelper;
@@ -21,8 +27,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.UUID;
 
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import settings.Translator;
@@ -32,14 +36,8 @@ import control.StyleModifyFacade;
 import control.TextModifyFacade;
 import control.ThreeDEventFacade;
 import control.WidgetModifyFacade;
-import document.Column;
-import document.Document;
-import document.DocumentText;
-import document.ParagraphSet;
-import event.ShapeDrawFacade;
-import event.ShapeDrawFacade.ShapeDrawingMode;
-import event.input.KeyboardManager;
 
+@SuppressWarnings("ucd")
 public class ProjectEnvironment {
 	
 	//Persistent properties
@@ -48,16 +46,17 @@ public class ProjectEnvironment {
 	
 	private DocumentView documentView;
 	private DocWidgetToolbar docWidgetToolbar;
-	private DocOverview docOverview;
+	@SuppressWarnings("unused")
 	private DocBottomToolbar docBottomToolbar;
 	private DocVersatilePane docVersatilePane;
 	private DocDebugView docDebugView;
 	private DocModifyScreen docModifyScreen;
+	@SuppressWarnings("unused")
 	private ThreeDModifyScreen tdModifyScreen;
+	@SuppressWarnings("unused")
 	private DebugHelper debugHelper;
 	private FilePickerWrapper filePicker;
 	private RepositoryManager repositoryManager;
-	private ProjectRepository projectRepository;
 	
 	private TextModifyFacade textModifyFacade;
 	private WidgetModifyFacade widgetModifyFacade;
@@ -76,7 +75,6 @@ public class ProjectEnvironment {
 		docModifyScreen = new DocModifyScreen();
 		this.documentView = docModifyScreen.getDocumentView();
 		this.docWidgetToolbar = docModifyScreen.getWidgetToolbar();
-		this.docOverview = docModifyScreen.getDocOverview();
 		this.docBottomToolbar = docModifyScreen.getDocBottomToolbar();
 		this.docVersatilePane = docModifyScreen.getDocVersatilePane();
 		this.docDebugView = docModifyScreen.getDocDebugView();
@@ -90,7 +88,6 @@ public class ProjectEnvironment {
 		shapeDrawFacade = new ShapeDrawFacade();
 		threeDEventFacade = new ThreeDEventFacade();
 		repositoryManager = new RepositoryManager();
-		projectRepository = new ProjectRepository();
 		filePicker = new FilePickerWrapper(repositoryManager);
 		caret = new Caret(textModifyFacade);
 		textModifyFacade.setCaret(caret);
@@ -122,7 +119,6 @@ public class ProjectEnvironment {
 		styleModifyFacade.setDocumentAndView(document, documentView);
 		threeDEventFacade.setDocumentAndView(document, documentView);
 		documentView.associateWithDocument(document);
-		docOverview.populateTreeView();
  	}
 
 	public Document getDocument(){
@@ -205,6 +201,7 @@ public class ProjectEnvironment {
 	    	FileInputStream fis;
 			try {
 				fis = new FileInputStream(file);
+				@SuppressWarnings("unused")
 				Image image = new Image(fis);
 //		    	docModifyPane.getActivePageView().setBackground(image);
 			} catch (FileNotFoundException e) {
@@ -233,10 +230,6 @@ public class ProjectEnvironment {
 
 	public void clearVersatilePane() {
 		docVersatilePane.hideAll();
-	}
-
-	public void updateOverview() {
-		docOverview.populateTreeView();
 	}
 
 	public TextModifyFacade getTextModifyFacade() {
@@ -351,5 +344,13 @@ public class ProjectEnvironment {
 	public void addBlankParagraphSet(Polygon finalPolygon, ColumnView columnView) {
 		ParagraphSet set = documentText.addBlankParagraphSet(finalPolygon);
 		columnView.insertParagraphSet(set);
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 }

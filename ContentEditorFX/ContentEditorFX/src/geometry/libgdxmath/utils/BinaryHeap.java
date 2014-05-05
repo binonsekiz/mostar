@@ -51,6 +51,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> {
 		return add(node);
 	}
 
+	@SuppressWarnings("unchecked")
 	public T peek () {
 		if (size == 0) throw new IllegalStateException("The heap is empty.");
 		return (T)nodes[0];
@@ -64,6 +65,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> {
 		return remove(node.index);
 	}
 
+	@SuppressWarnings("unchecked")
 	private T remove (int index) {
 		Node[] nodes = this.nodes;
 		Node removed = nodes[index];

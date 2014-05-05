@@ -200,7 +200,7 @@ class ComparableTimSort {
 	 * @param lo the index of the first element in the range to be sorted
 	 * @param hi the index after the last element in the range to be sorted
 	 * @param start the index of the first element in the range that is not already known to be sorted (@code lo <= start <= hi} */
-	@SuppressWarnings("fallthrough")
+	@SuppressWarnings({ "fallthrough", "rawtypes" })
 	private static void binarySort (Object[] a, int lo, int hi, int start) {
 		if (DEBUG) assert lo <= start && start <= hi;
 		if (start == lo) start++;
@@ -262,7 +262,7 @@ class ComparableTimSort {
 	 * @param lo index of the first element in the run
 	 * @param hi index after the last element that may be contained in the run. It is required that @code{lo < hi}.
 	 * @return the length of the run beginning at the specified position in the specified array */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static int countRunAndMakeAscending (Object[] a, int lo, int hi) {
 		if (DEBUG) assert lo < hi;
 		int runHi = lo + 1;
@@ -551,7 +551,7 @@ class ComparableTimSort {
 	 * @param len1 length of first run to be merged (must be > 0)
 	 * @param base2 index of first element in second run to be merged (must be aBase + aLen)
 	 * @param len2 length of second run to be merged (must be > 0) */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void mergeLo (int base1, int len1, int base2, int len2) {
 		if (DEBUG) assert len1 > 0 && len2 > 0 && base1 + len1 == base2;
 
@@ -655,7 +655,7 @@ class ComparableTimSort {
 	 * @param len1 length of first run to be merged (must be > 0)
 	 * @param base2 index of first element in second run to be merged (must be aBase + aLen)
 	 * @param len2 length of second run to be merged (must be > 0) */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void mergeHi (int base1, int len1, int base2, int len2) {
 		if (DEBUG) assert len1 > 0 && len2 > 0 && base1 + len1 == base2;
 

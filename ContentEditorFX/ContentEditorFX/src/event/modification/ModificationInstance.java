@@ -9,6 +9,7 @@ import javafx.scene.input.MouseEvent;
  *
  */
 public abstract class ModificationInstance{
+	@SuppressWarnings("unused")
 	private ModificationType type;
 	protected ShapedPane pane;
 	

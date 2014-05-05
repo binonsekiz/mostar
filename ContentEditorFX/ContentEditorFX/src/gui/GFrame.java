@@ -1,7 +1,6 @@
 package gui;
 
 import event.input.KeyboardManager;
-import gui.docmodify.test.TestFacade;
 import gui.popup.CustomPopup;
 import gui.start.TitleScreen;
 
@@ -51,6 +50,7 @@ public class GFrame extends Application {
 	//whenever a new gui screen is added to the project,
 	//insert it here to get it fast loaded on startup
 	private DocTabbedView docTabbedView;
+	@SuppressWarnings("unused")
 	private TitleScreen titleStage;
 	
 	private KeyboardManager keyboardManager;
@@ -84,7 +84,9 @@ public class GFrame extends Application {
 		initializePanes();
 		
 		if(GlobalAppSettings.isTestModeOn())
-			TestFacade.startTests();
+		{
+			//TODO: run tests
+		}
 		
 		mainStage.centerOnScreen();
 		mainStage.show();

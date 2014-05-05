@@ -8,7 +8,6 @@ import gui.docmodify.DocDebugView;
 import java.util.ArrayList;
 
 import javafx.scene.paint.Color;
-import document.Column;
 import document.ParagraphSpace;
 import document.style.TextStyle;
 import document.style.TextStyleRepository;

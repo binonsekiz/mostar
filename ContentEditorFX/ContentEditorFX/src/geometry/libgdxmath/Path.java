@@ -2,6 +2,7 @@ package geometry.libgdxmath;
 
 /** Interface that specifies a path of type T within the window 0.0<=t<=1.0.
  * @author Xoppa */
+@SuppressWarnings("ucd")
 public interface Path<T> {
 	/** @return The value of the path at t where 0<=t<=1 */
 	T valueAt(T out, float t);

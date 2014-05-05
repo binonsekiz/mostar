@@ -141,6 +141,7 @@ public class PooledLinkedList<T> {
 // list.remove();
 // }
 
+	@SuppressWarnings("unused")
 	public void clear () {
 		iter();
 		T v = null;
