@@ -47,20 +47,21 @@ public class StyleModifyFacade extends Facade{
 		this.textModifyFacade = facade;
 	}
 	
-	public void changeStyleForSelection(TextStyle style) {
-		if(!caret.isSelectionStyleEquals(style)) {
-			if(caret.isAtEnd()){
-				textModifyFacade.addNewParagraphToEnd(style);
-			}
-			else if(caret.getCaretIndex() == caret.getAnchor()) {
-				//divide the paragraph in two, add a third in between.
-		//		textModifyFacade.divideAtIndex(style, caret.getCaretIndex());
-			}
-			else{
-				textModifyFacade.setStyleAtInterval(style, caret.getCaretIndex(), caret.getAnchor());
-			}
-		}
-	}
+// TODO Remove unused code found by UCDetector
+// 	public void changeStyleForSelection(TextStyle style) {
+// 		if(!caret.isSelectionStyleEquals(style)) {
+// 			if(caret.isAtEnd()){
+// 				textModifyFacade.addNewParagraphToEnd(style);
+// 			}
+// 			else if(caret.getCaretIndex() == caret.getAnchor()) {
+// 				//divide the paragraph in two, add a third in between.
+// 		//		textModifyFacade.divideAtIndex(style, caret.getCaretIndex());
+// 			}
+// 			else{
+// 				textModifyFacade.setStyleAtInterval(style, caret.getCaretIndex(), caret.getAnchor());
+// 			}
+// 		}
+// 	}
 
 	public void changeFontName(String value) {
 		TextStyle initStyle = getInitialStyle();

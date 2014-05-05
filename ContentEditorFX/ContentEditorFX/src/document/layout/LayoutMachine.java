@@ -85,26 +85,39 @@ public class LayoutMachine{
 		}
 	}
 	
-	public void validateLineOnCanvases(Paragraph paragraph, ColumnView columnView) {
+	public void validateLineOnCanvases(ParagraphSet paragraphSet, ColumnView columnView) {
 		ParagraphOnCanvas paragraphOnCanvas = null;
 		for(int i = 0; i < columnView.getParagraphsOnCanvas().size(); i++) {
-			if( columnView.getParagraphsOnCanvas().get(i).containsParagraph(paragraph)){
+			if(columnView.getParagraphsOnCanvas().get(i).getParagraphSet() == paragraphSet){
 				paragraphOnCanvas = columnView.getParagraphsOnCanvas().get(i);
 				break;
 			}
 		}
-				
-		for(int i = 0; i < paragraph.getLineSegments().size(); i++) {
-			TextLine textLine = paragraph.getTextLines().get(i);
-			if(i >= paragraphOnCanvas.getLinesOnCanvas().size()) {
-				//an additional line on canvas is needed here.
-				buildSingleLineOnCanvas(columnView, paragraphOnCanvas, paragraph.getTextLines().get(i), paragraph.getLineSegments().get(i));
+		
+		int lineOnCanvasCounter = 0;
+		
+		for(int j = 0; j < paragraphSet.getParagraphCount(); j++) {
+			Paragraph paragraph = paragraphSet.getParagraph(j);
+			
+			System.out.println("\n\n\n\n\n\nvalidate call with paragraph: " + paragraph + ", columnview: " + columnView);
+			System.out.println("paragraphOnCanvas.linesoncanvas1:" + paragraphOnCanvas.getLinesOnCanvas());
+		
+			for(int i = 0; i < paragraph.getLineSegments().size(); i++) {
+				TextLine textLine = paragraph.getTextLines().get(i);
+				if(lineOnCanvasCounter >= paragraphOnCanvas.getLinesOnCanvas().size()) {
+					//an additional line on canvas is needed here.
+					buildSingleLineOnCanvas(columnView, paragraphOnCanvas, paragraph.getTextLines().get(i), paragraph.getLineSegments().get(i));
+				}
+				paragraphOnCanvas.getLinesOnCanvas().get(lineOnCanvasCounter).setTextLine(textLine);
+				paragraphOnCanvas.getLinesOnCanvas().get(lineOnCanvasCounter).setLineSegment(paragraph.getLineSegments().get(i));
+				lineOnCanvasCounter ++;
 			}
-			paragraphOnCanvas.getLinesOnCanvas().get(i).setTextLine(textLine);
-			paragraphOnCanvas.getLinesOnCanvas().get(i).setLineSegment(paragraph.getLineSegments().get(i));
+		
+			System.out.println("\n\n\n\n\n\nvalidate call with paragraph: " + paragraph + ", columnview: " + columnView);
+			System.out.println("paragraphOnCanvas.linesoncanvas2:" + paragraphOnCanvas.getLinesOnCanvas());
 		}
-
-		for(int i = paragraphOnCanvas.getLinesOnCanvas().size() - 1; i >= paragraph.getLineSegments().size(); i--) {
+		
+		for(int i = paragraphOnCanvas.getLinesOnCanvas().size() - 1; i >= lineOnCanvasCounter; i--) {
 			paragraphOnCanvas.getLinesOnCanvas().remove(i);
 		}
 	}
@@ -116,7 +129,7 @@ public class LayoutMachine{
 		paragraphOnCanvas.insertLine(newLine);
 	}
 	
-	public void startTextDivision(ParagraphSet paragraphSet) {
+	private void startTextDivision(ParagraphSet paragraphSet) {
 		textDivisionMode = true;
 		this.paragraphSet = paragraphSet;
 		lineSegmentOffset = paragraphSet.getParagraphSpace().getTextDivisionStartPoint();
@@ -137,9 +150,6 @@ public class LayoutMachine{
 	}
 	
 	public LineSegment getNextAvailableLineSegment(TextStyle style) {
-		System.out.println("\n\n$$$$$$LayoutMachine::GetNextAvailableLineSegment started.");
-		System.out.println("\t\tLastUsedSegment: " + lastUsedSegment);
-		
 		debugPaintVector2(lineSegmentOffset, Color.BLUE);
 		
 		if(textDivisionMode == false || paragraphSet == null) {
@@ -152,23 +162,14 @@ public class LayoutMachine{
 		
 		LineSegment retVal = null;
 		
-		System.out.println("\t%%%Options:");
-		System.out.println("\tLastUsedSegment: " + lastUsedSegment);
-		for(int i = 0; i < backupSegments.size(); i++) {
-			System.out.println("\tBackupSegment: " + backupSegments.get(i));
-		}
-		
 		if(lastUsedSegment != null) {
-			System.out.println("\tOption A1");
 			retVal = lastUsedSegment;
 		}
 		else if(backupSegments.size() > 0){
-			System.out.println("\tOption A2");
 			retVal  = backupSegments.get(0);
 			backupSegments.remove(0);
 		}
 		else {
-			System.out.println("\tOption A3");
 			float angle = paragraphSet.getAngle();
 			
 			LineSegment inputSegment = new LineSegment(lineSegmentOffset, insets.getPageWidth(), angle);
@@ -179,12 +180,8 @@ public class LayoutMachine{
 				intersection.remove(0);
 				backupSegments.addAll(intersection);
 			}
-			else{
-				System.out.println("----Boþ geçecek");
-			}
 		}
 
-		System.out.println("\n***Line Segment will return: " + retVal + "\n");
 		if(retVal != null) {
 			lastUsedSegment = retVal.cpy();	
 		}
@@ -212,7 +209,6 @@ public class LayoutMachine{
 	 * @return
 	 */
 	private ArrayList<LineSegment> buildLineSegments(LineSegment inputSegment, float height) {
-		
 		System.out.println("\n\tLayoutMachine::BuildLineSegments started");
 		
 		ArrayList<LineSegment> segments = new ArrayList<LineSegment>();
@@ -235,10 +231,6 @@ public class LayoutMachine{
 		
 		if(trimmedSegmentLower == null) {
 			return segments;
-		}
-		
-		if(Math.abs(trimmedSegment.getLength() - trimmedSegmentLower.getLength()) < GlobalAppSettings.ignoreValuesBelow) {
-			System.out.println("EQUAL LENGTH");
 		}
 		
 		if(GlobalAppSettings.selectedFitLineOption == LineFitOption.strictFit) {

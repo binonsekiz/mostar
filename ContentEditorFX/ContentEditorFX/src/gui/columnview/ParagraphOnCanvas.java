@@ -22,7 +22,7 @@ public class ParagraphOnCanvas{
 	private ColumnView parent;
 	
 	private ParagraphSpace allowedSpace;
-	private ArrayList<LineOnCanvas> lines; 
+	private ArrayList<LineOnCanvas> lines;
 	private ParagraphSet paragraphSet;
 	
 	private TextModifyFacade textModifyFacade;
@@ -54,23 +54,27 @@ public class ParagraphOnCanvas{
 	public void insertLine(LineOnCanvas newLine) {
 		this.lines.add(newLine);
 	}
-	
-	public ArrayList<LineOnCanvas> getLines() {
-		return lines;
-	}
 
-	public void insertLines(ArrayList<LineOnCanvas> newLines) {
-		this.lines.addAll(newLines);
-	}
-	
 	public void refresh() {
-	//	lines.clear();
-	//	getLayoutMachine().buildLineOnCanvases(parent, this, paragraphSet, textModifyFacade);
-		for(int i = 0; i < paragraphSet.getParagraphCount(); i++) {
-			paragraphSet.getParagraph(i).validateLineOnCanvases(parent);
+		System.out.println("Lines:");
+		
+		for(int i = 0; i < lines.size(); i++) {
+			System.out.println("Line " + i + ": " + lines.get(i).toString());
 		}
+		
+	/*	for(int i = 0; i < paragraphSet.getParagraphCount(); i++) {
+			paragraphSet.getParagraph(i).validateLineOnCanvases(parent);
+		}*/
+		
+		paragraphSet.validateLineOnCanvases(parent);
+		
 		for(int i = 0; i < lines.size(); i++){
 			lines.get(i).refresh();
+		}
+		
+		System.out.println("Lines2:");
+		for(int i = 0; i < lines.size(); i++) {
+			System.out.println("Line " + i + ": " + lines.get(i).toString());
 		}
 		
 		allowedSpace.draw(parent.getGraphicsContext());
@@ -83,13 +87,6 @@ public class ParagraphOnCanvas{
 
 	public String getText() {
 		return paragraphSet.getText();
-	}
-
-	/**
-	 * Forces refresh on the column this paragraph is in
-	 */
-	public void updateColumn() {
-		parent.refresh();
 	}
 
 	public void setParagraphSet(ParagraphSet paragraph) {

@@ -6,6 +6,7 @@ import document.DocumentText;
 
 abstract class Facade {
 
+	@SuppressWarnings("ucd")
 	protected Document document;
 	protected DocumentView documentView;
 	protected DocumentText documentText;

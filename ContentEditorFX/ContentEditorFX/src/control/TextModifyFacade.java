@@ -61,11 +61,11 @@ public class TextModifyFacade extends Facade{
 		caret.insertString(text);
 	}
 	
-	@SuppressWarnings("ucd")
+/*	@SuppressWarnings("ucd")
 	public void addNewParagraphToEnd(TextStyle style) {
 		System.out.println("\n\n~~Adding new paragraph to end, style: " + style);
 		new Paragraph(style, "", documentText.getParagraphs().size());
-	}
+	}*/
 	
 	/**
 	 * Divide the start and end paragraphs into two, and set the style in between to the given style
@@ -73,7 +73,6 @@ public class TextModifyFacade extends Facade{
 	 * @param caretIndex
 	 * @param anchor
 	 */
-	@SuppressWarnings("ucd")
 	public void setStyleAtInterval(TextStyle style, int caretIndex, int anchor) {
 		System.out.println("\n\n~~Setting style in interval: " + caretIndex + "-" + anchor + " style: " + style);
 		int lowerIndex = Math.min(caretIndex, anchor);

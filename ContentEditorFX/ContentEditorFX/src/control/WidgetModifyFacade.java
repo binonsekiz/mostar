@@ -82,19 +82,22 @@ public class WidgetModifyFacade extends Facade{
 		widgetFocusHandler.gainedFocusSignal(modifier);
 	}
 	
-	class WidgetFocusHandler{
+	private class WidgetFocusHandler{
 		protected WidgetFocusHandler() {
 			widgetModifiers = new ArrayList<WidgetModifier>();
 		}
 		
+		@SuppressWarnings("ucd")
 		protected void addWidgetModifier(WidgetModifier modifier){
 			widgetModifiers.add(modifier);
 		}
 		
+		@SuppressWarnings("unused")
 		protected void removeWidgetModifier(WidgetModifier modifier){
 			widgetModifiers.remove(modifier);
 		}
 		
+		@SuppressWarnings({ "ucd", "unused" })
 		protected void clearAll(){
 			widgetModifiers.clear();
 		}
@@ -106,6 +109,7 @@ public class WidgetModifyFacade extends Facade{
 			}
 		}
 		
+		@SuppressWarnings("ucd")
 		protected void loseAllFocus(){
 			for(WidgetModifier modifier: widgetModifiers){
 				modifier.loseFocus();
@@ -113,6 +117,7 @@ public class WidgetModifyFacade extends Facade{
 			ProjectRepository.getActiveProjectEnvironment().clearVersatilePane();
 		}
 		
+		@SuppressWarnings("unused")
 		protected void refreshWidgetTextOrder(){
 			for(WidgetModifier modifier: widgetModifiers){
 				if(modifier.getWidget().getTextWrap() == TextWrapType.Behind)

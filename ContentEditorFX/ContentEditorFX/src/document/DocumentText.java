@@ -26,11 +26,11 @@ public class DocumentText extends DocumentTextProperties{
 			paragraphSets.add(paragraphSet);
 		}
 		
+		paragraphSet.addParagraph(paragraph);
 		globalText.add(paragraph.getIndexInParent(), paragraph);
 		for(int i = 0; i < globalText.size(); i++) {
 			globalText.get(i).setIndexInParent(i);
 		}
-		paragraphSet.addParagraph(paragraph);
 	}
 	
 	void removeParagraph(int indexInParent) {

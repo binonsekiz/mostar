@@ -1,7 +1,6 @@
 package document;
 
 import geometry.libgdxmath.LineSegment;
-import gui.columnview.ColumnView;
 import gui.columnview.ParagraphOnCanvas;
 import gui.helper.MathHelper;
 
@@ -338,6 +337,9 @@ public class Paragraph extends ParagraphProperties implements CharSequence, Comp
 		
 		updateTextLines();
 		newParagraph.updateTextLines();
+		
+		System.out.println("Divided: current: " + this.getText() + ", new: " + newParagraph.getText());
+		
 		return newParagraph;
 	}
 	
@@ -441,10 +443,6 @@ public class Paragraph extends ParagraphProperties implements CharSequence, Comp
 			return 1;
 		}
 		return 0;
-	}
-
-	public void validateLineOnCanvases(ColumnView columnView) {
-		paragraphSet.getColumn().getLayoutMachine().validateLineOnCanvases(this, columnView);
 	}
 
 }

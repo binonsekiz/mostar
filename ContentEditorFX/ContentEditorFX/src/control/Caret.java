@@ -44,7 +44,7 @@ public class Caret{
 	
 	private LineOnCanvas activeLineView;
 	private LineOnCanvas anchorLineView;
-	protected boolean isCaretVisible;
+	private boolean isCaretVisible;
 	
 	private Interpolation interpolation = Interpolation.pow2;
 	private float totalDestination;
@@ -139,7 +139,7 @@ public class Caret{
 		return anchor;
 	}
 	
-	public void setVisualPosition(float x, float y){
+	private void setVisualPosition(float x, float y){
 		totalDestination = 0;
 		startX = destinationX;
 		startY = destinationY;
@@ -154,10 +154,6 @@ public class Caret{
 
 	public void setDocumentText(DocumentText documentText) {
 		this.documentText = documentText;
-	}
-	
-	public boolean isCaretOnParagraph(Paragraph paragraph) {
-		return caretParagraph == paragraph;
 	}
 	
 	public void drawCaret(double xOffset, double yOffset, GraphicsContext context) {
@@ -200,7 +196,7 @@ public class Caret{
 		calculateAnchorLine(index);
 	}
 
-	public void insertString(String text) {
+	void insertString(String text) {
 		if(caretParagraph == null) caretParagraph = documentText.getParagraph(0);
 		
 		if(caretIndex == anchor) {
@@ -210,7 +206,7 @@ public class Caret{
 			caretParagraph.insertText(text, Math.min(caretIndex, anchor), Math.max(caretIndex,anchor));
 		}
 		//getActiveColumnView().refresh();
-		caretParagraph.validateLineOnCanvases(getActiveColumnView());
+		caretParagraph.getParagraphSet().validateLineOnCanvases(getActiveColumnView());
 		setCaretIndex(Math.min(caretIndex, anchor) + text.length());
 	}
 
@@ -242,7 +238,7 @@ public class Caret{
 		textModifyFacade.changeMousePointer(cursorType);
 	}
 
-	public boolean isSelectionStyleEquals(TextStyle style) {
+	boolean isSelectionStyleEquals(TextStyle style) {
 		if(caretIndex == anchor && caretParagraph.getStyle().isEqual(style))
 			return true;
 	

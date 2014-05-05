@@ -1,6 +1,7 @@
 package document;
 
 import geometry.libgdxmath.Polygon;
+import gui.columnview.ColumnView;
 import gui.helper.DebugHelper;
 
 import java.util.ArrayList;
@@ -144,6 +145,10 @@ public class ParagraphSet extends ParagraphSetProperties {
 
 	public void setIndexInDocument(int indexInDocument) {
 		this.indexInDocument = indexInDocument;
+	}
+
+	public void validateLineOnCanvases(ColumnView parent) {
+		getColumn().getLayoutMachine().validateLineOnCanvases(this, parent);
 	}
 
 }

@@ -1,5 +1,6 @@
 package document.persistentproperties.interfaces;
 
+@SuppressWarnings("ucd")
 public enum PersistentObjectType {
 
 	ImageGalleryWidget,

@@ -93,16 +93,10 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	}
 	
 	public void setLineSegment(LineSegment line) {
-	//	layoutX = line.getFirstPoint().x;
-	//	layoutY = line.getFirstPoint().y;
 		this.angle = line.getAngle();
 		rotateTransform.setAngle(angle);
 		this.preferredWidthProperty.set(line.getLength());
 		width = (float) line.getLength();
-		
-		//TODO: debug
-//		this.height = textLine.getStyle();
-		//TODO: end debug
 		
 		lineSegmentProperty.set(line);
 	}
@@ -110,6 +104,7 @@ public class LineOnCanvas implements Comparable<LineOnCanvas>{
 	public void setTextLine(TextLine line) {
 		this.textLine = line;
 		height = textLine.getStyle().getLineSpacingHeight();
+		initializeLetterSizes();
 	}
 	
 	private void revalidateLineSegment() {

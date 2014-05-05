@@ -31,10 +31,15 @@ import java.util.function.Consumer;
  * makes iteration fast. Like {@link Array}, if ordered is false, * this class avoids a memory copy when removing elements (the
  * last element is moved to the removed element's position).
  * @author Nathan Sweet */
+@SuppressWarnings("ucd")
 public class ArrayMap<K, V> {
+	@SuppressWarnings("ucd")
 	public K[] keys;
+	@SuppressWarnings("ucd")
 	public V[] values;
+	@SuppressWarnings("ucd")
 	public int size;
+	@SuppressWarnings("ucd")
 	public boolean ordered;
 
 	@SuppressWarnings("rawtypes")
