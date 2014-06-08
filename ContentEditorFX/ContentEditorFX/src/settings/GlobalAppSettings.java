@@ -4,7 +4,12 @@ import gui.columnview.DocumentView.ScrollMode;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+
+import javafx.geometry.Insets;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,10 +33,12 @@ public class GlobalAppSettings {
 	public static final float ignoreValuesBelow = 0.001f;
 	public static final float ignoreValuesBelowMedium = 0.1f;
 	public static final float ignoreValuesBelowLarge = 5f;
-	public static final double caretBlinkRate = 1000;
-	public static final float caretMovementTime = 100f;
-	public static final float pointerJumpSize = 10;
-	public static final ScrollMode defaultDocumentViewScrollMode = ScrollMode.Continuous;
+	public static final boolean bypassLogin = true;
+	public static double caretBlinkRate = 1000;
+	public static float caretMovementTime = 100f;
+	public static float pointerJumpSize = 10;
+	public static ScrollMode defaultDocumentViewScrollMode = ScrollMode.Continuous;
+	public static Insets popupInsets = new Insets(20,20,20,20);
 	public static double gridHGap = 20;
 	public static double gridVGap = 20;
 	public static double minFrameWidth = 240;
@@ -40,12 +47,19 @@ public class GlobalAppSettings {
 	public static double frameHeight = 960;
 	public static double smallFrameWidth = 600;
 	public static double smallFrameHeight = 200;
-	private static boolean guiDebugGuidelines;
-	private static boolean isTestModeOn;
+	public static boolean guiDebugGuidelines;
+	public static boolean isTestModeOn;
 	public static boolean areLineViewCountsVisible = true;
 	public static double memoryStatUpdateRate = 500f;
 	public static LineFitOption selectedFitLineOption = LineFitOption.averageFit;
 	public static double dimmerTime = 500;
+	
+	public static int defaultServerPort = 1018;
+	
+	public static Color accentColor; 
+	public static Color complementColor;
+	public static long defaultServerTimeout = 5000;
+	public static int defaultThreadpoolSize = 10;
 	
 	public enum LineFitOption {
 		strictFit,
@@ -56,6 +70,8 @@ public class GlobalAppSettings {
 	public static void loadAppSettings(){
 		loadTestConfigSettings();
 		loadLanguageSettings();
+		accentColor = Color.rgb(247, 107, 0, 1f);
+		complementColor = Color.rgb(163, 196, 186, 1);
 	}
 	
 	private static void loadTestConfigSettings() {
@@ -130,13 +146,4 @@ public class GlobalAppSettings {
 			e.printStackTrace();
 		}
 	}
-	
-	public static boolean areGuiDebugGuidelinesVisible(){
-		return guiDebugGuidelines;
-	}
-
-	public static boolean isTestModeOn() {
-		return isTestModeOn;
-	}
-
 }

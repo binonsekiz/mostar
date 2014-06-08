@@ -14,10 +14,13 @@
 <text id = "New Page">New Page</text>
 <text id = "Login as a\n Guest">Login as a\n Guest</text>
 <text id = "Sign in">Sign in</text>
+<text id = "Retry">Retry</text>
 <text id = "Username">Username</text>
 <text id = "Password">Password</text>
 <text id = "Login">Login</text>
 <text id = "Email">Email</text>
+<text id = "Forgot Password">Forgot Password</text>
+<text id = "Work Offline">Work Offline</text>
 <text id = "Confirm">Confirm</text>
 <text id = "Back">Back</text>
 <text id = "Header">Header</text>
@@ -37,6 +40,7 @@
 <text id = "New Section">New Section</text>
 <text id = "New Book">New Book</text>
 <text id = "New Page">New Page</text>
+<text id = "Load Book">Load Book</text>
 <text id = "Template">Template</text>
 <text id = "Empty Template">Empty Template</text>
 <text id = "Header">Header</text>
@@ -74,4 +78,7 @@
 <text id = "Box">Box</text>
 <text id = "Save Document">Save Document</text>
 <text id = "Open Document">Open Document</text>
+<text id = "#Welcome Text#">Welcome, please log in</text>
+<text id = "#Wait Connection Text#">Connecting to server, please wait</text>
+<text id = "#Connection Failed Text#">Couldn't connect to server</text>
 </translation>

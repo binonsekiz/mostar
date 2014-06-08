@@ -113,7 +113,8 @@ public class Paragraph extends ParagraphProperties implements CharSequence, Comp
 		
 		startTextDivision();
 		
-		while(textCounter < length()) {			
+		while(textCounter < length()) {
+			System.out.println("\nParagraph while loop start");
 			//find out the available length for the current line segment
 			LineSegment segment = machine.getNextAvailableLineSegment(style);
 			if(segment == null) {

@@ -99,9 +99,6 @@ public class LayoutMachine{
 		for(int j = 0; j < paragraphSet.getParagraphCount(); j++) {
 			Paragraph paragraph = paragraphSet.getParagraph(j);
 			
-			System.out.println("\n\n\n\n\n\nvalidate call with paragraph: " + paragraph + ", columnview: " + columnView);
-			System.out.println("paragraphOnCanvas.linesoncanvas1:" + paragraphOnCanvas.getLinesOnCanvas());
-		
 			for(int i = 0; i < paragraph.getLineSegments().size(); i++) {
 				TextLine textLine = paragraph.getTextLines().get(i);
 				if(lineOnCanvasCounter >= paragraphOnCanvas.getLinesOnCanvas().size()) {
@@ -112,9 +109,6 @@ public class LayoutMachine{
 				paragraphOnCanvas.getLinesOnCanvas().get(lineOnCanvasCounter).setLineSegment(paragraph.getLineSegments().get(i));
 				lineOnCanvasCounter ++;
 			}
-		
-			System.out.println("\n\n\n\n\n\nvalidate call with paragraph: " + paragraph + ", columnview: " + columnView);
-			System.out.println("paragraphOnCanvas.linesoncanvas2:" + paragraphOnCanvas.getLinesOnCanvas());
 		}
 		
 		for(int i = paragraphOnCanvas.getLinesOnCanvas().size() - 1; i >= lineOnCanvasCounter; i--) {
@@ -150,6 +144,7 @@ public class LayoutMachine{
 	}
 	
 	public LineSegment getNextAvailableLineSegment(TextStyle style) {
+		System.out.println("\nLayoutMachine::GetNextAvailableLineSegment call");
 		debugPaintVector2(lineSegmentOffset, Color.BLUE);
 		
 		if(textDivisionMode == false || paragraphSet == null) {
@@ -190,13 +185,17 @@ public class LayoutMachine{
 	}
 
 	private void moveToNextLine() {
+		System.out.println("\nLayoutMachine::MoveToNextLine call");
 		float angle = paragraphSet.getAngle();
 		angle = (angle + 90) % 360;
 		
 		lineSegmentOffset.moveWithGivenAngle(angle, backupStyle.getLineSpacingHeight());
 		
+		System.out.println("Line segment offset: " + lineSegmentOffset);
+		
 		//if the offset is outside the ParagraphSpace, we are out of space.
 		if(!paragraphSet.getParagraphSpace().canContain(lineSegmentOffset, angle)) {
+			System.out.println("OUT OF SPACE IS TRUE");
 			isOutOfSpace = true;
 		}
 	}
@@ -209,7 +208,7 @@ public class LayoutMachine{
 	 * @return
 	 */
 	private ArrayList<LineSegment> buildLineSegments(LineSegment inputSegment, float height) {
-		System.out.println("\n\tLayoutMachine::BuildLineSegments started");
+		System.out.println("\nLayoutMachine::BuildLineSegments started");
 		
 		ArrayList<LineSegment> segments = new ArrayList<LineSegment>();
 		
@@ -275,6 +274,7 @@ public class LayoutMachine{
 	}
 	
 	private void modifySegmentsWRTShapes(ArrayList<LineSegment> segments, ArrayList<Polygon> shapes, float height) {
+		System.out.println("\nLayoutMachine::ModifySegmentsWRTShapes call");
 		if(segments.size() != 1) throw new RuntimeException("Expecting only one segment");
 		
 		for(int j = 0; j < shapes.size(); j++) {
@@ -313,14 +313,15 @@ public class LayoutMachine{
 	}
 
 	private void disregardLastSegmentForFutureUse() {
+		System.out.println("\nLayoutMachine::DisregardLastSegment call");
 		lastUsedSegment = null;
-		System.out.println("LAST SEGMENT SET TO NULL");
 		if(backupSegments.size() == 0) {
 			moveToNextLine();
 		}
 	}
 
 	private void reuseSegmentFromOffset(float trimAmount) {
+		System.out.println("\nLayoutMachine::ReuseLastSegment call");
 		LineSegment segment = new LineSegment(lastUsedSegment.getFirstPoint(), lastUsedSegment.getSecondPoint());
 		lastUsedSegment = segment;
 		lastUsedSegment.trimWithStartOffset(trimAmount);

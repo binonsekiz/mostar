@@ -14,10 +14,13 @@
 <text id = "New Page">Yeni Sayfa</text>
 <text id = "Login as a Guest">Ziyaretçi Girişi</text>
 <text id = "Sign in">Giriş</text>
+<text id = "Retry">Tekrar dene</text>
 <text id = "Username">Kullanıcı adı</text>
 <text id = "Password">Şifre</text>
 <text id = "Login">Giriş</text>
 <text id = "Email">E-posta</text>
+<text id = "Forgot Password">Şifremi Unuttum</text>
+<text id = "Work Offline">Çevrimdışı Çalış</text>
 <text id = "Confirm">Şifre onay</text>
 <text id = "Back">Geri</text>
 <text id = "Header">Başlık</text>
@@ -36,7 +39,8 @@
 <text id = "New Chapter">Yeni Ünite</text>
 <text id = "New Section">Yeni Bölüm</text>
 <text id = "New Book">Yeni Kitap</text>
-<text id = "New Page">Yeni Sayfa</text>a
+<text id = "New Page">Yeni Sayfa</text>
+<text id = "Load Book">Kitap Aç</text>
 <text id = "Template">Şablon</text>
 <text id = "Empty Template">Boş Şablon</text>
 <text id = "Header">Başlık</text>
@@ -76,4 +80,7 @@
 <text id = "Box">Küp</text>
 <text id = "Save Document">Belgeyi Kaydet</text>
 <text id = "Open Document">Belge Aç</text>
+<text id = "#Welcome Text#">Hoşgeldiniz, lütfen giriş yapın</text>
+<text id = "#Wait Connection Text#">Sunucuya bağlanılıyor, lütfen bekleyin</text>
+<text id = "#Connection Failed Text#">Sunucuya bağlanılamadı</text>
 </translation>

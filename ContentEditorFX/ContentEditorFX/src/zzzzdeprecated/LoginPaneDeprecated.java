@@ -29,7 +29,7 @@ public class LoginPaneDeprecated extends GridPane{
 		setVgap(20);
 		setPadding(new Insets(25 ,25, 25, 25));
 		
-		if(GlobalAppSettings.areGuiDebugGuidelinesVisible())
+		if(GlobalAppSettings.guiDebugGuidelines)
 			setGridLinesVisible(true);
 		
 		title = new Text(Translator.get("Login"));

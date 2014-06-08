@@ -64,6 +64,10 @@
         linear-gradient(to top, -light-black 2%, -dark-black 98%);
 }
 
+.popup-class {
+	-fx-background-color: rgb(255,255,255,1);
+}
+
 #dimmer {
     -fx-background-color: rgb(0,0,0,0.2);
 }

@@ -13,7 +13,6 @@ public class DocTabbedView extends BorderPane implements ScreenType{
 
 	private TabPane tabPane;
 	
-	
 	private Tab docModifyTab;
 	private DocModifyScreen docModifyScreen;
 	

@@ -258,7 +258,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 			paragraphsOnCanvas.get(i).refreshOverlay();
 		}
 		
-		if(GlobalAppSettings.areGuiDebugGuidelinesVisible()){
+		if(GlobalAppSettings.guiDebugGuidelines){
 			drawWidgetGuidelines();
 		}
 		

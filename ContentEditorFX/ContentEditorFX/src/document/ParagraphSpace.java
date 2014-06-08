@@ -100,8 +100,12 @@ public class ParagraphSpace extends ParagraphSpaceProperties{
 	}
 
 	public boolean canContain(Vector2 lineSegmentOffset, float angle) {
+		System.out.println("\n\n555555555\nParagraphSpace::CanContain call");
 		LineSegment lineSegment = new LineSegment(lineSegmentOffset, ProjectRepository.getActiveProjectEnvironment().getDocument().getPageInsets().getPageWidth(), angle);
+		System.out.println("linesegment: " + lineSegment);
+		
 		LineSegmentIntersection intersection = allowedShape.intersect(lineSegment);
+		System.out.println("intersection: " + intersection);
 		
 		if(intersection.getLineCount() == 0)
 			return false;

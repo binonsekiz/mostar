@@ -88,13 +88,16 @@ public class TitleScreen extends Stage{
 		final FillTransition fillTransition2 = new FillTransition(Duration.millis(500), subTitle, Color.rgb(0, 0, 0, 0), Color.GRAY);
 		
 		final Timeline timer = new Timeline(new KeyFrame(Duration.millis(16), new EventHandler<ActionEvent>() {
+			boolean hasFrameInitialized = false;
+			
 		    @Override
 		    public void handle(ActionEvent event) {
 		    	time += 16;
 		    	blurFractionValue = Interpolation.fade.apply(1.0f - (float)time / totalTime) * 100;
 		    	titleBlur.setRadius(blurFractionValue);
 		    	
-				if(time >= totalTime) {
+				if(time >= totalTime && !hasFrameInitialized) {
+					hasFrameInitialized = true;
 					frame.mainPath();
 					hide();
 				}

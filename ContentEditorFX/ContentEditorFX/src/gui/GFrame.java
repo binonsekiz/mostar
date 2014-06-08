@@ -83,7 +83,7 @@ public class GFrame extends Application {
 		initializeMainScene();		
 		initializePanes();
 		
-		if(GlobalAppSettings.isTestModeOn())
+		if(GlobalAppSettings.isTestModeOn)
 		{
 			//TODO: run tests
 		}

@@ -1,9 +1,12 @@
 package gui.docmodify;
 
+import settings.GlobalAppSettings;
+import network.NetworkFacade;
 import document.project.ProjectRepository;
 import gui.GFrame.WindowType;
 import gui.ScreenType;
 import gui.columnview.DocumentView;
+import gui.popup.LoginPopup;
 import gui.popup.WelcomePopup;
 import javafx.scene.layout.BorderPane;
 
@@ -16,11 +19,14 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 	private DocDebugView docDebugView;
 	
 	private WelcomePopup welcomePopup;
+	private LoginPopup loginPopup;
+	
 	@SuppressWarnings("unused")
 	private WindowType referrer;
 	
 	public DocModifyScreen(){
 		new ProjectRepository();
+		new NetworkFacade();
 		initGui();
 	}
 	
@@ -36,8 +42,14 @@ public class DocModifyScreen extends BorderPane implements ScreenType{
 		this.setCenter(documentView);
 		this.setBottom(docBottomToolbar);
 		
-		welcomePopup = new WelcomePopup();
-		welcomePopup.show();
+		if(GlobalAppSettings.bypassLogin){
+			welcomePopup = new WelcomePopup();
+			welcomePopup.show();
+		}
+		else{
+			loginPopup = new LoginPopup();
+			loginPopup.show();
+		}
 	}
 	
 	@Override
