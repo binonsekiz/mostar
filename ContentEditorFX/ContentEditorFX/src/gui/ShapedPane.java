@@ -1,5 +1,6 @@
 package gui;
 
+import document.visual.Shape;
 import event.modification.ModificationType;
 import geometry.GeometryHelper;
 import geometry.libgdxmath.Polygon;
@@ -18,7 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public abstract class ShapedPane extends Pane implements VisualView {
-	private Polygon shape;
+	private Shape shape;
 	
 	private Rectangle relocationRectangle;
 	private final float relocationRectangleOffsetX = 5;
@@ -58,10 +59,10 @@ public abstract class ShapedPane extends Pane implements VisualView {
 	protected boolean isShapeInitialized;
 	
 	public ShapedPane(CanvasOwner canvasOwner) {
-		this(canvasOwner, GeometryHelper.getRectanglePolygon(250, 250));
+		this(canvasOwner, new Shape(GeometryHelper.getRectanglePolygon(250, 250)));
 	}
 	
-	public ShapedPane(CanvasOwner canvasOwner, Polygon shape){ 
+	public ShapedPane(CanvasOwner canvasOwner, Shape shape){ 
 		this.canvasOwner = canvasOwner;
 		selfReference = this;
 		initEvents();
@@ -249,7 +250,7 @@ public abstract class ShapedPane extends Pane implements VisualView {
 		}
 	}
 
-	private void initializeShape(Polygon shape) {
+	private void initializeShape(Shape shape) {
 		this.shape = shape;
 		resizeRectangles = new Rectangle[shape.getVerticeCount()];
 		resizeVectors = new Vector2[shape.getVerticeCount()];
@@ -260,7 +261,7 @@ public abstract class ShapedPane extends Pane implements VisualView {
 	}
 
 	public void initializeShape() {
-		Polygon defaultShape = GeometryHelper.getRectanglePolygon(this.getWidth(), this.getHeight());
+		Shape defaultShape = new Shape(GeometryHelper.getRectanglePolygon(this.getWidth(), this.getHeight()));
 		defaultShape.move((float)this.getLayoutX(), (float)this.getLayoutY());
 		initializeShape(defaultShape);
 	}
@@ -360,7 +361,7 @@ public abstract class ShapedPane extends Pane implements VisualView {
 		translate(movement.x, movement.y);
 	}
 	
-	public Polygon getPaneShape(){
+	public Shape getPaneShape(){
 		return shape;
 	}
 	
@@ -389,7 +390,7 @@ public abstract class ShapedPane extends Pane implements VisualView {
 		this.setPrefSize(newWidth, newHeight);
 	}
 
-	public void setShape(Polygon newShape) {
+	public void setShape(Shape newShape) {
 		this.shape = newShape;
 		Rectangle border = newShape.getBoundingRectangle();
 		isResizeEventsDisabled = true;

@@ -17,6 +17,8 @@ import document.PageSpecs.Measurement;
 import document.ParagraphSet;
 import document.persistentproperties.interfaces.PersistentObject;
 import document.project.ProjectRepository;
+import document.visual.VisualComponent;
+import document.visual.VisualComposite;
 import document.widget.Widget;
 
 public abstract class ColumnProperties implements PersistentObject {
@@ -27,7 +29,7 @@ public abstract class ColumnProperties implements PersistentObject {
 	protected Image background;
 	protected Polygon columnShape;
 	protected ArrayList<ParagraphSet> paragraphSets;
-	protected ArrayList<Polygon> shapes;
+	protected ArrayList<VisualComponent> shapes;
 
 	public ColumnProperties() {
 		//default constructor, empty
@@ -53,7 +55,7 @@ public abstract class ColumnProperties implements PersistentObject {
 			paragraphSets.add(ProjectRepository.getActiveProjectEnvironment().getDocumentText().getParagraphSet(i));
 		}
 		
-		shapes = (ArrayList<Polygon>) XmlManager.loadArrayListFromXmlElement("Shapes", "Polygon", element);
+	//	shapes = (ArrayList<VisualComposite>) XmlManager.loadArrayListFromXmlElement("Shapes", "Polygon", element);
 	}
 	
 	@Override

@@ -6,6 +6,7 @@ import geometry.libgdxmath.Polygon;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import document.visual.Shape;
 import storage.XmlManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -19,7 +20,7 @@ public class ThreeDViewerWidget extends Widget{
 	}
 	
 	public ThreeDViewerWidget(double x, double y, double width, double height){
-		Polygon shape = GeometryHelper.getRectanglePolygon(width, height); 
+		Shape shape = new Shape(GeometryHelper.getRectanglePolygon(width, height)); 
 		shape.setPositionX((float) x);
 		shape.setPositionY((float) y);
 		setShape(shape);

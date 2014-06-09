@@ -15,6 +15,9 @@ import org.w3c.dom.Element;
 import document.PageSpecs.Measurement;
 import document.layout.LayoutMachine;
 import document.persistentproperties.ColumnProperties;
+import document.visual.Shape;
+import document.visual.VisualComponent;
+import document.visual.VisualComposite;
 import document.widget.Widget;
 
 public class Column extends ColumnProperties{
@@ -28,7 +31,7 @@ public class Column extends ColumnProperties{
 		this.pageSize = measurement;
 		widgets = new ArrayList<Widget>();
 		paragraphSets = new ArrayList<ParagraphSet>();
-		shapes = new ArrayList<Polygon>();
+		shapes = new ArrayList<VisualComponent>();
 		debugInstance = this;
 		
 		this.insets = new SimpleObjectProperty<PageInsets>();
@@ -111,16 +114,16 @@ public class Column extends ColumnProperties{
 		paragraphSets.remove(paragraphSet);
 	}
 
-	public void addShape(Polygon finalPolygon) {
+	public void addShape(VisualComponent finalPolygon) {
 		shapes.add(finalPolygon);
 	}
 
-	public ArrayList<Polygon> getShapes() {
+	public ArrayList<VisualComponent> getShapes() {
 		return shapes;
 	}
 
-	public ArrayList<Polygon> getShapesAndWidgetPolygons() {
-		ArrayList<Polygon> shapesAndWidgets = new ArrayList<Polygon>();
+	public ArrayList<VisualComponent> getShapesAndWidgetPolygons() {
+		ArrayList<VisualComponent> shapesAndWidgets = new ArrayList<VisualComponent>();
 		for(int i = 0; i < widgets.size(); i++) {
 			shapesAndWidgets.add(widgets.get(i).getShape());
 		}

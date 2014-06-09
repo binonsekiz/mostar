@@ -10,6 +10,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -24,6 +25,8 @@ import document.DocumentText;
 import document.ParagraphSet;
 import document.layout.LayoutMachine;
 import document.project.ProjectRepository;
+import document.visual.Shape;
+import document.visual.VisualComponent;
 import document.widget.Widget;
 import event.ShapeDrawFacade;
 import event.ShapeDrawFacade.ShapeDrawingMode;
@@ -164,7 +167,7 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		float smallestAreaSize = Float.MAX_VALUE;
 		int smallestAreaIndex = -1;
 		for(int i = 0; i < column.getShapes().size(); i++) {
-			Polygon p = column.getShapes().get(i);
+			VisualComponent p = column.getShapes().get(i);
 			if(p.contains(mx, my)) {
 				float area = p.area();
 				if(area < smallestAreaSize) {
@@ -239,9 +242,13 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		overlayContext = parent.getGraphicsContext();
 				
 		overlayContext.save();
-		overlayContext.translate(parent.getOverlayOffsetX(), parent.getOverlayOffsetY());
-		overlayContext.scale(parent.getOverlayScale(), parent.getOverlayScale());
 		
+		System.out.println("Columnview translating overlay to: " + parent.getOverlayOffsetX() + ", " + parent.getOverlayOffsetY());
+		overlayContext.translate(parent.getOverlayOffsetX(), parent.getOverlayOffsetY());
+		Bounds bounds = this.getBoundsInParent();
+		
+		overlayContext.scale(parent.getOverlayScale(), parent.getOverlayScale());
+		overlayContext.translate(bounds.getMinX(), bounds.getMinY());
 		overlayContext.setLineWidth(2);
 		
 		overlayContext.setStroke(Color.HOTPINK);

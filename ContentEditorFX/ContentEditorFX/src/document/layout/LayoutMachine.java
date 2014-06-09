@@ -25,6 +25,8 @@ import document.Paragraph;
 import document.ParagraphSet;
 import document.TextLine;
 import document.style.TextStyle;
+import document.visual.Shape;
+import document.visual.VisualComponent;
 
 /**
  * Here is how this works:
@@ -256,9 +258,9 @@ public class LayoutMachine{
 		}
 		
 		segments.add(segmentToUse); 
-		ArrayList<Polygon> shapes = parent.getShapesAndWidgetPolygons();
+		ArrayList<VisualComponent> allVisualComponents = parent.getShapesAndWidgetPolygons();
 		
-		modifySegmentsWRTShapes(segments, shapes, height);
+		modifySegmentsWRTShapes(segments, allVisualComponents, height);
 		
 		System.out.println("\t\tBuilt those line segments: ");
 		
@@ -273,12 +275,12 @@ public class LayoutMachine{
 		return segments;
 	}
 	
-	private void modifySegmentsWRTShapes(ArrayList<LineSegment> segments, ArrayList<Polygon> shapes, float height) {
+	private void modifySegmentsWRTShapes(ArrayList<LineSegment> segments, ArrayList<VisualComponent> allVisualComponents, float height) {
 		System.out.println("\nLayoutMachine::ModifySegmentsWRTShapes call");
 		if(segments.size() != 1) throw new RuntimeException("Expecting only one segment");
 		
-		for(int j = 0; j < shapes.size(); j++) {
-			Polygon shape = shapes.get(j);
+		for(int j = 0; j < allVisualComponents.size(); j++) {
+			VisualComponent shape = allVisualComponents.get(j);
 			for(int k = 0; k < segments.size(); k++) {
 				LineSegment segment = segments.get(k);
 				LineSegmentIntersection intersection = shape.intersectWithHeight(segment, height);

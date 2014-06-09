@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import control.WidgetModifyFacade;
 import document.Column;
+import document.visual.Shape;
 import document.widget.Widget;
 import document.widget.Widget.TextWrapType;
 
@@ -55,12 +56,12 @@ public abstract class WidgetModifier extends ShapedPane{
 		this.parentPane = parentPane;
 	}
 	
-	public void setPolygon(Polygon shape) {
+	public void setPolygon(Shape shape) {
 		super.setShape(shape);
 		widget.setShape(shape);
 	}
 	
-	public Polygon getPolygon(){
+	public Shape getPolygon(){
 		return widget.getShape();
 	}
 	
@@ -78,7 +79,7 @@ public abstract class WidgetModifier extends ShapedPane{
 	private void recalculateClip() {
 		widgetStack.setLayoutX(0);
 		widgetStack.setLayoutY(0);
-		widgetStack.setClip(GeometryHelper.polygonShapeFromPolygon(this.getPaneShape()));
+		widgetStack.setClip(GeometryHelper.polygonShapeFromPolygon(this.getPaneShape().getPolygon()));
 	}
 
 	public void delete(){

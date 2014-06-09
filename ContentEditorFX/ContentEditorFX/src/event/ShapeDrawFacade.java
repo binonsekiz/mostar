@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import settings.GlobalAppSettings;
 import document.project.ProjectRepository;
+import document.visual.Shape;
 
 public class ShapeDrawFacade {
 
@@ -80,13 +81,8 @@ public class ShapeDrawFacade {
 			vertices[2 * i + 1] = currentShapePoints.get(i).y;
 		}
 		Polygon finalPolygon = new Polygon(vertices);
-		
-		//ParagraphSet pSet = new ParagraphSet(finalPolygon);
-		//caller.insertParagraphSet(pSet);
-		
-		
 		ProjectRepository.getActiveProjectEnvironment().addBlankParagraphSet(finalPolygon, caller);
-		
+
 		mode = ShapeDrawingMode.Off;
 		caller.refresh();
 		caller = null;
@@ -99,7 +95,7 @@ public class ShapeDrawFacade {
 			vertices[2 * i] = currentShapePoints.get(i).x;
 			vertices[2 * i + 1] = currentShapePoints.get(i).y;
 		}
-		Polygon finalPolygon = new Polygon(vertices);
+		Shape finalPolygon = new Shape(new Polygon(vertices));
 		caller.getColumn().addShape(finalPolygon);
 		mode = ShapeDrawingMode.Off;
 		caller.refresh();

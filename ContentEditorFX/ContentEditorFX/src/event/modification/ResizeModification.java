@@ -1,5 +1,6 @@
 package event.modification;
 
+import document.visual.Shape;
 import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Vector2;
 import gui.ShapedPane;
@@ -19,7 +20,7 @@ public class ResizeModification extends ModificationInstance{
 	public ResizeModification(ShapedPane pane, int edgeIndex) {
 		super(pane);
 		this.edgeIndex = edgeIndex;
-		newShape = pane.getPaneShape();
+		newShape = pane.getPaneShape().getPolygon();
 		backupShape = new Polygon(newShape.getVertices().clone());
 		normal = backupShape.getEdgeNormal(edgeIndex);
 		normal.nor();
@@ -56,7 +57,7 @@ public class ResizeModification extends ModificationInstance{
 		newShape.moveEdge(edgeIndex, diff);
 		pane.setResizeVector(diff);
 
-		pane.setShape(newShape);
+		pane.setShape(new Shape(newShape));
 		lastMousePosition.set((float)event.getX(), (float)event.getY());
 	}
 
@@ -64,7 +65,7 @@ public class ResizeModification extends ModificationInstance{
 	public void modificationEnd(MouseEvent event) {
 		normal = null;
 		diff = null;
-		pane.setShape(newShape);
+		pane.setShape(new Shape(newShape));
 		pane.setResizeVector(new Vector2());
 	}
 

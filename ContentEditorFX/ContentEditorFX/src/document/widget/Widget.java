@@ -6,10 +6,11 @@ import geometry.libgdxmath.Rectangle;
 import org.w3c.dom.Element;
 
 import document.persistentproperties.WidgetProperties;
+import document.visual.Shape;
 
 public class Widget extends WidgetProperties{
 
-	private Polygon shape;
+	private Shape shape;
 	private TextWrapType textWrap;
 	
 	public Widget(){
@@ -56,12 +57,11 @@ public class Widget extends WidgetProperties{
 		throw new RuntimeException("Typeless Widget");
 	}
 
-	public Polygon getShape() {
+	public Shape getShape() {
 		return shape;
 	}
 
-	public void setShape(Polygon shape) {
-		System.out.println("@@Setting widget shape to: " + shape);
+	public void setShape(Shape shape) {
 		this.shape = shape;
 	}
 
