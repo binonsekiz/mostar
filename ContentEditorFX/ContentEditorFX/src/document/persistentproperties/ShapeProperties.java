@@ -15,13 +15,13 @@ public class ShapeProperties implements PersistentObject{
 	@Override
 	public Node saveToXmlNode(Document doc) {
 		// TODO Auto-generated method stub
-		return null;
+		return polygon.saveToXmlNode(doc);
 	}
 
 	@Override
 	public void loadFromXmlElement(Element element) {
-		// TODO Auto-generated method stub
-		
+		polygon = new Polygon();
+		polygon.loadFromXmlElement(element);
 	}
 
 }

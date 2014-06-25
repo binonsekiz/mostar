@@ -11,7 +11,7 @@ import document.visual.VisualComponent;
 
 public class VisualCompositeProperties implements PersistentObject {
 
-	private ArrayList<VisualComponent> children;
+	protected ArrayList<VisualComponent> children;
 	
 	public VisualCompositeProperties() {
 		// Default constructor

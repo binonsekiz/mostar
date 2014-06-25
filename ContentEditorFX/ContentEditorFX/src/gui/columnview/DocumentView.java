@@ -1,37 +1,28 @@
 package gui.columnview;
 
+import gui.ShapedPane;
+import gui.helper.CustomScrollPane;
+import gui.helper.CustomScrollPane.ScrollMode;
+
 import java.util.ArrayList;
 
 import javafx.animation.KeyFrame;
-import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import settings.GlobalAppSettings;
 import document.Column;
 import document.Document;
 import document.project.ProjectRepository;
-import event.input.OverlayCanvas;
 import event.modification.ModificationType;
-import gui.ShapedPane;
 
 /**
  * This is a pane that has a corresponding document attached.
@@ -41,22 +32,11 @@ import gui.ShapedPane;
  */
 public class DocumentView extends Pane implements CanvasOwner{
 	
-	private ScrollPane continuousScrollPane;
-	private BorderPane discreteScrollPane;
-	private ScrollBar discreteSlider;
-	private ScrollMode activeScrollMode;
-	private StackPane gridStack;
-	private GridPane gridPane;
-	
+	private CustomScrollPane continuousScrollPane;
 	private ArrayList<ColumnView> columnViews;
 	private double zoomFactor;
 	
-	private OverlayCanvas overlayCanvas;
 	private GraphicsContext overlayContext;
-	
-	private Canvas debugCanvas;
-	private GraphicsContext debugContext;
-	
 	private Document document;
 	private static DocumentView selfReference;
 
@@ -66,28 +46,11 @@ public class DocumentView extends Pane implements CanvasOwner{
 	private boolean areLinePolygonsVisible;
 	private boolean isPageInsetVisible;
 
-	private double gridHGap;
-	private double gridVGap;
-	private double gridStackWidth;
-	private double gridStackHeight;
-
 	protected double offsetX;
 	protected double offsetY;
 
-	private boolean isFixCanvasSizeActive;
-
-	private boolean isDebugCanvasVisible;
-
-	private ScaleTransition transition;
-	private Group contentGroup;
-	private Group zoomGroup;
-	
 	private Rectangle debugBox;
 
-	private double scaledOffsetX;
-
-	private double scaledOffsetY;
-	
 	public DocumentView(){
 		selfReference = this;
 		columnViews = new ArrayList<ColumnView>();
@@ -95,92 +58,28 @@ public class DocumentView extends Pane implements CanvasOwner{
 		initEvents();	
 		System.out.println("Document view initialized");
 	}
+	
+	public void setOverlayContext(GraphicsContext overlayContext) {
+		this.overlayContext = overlayContext;
+	}
+	
+	public GraphicsContext getOverlayContext() {
+		return overlayContext;
+	}
 
 	private void initGui() {
-		this.setId("docmodify-pane");
-
-		continuousScrollPane = new ScrollPane() {
-			@Override
-			public void requestFocus() {
-				//do nothing
-			}
-		};
-		discreteScrollPane = new BorderPane();
-		discreteSlider = new ScrollBar();
-		
-		//this is to prevent gridpane to layout its children on top of each other
-		gridStack = new StackPane();
-		gridStack.setId("red-pane");
-		
-		gridPane = new GridPane();
-		gridHGap = GlobalAppSettings.gridHGap;
-		gridVGap = GlobalAppSettings.gridVGap;
-		gridPane.setVgap(gridVGap);
-		gridPane.setHgap(gridHGap);
-		gridStack.getChildren().add(gridPane);
-		gridStack.setAlignment(Pos.CENTER_LEFT);
-				
-		overlayCanvas = new OverlayCanvas();
-		overlayContext = overlayCanvas.getGraphicsContext2D();
-		overlayCanvas.setLayoutX(0);
-		overlayCanvas.setLayoutY(0);
-		overlayCanvas.setId("scenechange-pane");
-		
-		debugCanvas = new OverlayCanvas();
-		debugContext = debugCanvas.getGraphicsContext2D();
-		debugCanvas.setLayoutX(0);
-		debugCanvas.setLayoutY(0);
-		fixCanvasSize();
-		
-		contentGroup = new Group();
-		zoomGroup = new Group();
-		zoomGroup.getChildren().add(gridStack);
-		contentGroup.getChildren().add(zoomGroup);
+		continuousScrollPane = new CustomScrollPane();
+		continuousScrollPane.setContent(columnViews);
 		
 		debugBox = new Rectangle(0, 0, 4, 4);
-		zoomGroup.getChildren().add(debugBox);
-	
-		transition = new ScaleTransition(Duration.millis(200), zoomGroup);
 		
 		isOverlayCanvasVisible = true;
 		isTextCanvasVisible = true;
 		isRefreshInProgress = false;
 		areLinePolygonsVisible = true;
-		isFixCanvasSizeActive = false;
 		zoomFactor = 1;	
 		
-		activeScrollMode = GlobalAppSettings.defaultDocumentViewScrollMode;
-		if(activeScrollMode == ScrollMode.Continuous) {
-			initContinuousScroll();
-		}
-		else if(activeScrollMode == ScrollMode.Discrete) {
-			initDiscreteScroll();
-		}
-
-		this.getChildren().addAll(overlayCanvas, debugCanvas);
-		overlayCanvas.toFront();
-		debugCanvas.toFront();
-	}
-	
-	private void initContinuousScroll() {
-		continuousScrollPane.setContent(contentGroup);
-		continuousScrollPane.setFocusTraversable(false);
-		continuousScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
-		continuousScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-		continuousScrollPane.setFitToHeight(true);
-		continuousScrollPane.setFitToWidth(true);
-		setFocusTraversable(true);
-		
 		this.getChildren().add(continuousScrollPane);
-	}
-	
-	private void initDiscreteScroll() {
-		discreteScrollPane.setCenter(gridStack);
-		gridStack.setLayoutX(0);
-		gridStack.setLayoutY(0);
-		discreteScrollPane.setBottom(discreteSlider);
-		
-		this.getChildren().add(discreteScrollPane);
 	}
 	
 	private void initEvents(){
@@ -188,8 +87,8 @@ public class DocumentView extends Pane implements CanvasOwner{
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
+				continuousScrollPane.setMinWidth(widthProperty().get());
 				setClip(new Rectangle(0,0,getWidth(), getHeight()));
-				fixCanvasSize();
 			}
 		});
 		
@@ -197,8 +96,8 @@ public class DocumentView extends Pane implements CanvasOwner{
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
+				continuousScrollPane.setMinHeight(heightProperty().get());
 				setClip(new Rectangle(0,0,getWidth(), getHeight()));
-				fixCanvasSize();
 			}
 		});	
 		
@@ -217,19 +116,6 @@ public class DocumentView extends Pane implements CanvasOwner{
 				refreshOverlay();
 			}
 		});
-	}
-
-	protected void recalculateOffsets() {
-		offsetX = -1 * ((continuousScrollPane.getHvalue() - continuousScrollPane.getHmin()) / (continuousScrollPane.getHmax() - continuousScrollPane.getHmin())) 
-				* (zoomGroup.getBoundsInParent().getWidth() - continuousScrollPane.getViewportBounds().getWidth());
-		offsetY = -1 * ((continuousScrollPane.getVvalue() - continuousScrollPane.getVmin()) / (continuousScrollPane.getVmax() - continuousScrollPane.getVmin())) 
-				* (zoomGroup.getBoundsInParent().getHeight() - continuousScrollPane.getViewportBounds().getHeight());
-		
-		scaledOffsetX = offsetX / zoomFactor;
-		scaledOffsetY = offsetY / zoomFactor;
-		
-		debugBox.setX(-1 * scaledOffsetX);
-		debugBox.setY(-1 * scaledOffsetY);
 	}
 
 	public LineOnCanvas getLineThatIncludesIndex(int index) {
@@ -283,28 +169,12 @@ public class DocumentView extends Pane implements CanvasOwner{
 		newView.setDocumentText(document.getDocumentText());
 		columnViews.add(index, newView);
 		
-		gridPane.getChildren().clear();
-		gridStackWidth = 0;
-		gridStackHeight = 0;
-		
-		for(int i = 0; i < columnViews.size(); i++) {
-			gridPane.add(columnViews.get(i), i, 0);
-			gridStackWidth = gridStackWidth + columnViews.get(i).getWidth() + gridHGap;
-			if(columnViews.get(i).getHeight() + gridVGap > gridStackHeight)
-				gridStackHeight = columnViews.get(i).getHeight() + gridVGap;
-		}
-		
-		gridStack.setMinWidth(gridStackWidth);
-		gridStack.setPrefWidth(gridStackWidth);
-		gridStack.setMaxWidth(gridStackWidth);
-		gridStack.setMinHeight(gridStackHeight);
-		gridStack.setPrefHeight(gridStackHeight);
-		gridStack.setMaxHeight(gridStackHeight);
+		continuousScrollPane.validateContent();
 	}
 	
 	private void removeDocument() {
 		columnViews.clear();
-		gridPane.getChildren().clear();
+		continuousScrollPane.validateContent();
 	}
 	
 	private void initialPopulate() {
@@ -314,8 +184,8 @@ public class DocumentView extends Pane implements CanvasOwner{
 			tempColumnView.associateWithColumn(tempColumn);
 			tempColumnView.setDocumentText(document.getDocumentText());
 			columnViews.add(tempColumnView);
-			gridPane.add(tempColumnView, i, 0);
 		}
+		continuousScrollPane.validateContent();
 		refresh();
 	}
 
@@ -340,9 +210,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 		}
 		
 		ProjectRepository.getActiveProjectEnvironment().notifyRefreshHappened();
-		fixCanvasSize();
-		overlayCanvas.toFront();
-		debugCanvas.toFront();
+	//	fixCanvasSize();
 	}
 
 	@Override
@@ -355,8 +223,8 @@ public class DocumentView extends Pane implements CanvasOwner{
 	}
 
 	protected void refreshAllOverlay() {
-		recalculateOffsets();
-		overlayContext.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
+		Bounds bounds = localToScene(this.getBoundsInLocal());
+		overlayContext.clearRect(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight());
 		
 		Bounds visibleRectangle = getVisibleViewportBounds();
 		
@@ -367,21 +235,14 @@ public class DocumentView extends Pane implements CanvasOwner{
 		}
 		
 		ProjectRepository.getActiveProjectEnvironment().notifyRefreshHappened();
-		overlayCanvas.toFront();
-		debugCanvas.toFront();
 	}
 
-	private void fixCanvasSize() {
+	/*private void fixCanvasSize() {
 		if(!isFixCanvasSizeActive) {
 			isFixCanvasSizeActive = true;
 			Timeline timer = new Timeline(new KeyFrame(Duration.millis(GlobalAppSettings.fastDeviceFrameMillis), new EventHandler<ActionEvent>(){
 				@Override
 			    public void handle(ActionEvent event) {
-					overlayCanvas.setWidth(getWidth() - 25);
-					overlayCanvas.setHeight(getHeight() - 25);
-					debugCanvas.setWidth(getWidth() - 25);
-					debugCanvas.setHeight(getHeight() - 25);
-
 					gridStack.setLayoutX(0);
 					gridStack.setLayoutY(0);
 
@@ -409,13 +270,13 @@ public class DocumentView extends Pane implements CanvasOwner{
 			timer.play();
 		}
 	}
-	
+	*/
 	public double getOverlayOffsetX() {
-		return offsetX;
+		return this.getBoundsInParent().getMinX();
 	}
 
 	public double getOverlayOffsetY() {
-		return offsetY;
+		return this.getBoundsInParent().getMinY();
 	}
 	
 	public ColumnView getActiveColumnView() {
@@ -423,24 +284,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 	}
 	
 	public void changeZoom(double zoomFactor) {
-		zoomFactor = zoomFactor / 100.0;
-		
-		double oldFactor = this.zoomFactor;
-		System.out.println("old factor: " + oldFactor + ", new factor: " + zoomFactor);
-		transition.setFromX(oldFactor);
-		transition.setFromY(oldFactor);
-		transition.setToX(zoomFactor);
-		transition.setToY(zoomFactor);
-		transition.setCycleCount(1);
-		transition.setOnFinished(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				refreshAllOverlay();
-			}
-		});
-		transition.setAutoReverse(false);
-		transition.play();
-		this.zoomFactor = zoomFactor;
+		continuousScrollPane.setZoomFactor(zoomFactor);
 	}
 
 	public double getZoomFactor() {
@@ -473,20 +317,6 @@ public class DocumentView extends Pane implements CanvasOwner{
 	@Override
 	public GraphicsContext getGraphicsContext() {
 		return overlayContext;
-	}
-
-	public static GraphicsContext getDebugContext() {
-		return selfReference.debugContext;
-	}
-	
-	public void setOverlayCanvasVisible(boolean value) {
-		this.isOverlayCanvasVisible = value;
-		if(isOverlayCanvasVisible) {
-			overlayCanvas.setOpacity(1);
-		}
-		else{
-			overlayCanvas.setOpacity(0);
-		}
 	}
 
 	public void setTextCanvasVisible(boolean value) {
@@ -526,26 +356,8 @@ public class DocumentView extends Pane implements CanvasOwner{
 		return 0;
 	}
 
-	public enum ScrollMode {
-		Continuous,
-		Discrete
-	}
-
 	public void setScrollBehaviour(ScrollMode mode) {
-		if(activeScrollMode != mode) {
-			activeScrollMode = mode;
-			//update layout
-		}
-	}
-
-	public void setDebugCanvasVisible(boolean b) {
-		isDebugCanvasVisible = b;
-		if(isDebugCanvasVisible) {
-			debugCanvas.setOpacity(1);
-		}
-		else{
-			debugCanvas.setOpacity(0);
-		}
+		continuousScrollPane.setScrollMode(mode);
 	}
 
 	public double getOverlayScale() {
@@ -553,7 +365,7 @@ public class DocumentView extends Pane implements CanvasOwner{
 	}
 	
 	public Bounds getVisibleViewportBounds() {
-		BoundingBox retVal = new BoundingBox(offsetX * -1 / zoomFactor, offsetY * -1 / zoomFactor, continuousScrollPane.getViewportBounds().getWidth() / zoomFactor, continuousScrollPane.getViewportBounds().getHeight() / zoomFactor);
-		return retVal;
+	//	BoundingBox retVal = new BoundingBox(offsetX * -1 / zoomFactor, offsetY * -1 / zoomFactor, continuousScrollPane.getViewportBounds().getWidth() / zoomFactor, continuousScrollPane.getViewportBounds().getHeight() / zoomFactor);
+		return continuousScrollPane.getVisibleViewportBounds();
 	}
 }

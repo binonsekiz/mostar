@@ -1,8 +1,8 @@
 package document.visual;
 
-import javafx.scene.canvas.GraphicsContext;
 import geometry.libgdxmath.LineSegment;
 import geometry.libgdxmath.Polygon.LineSegmentIntersection;
+import javafx.scene.canvas.GraphicsContext;
 import document.persistentproperties.interfaces.PersistentObject;
 
 public interface VisualComponent extends PersistentObject{

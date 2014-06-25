@@ -1,15 +1,13 @@
 package settings;
 
-import gui.columnview.DocumentView.ScrollMode;
+import gui.helper.CustomScrollPane.ScrollMode;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,7 +35,7 @@ public class GlobalAppSettings {
 	public static double caretBlinkRate = 1000;
 	public static float caretMovementTime = 100f;
 	public static float pointerJumpSize = 10;
-	public static ScrollMode defaultDocumentViewScrollMode = ScrollMode.Continuous;
+	public static ScrollMode defaultDocumentViewScrollMode = gui.helper.CustomScrollPane.ScrollMode.ContinuousHorizontal;
 	public static Insets popupInsets = new Insets(20,20,20,20);
 	public static double gridHGap = 20;
 	public static double gridVGap = 20;

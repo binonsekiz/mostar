@@ -10,8 +10,6 @@ import document.persistentproperties.VisualCompositeProperties;
 
 public class VisualComposite extends VisualCompositeProperties implements VisualComponent {
 
-	private ArrayList<VisualComponent> children;
-	
 	public VisualComposite() {
 		children = new ArrayList<VisualComponent>();
 	}

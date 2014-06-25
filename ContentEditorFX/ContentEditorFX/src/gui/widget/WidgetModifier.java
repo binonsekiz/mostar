@@ -1,7 +1,6 @@
 package gui.widget;
 
 import geometry.GeometryHelper;
-import geometry.libgdxmath.Polygon;
 import gui.ShapedPane;
 import gui.columnview.ColumnView;
 import javafx.beans.value.ChangeListener;

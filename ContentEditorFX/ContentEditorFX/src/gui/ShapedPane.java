@@ -1,9 +1,6 @@
 package gui;
 
-import document.visual.Shape;
-import event.modification.ModificationType;
 import geometry.GeometryHelper;
-import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Rectangle;
 import geometry.libgdxmath.Vector2;
 import gui.columnview.CanvasOwner;
@@ -17,6 +14,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import document.visual.Shape;
+import event.modification.ModificationType;
 
 public abstract class ShapedPane extends Pane implements VisualView {
 	private Shape shape;

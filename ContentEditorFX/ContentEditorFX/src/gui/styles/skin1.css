@@ -110,6 +110,11 @@
 	-fx-background-color: #FF222255;
 }
 
+#gridstack-pane{
+	-fx-border-color: #43983B;
+	-fx-border-width: 2px;
+}
+
 #columnview-selected{
 	-fx-border-color: darkblue;
 	-fx-border-width: 3px;

@@ -1,14 +1,13 @@
 package document.widget;
 
 import geometry.GeometryHelper;
-import geometry.libgdxmath.Polygon;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import document.visual.Shape;
 import storage.XmlManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import document.visual.Shape;
 
 
 public class MediaWidget extends Widget{

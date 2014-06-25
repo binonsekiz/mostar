@@ -1,6 +1,6 @@
 package gui.docmodify;
 
-import gui.columnview.DocumentView.ScrollMode;
+import gui.helper.CustomScrollPane.ScrollMode;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -110,7 +110,7 @@ public class DocBottomToolbar extends ToolBar{
 		continuousScroll.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				ProjectRepository.getActiveProjectEnvironment().setDocumentViewScrollBehaviour(ScrollMode.Continuous);
+				ProjectRepository.getActiveProjectEnvironment().setDocumentViewScrollBehaviour(ScrollMode.ContinuousHorizontal);
 			}
 		});
 

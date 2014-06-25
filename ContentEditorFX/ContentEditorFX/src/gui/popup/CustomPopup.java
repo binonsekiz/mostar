@@ -1,10 +1,10 @@
 package gui.popup;
 
-import settings.GlobalAppSettings;
 import gui.GFrame;
 import gui.helper.GuiStyleHelper;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import settings.GlobalAppSettings;
 
 public abstract class CustomPopup extends StackPane{
 	

@@ -18,7 +18,6 @@ import document.ParagraphSet;
 import document.persistentproperties.interfaces.PersistentObject;
 import document.project.ProjectRepository;
 import document.visual.VisualComponent;
-import document.visual.VisualComposite;
 import document.widget.Widget;
 
 public abstract class ColumnProperties implements PersistentObject {

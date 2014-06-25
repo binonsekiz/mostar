@@ -31,7 +31,6 @@ public class DocDebugView extends VBox {
 	private CheckBox textCanvasVisible;
 	private CheckBox linePolygonsVisible;
 	private CheckBox insetVisible;
-	private CheckBox debugCanvasVisible;
 	private Button refresh;
 	private Button refreshTextIndices;
 	private Button collectGarbage;
@@ -67,13 +66,6 @@ public class DocDebugView extends VBox {
 			@Override
 			public void handle(ActionEvent arg0) {
 				ProjectRepository.getActiveProjectEnvironment().setTextCanvasVisible(textCanvasVisible.selectedProperty().get());
-			}
-		});
-		
-		debugCanvasVisible.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				ProjectRepository.getActiveProjectEnvironment().setDebugCanvasVisible(debugCanvasVisible.selectedProperty().get());
 			}
 		});
 		
@@ -143,7 +135,6 @@ public class DocDebugView extends VBox {
 		refreshCount = new SimpleIntegerProperty(0);
 		overlayVisible = new CheckBox("Overlay Visible");
 		textCanvasVisible = new CheckBox("Text Canvas Visible");
-		debugCanvasVisible = new CheckBox("Debug Canvas Visible");
 		linePolygonsVisible = new CheckBox("Line Polygons Visible");
 		insetVisible = new CheckBox("Page Insets Visible");
 		refresh = new Button("Refresh");
@@ -163,9 +154,8 @@ public class DocDebugView extends VBox {
 		textCanvasVisible.selectedProperty().set(true);
 		linePolygonsVisible.selectedProperty().set(true);
 		insetVisible.selectedProperty().set(true);
-		debugCanvasVisible.selectedProperty().set(true);
 		
-		this.getChildren().addAll(title, overlayVisible, debugCanvasVisible, textCanvasVisible, linePolygonsVisible, 
+		this.getChildren().addAll(title, overlayVisible, textCanvasVisible, linePolygonsVisible, 
 				insetVisible, refresh, refreshTextIndices, collectGarbage, totalRefreshCount, debugLabel1, debugLabel2, debugLabel3, debugLabel4, totalDocument, memoryStats);
 	}
 	

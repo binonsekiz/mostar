@@ -1,11 +1,11 @@
 package document.visual;
 
-import javafx.scene.canvas.GraphicsContext;
 import geometry.libgdxmath.LineSegment;
 import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Polygon.LineSegmentIntersection;
 import geometry.libgdxmath.Rectangle;
 import geometry.libgdxmath.Vector2;
+import javafx.scene.canvas.GraphicsContext;
 import document.persistentproperties.ShapeProperties;
 
 public class Shape extends ShapeProperties implements VisualEntity{

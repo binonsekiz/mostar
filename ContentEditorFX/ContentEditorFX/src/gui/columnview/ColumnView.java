@@ -25,7 +25,6 @@ import document.DocumentText;
 import document.ParagraphSet;
 import document.layout.LayoutMachine;
 import document.project.ProjectRepository;
-import document.visual.Shape;
 import document.visual.VisualComponent;
 import document.widget.Widget;
 import event.ShapeDrawFacade;
@@ -34,9 +33,10 @@ import event.modification.ModificationInstance;
 import event.modification.ModificationType;
 import event.modification.ResizeModification;
 import event.modification.TranslateModification;
-import geometry.libgdxmath.Polygon;
+import geometry.libgdxmath.Vector2;
 import gui.ShapedPane;
 import gui.docmodify.DocDebugView;
+import gui.helper.CustomScrollPane;
 import gui.helper.DebugHelper;
 import gui.widget.WidgetModifier;
 
@@ -81,7 +81,6 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 		context.setStroke(Color.BLACK);
 		visuals = new ArrayList<ShapedPane>();
 		paragraphsOnCanvas = new ArrayList<ParagraphOnCanvas>();
-		//this.setId("columnview-selected");
 		this.text = new SimpleObjectProperty<DocumentText>();
 		modificationHash = new HashMap<ShapedPane, ModificationInstance>();
 		initEvents();
@@ -240,20 +239,21 @@ public class ColumnView extends Pane implements VisualView, CanvasOwner{
 
 	public void refreshOverlayCanvas(){
 		overlayContext = parent.getGraphicsContext();
-				
-		overlayContext.save();
 		
-		System.out.println("Columnview translating overlay to: " + parent.getOverlayOffsetX() + ", " + parent.getOverlayOffsetY());
+		//make proper transforms for the overlay canvas
+		overlayContext.save();
+		CustomScrollPane scrollPane = (CustomScrollPane) getParent();
+		Vector2 translateVector = scrollPane.convertContentCoordinateToScreenCoordinate(0, 0);
+		
+		overlayContext.translate(translateVector.x, translateVector.y);
 		overlayContext.translate(parent.getOverlayOffsetX(), parent.getOverlayOffsetY());
 		Bounds bounds = this.getBoundsInParent();
 		
-		overlayContext.scale(parent.getOverlayScale(), parent.getOverlayScale());
+		overlayContext.scale(scrollPane.zoomProperty().get(), scrollPane.zoomProperty().get());
 		overlayContext.translate(bounds.getMinX(), bounds.getMinY());
+		//transform ends here
+		
 		overlayContext.setLineWidth(2);
-		
-		overlayContext.setStroke(Color.HOTPINK);
-		overlayContext.strokeRect(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY(), this.getBoundsInParent().getWidth(), this.getBoundsInParent().getHeight());
-		
 		for(int i = 0; i < visuals.size(); i++){
 			VisualView view = visuals.get(i);
 			if(view instanceof ShapedPane){

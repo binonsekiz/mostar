@@ -10,12 +10,12 @@ import event.input.KeyboardManager;
 import geometry.libgdxmath.Polygon;
 import gui.columnview.ColumnView;
 import gui.columnview.DocumentView;
-import gui.columnview.DocumentView.ScrollMode;
 import gui.docmodify.DocBottomToolbar;
 import gui.docmodify.DocDebugView;
 import gui.docmodify.DocModifyScreen;
 import gui.docmodify.DocVersatilePane;
 import gui.docmodify.DocWidgetToolbar;
+import gui.helper.CustomScrollPane.ScrollMode;
 import gui.helper.DebugHelper;
 import gui.storage.FilePickerWrapper;
 import gui.storage.FilePickerWrapper.FilePickerType;
@@ -237,8 +237,7 @@ public class ProjectEnvironment {
 	}
 
 	public void setOverlayCanvasVisible(boolean value) {
-		documentView.setOverlayCanvasVisible(value);
-		documentView.requestFocus();
+		docModifyScreen.setOverlayCanvasVisible(value);
 	}
 
 	public void setTextCanvasVisible(boolean value) {
@@ -315,10 +314,6 @@ public class ProjectEnvironment {
 
 	public void setDocumentViewScrollBehaviour(ScrollMode mode) {
 		documentView.setScrollBehaviour(mode);
-	}
-
-	public void setDebugCanvasVisible(boolean b) {
-		documentView.setDebugCanvasVisible(b);
 	}
 
 	public void toggleDebugPaneVisible(boolean value) {

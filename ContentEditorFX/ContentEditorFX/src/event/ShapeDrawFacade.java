@@ -53,6 +53,7 @@ public class ShapeDrawFacade {
 	}
 
 	private void mouseClicked(MouseEvent event, ColumnView source) {
+		System.out.println("Shape draw click");
 		if(isWaitingForCaller) {
 			caller = source;
 			isWaitingForCaller = false;

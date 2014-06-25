@@ -15,9 +15,7 @@ import org.w3c.dom.Element;
 import document.PageSpecs.Measurement;
 import document.layout.LayoutMachine;
 import document.persistentproperties.ColumnProperties;
-import document.visual.Shape;
 import document.visual.VisualComponent;
-import document.visual.VisualComposite;
 import document.widget.Widget;
 
 public class Column extends ColumnProperties{

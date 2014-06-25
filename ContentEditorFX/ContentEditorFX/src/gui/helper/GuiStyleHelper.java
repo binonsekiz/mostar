@@ -2,7 +2,6 @@ package gui.helper;
 
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 public class GuiStyleHelper {
 

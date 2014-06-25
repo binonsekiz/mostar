@@ -1,6 +1,5 @@
 package document.widget;
 
-import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Rectangle;
 
 import org.w3c.dom.Element;

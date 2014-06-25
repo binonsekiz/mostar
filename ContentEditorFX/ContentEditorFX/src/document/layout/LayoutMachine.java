@@ -1,19 +1,15 @@
 package document.layout;
 
 import geometry.libgdxmath.LineSegment;
-import geometry.libgdxmath.Polygon;
 import geometry.libgdxmath.Polygon.LineSegmentIntersection;
 import geometry.libgdxmath.Vector2;
 import gui.columnview.ColumnView;
-import gui.columnview.DocumentView;
 import gui.columnview.LineOnCanvas;
 import gui.columnview.ParagraphOnCanvas;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 //import javafx.scene.canvas.GraphicsContext;
 //import javafx.scene.paint.Color;
 import settings.GlobalAppSettings;
@@ -25,7 +21,6 @@ import document.Paragraph;
 import document.ParagraphSet;
 import document.TextLine;
 import document.style.TextStyle;
-import document.visual.Shape;
 import document.visual.VisualComponent;
 
 /**
@@ -132,9 +127,6 @@ public class LayoutMachine{
 		backupSegments.clear();
 		lastUsedSegment = null;
 		isOutOfSpace = false;
-		
-		//TODO: erase this line
-		DocumentView.getDebugContext().clearRect(0, 0, 2000, 2000);
 	}
 
 	public LineSegment getDefaultSegment(TextStyle style) {
@@ -147,7 +139,6 @@ public class LayoutMachine{
 	
 	public LineSegment getNextAvailableLineSegment(TextStyle style) {
 		System.out.println("\nLayoutMachine::GetNextAvailableLineSegment call");
-		debugPaintVector2(lineSegmentOffset, Color.BLUE);
 		
 		if(textDivisionMode == false || paragraphSet == null) {
 			throw new RuntimeException("TextDiv: " + textDivisionMode + ", paragraphSet: " + paragraphSet);
@@ -227,9 +218,6 @@ public class LayoutMachine{
 		
 		trimmedSegmentLower = trimmedSegmentLower.trimToFitInPolygon(paragraphSet.getParagraphSpace().getShape());
 		
-		debugPaintLineSegment(trimmedSegment, Color.GREEN);
-		debugPaintLineSegment(trimmedSegmentLower, Color.BLUE);
-		
 		if(trimmedSegmentLower == null) {
 			return segments;
 		}
@@ -304,16 +292,6 @@ public class LayoutMachine{
 		Collections.sort(segments);
 	}
 
-	@SuppressWarnings("unused")
-	private void debugPaintPolygon(Polygon polygon) {
-		GraphicsContext context = DocumentView.getDebugContext();
-		context.save();
-		context.setStroke(Color.BLUE);
-		context.setLineWidth(2);
-		polygon.draw(context);
-		context.restore();
-	}
-
 	private void disregardLastSegmentForFutureUse() {
 		System.out.println("\nLayoutMachine::DisregardLastSegment call");
 		lastUsedSegment = null;
@@ -329,24 +307,6 @@ public class LayoutMachine{
 		lastUsedSegment.trimWithStartOffset(trimAmount);
 	}
 	
-	private void debugPaintLineSegment(LineSegment segment, Color color) {
-		if(segment == null) return;
-		GraphicsContext context = DocumentView.getDebugContext();
-		context.save();
-		context.setStroke(color);
-		segment.draw(context);
-		context.restore();
-	}
-	
-	private void debugPaintVector2(Vector2 vector, Color color) {
-		if(vector == null) return;
-		GraphicsContext context = DocumentView.getDebugContext();
-		context.save();
-		context.setStroke(color);
-		context.strokeOval(vector.x-2, vector.y-2, 4, 4);
-		context.restore();
-	}
-
 	public void reportLastUsedWidth(float lastCalculatedWidth) {
 		System.out.println("REPORTING WIDTH: " + lastCalculatedWidth);
 		if(Math.abs(lastCalculatedWidth) < GlobalAppSettings.ignoreValuesBelow) {
